@@ -470,7 +470,7 @@ details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(
 /* ===== FIX tràn menu: 13 mục + VI/JP không bao giờ bị cắt khuất =====
    Desktop rộng: thu gọn khoảng cách/cỡ chữ + nới khung nav để vừa 1 hàng.
    Khi vẫn không vừa: cuộn ngang mượt, mục không co chữ, mờ dần mép để báo còn nội dung. */
-nav.top{position:sticky;top:0}
+nav.top{position:sticky;top:0;z-index:60}
 nav.top .wrap{
   position:relative;
   max-width:1460px;
