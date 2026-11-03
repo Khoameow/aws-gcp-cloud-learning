@@ -552,6 +552,38 @@ nav.top.can-r .nav-fade.r{opacity:1}
 .dg-zoom-box .dg-stage-wrap{box-shadow:0 0 50px rgba(34,211,238,.25)}
 .dg-note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:10px}
 
+/* ===== BỘ KHUNG CHUẨN (frame kit) cho sơ đồ kiến trúc =====
+   Khung môi trường lồng nhau kiểu reference architecture: rect bo góc,
+   nhãn + icon ở góc trên-trái, mỗi kind một màu. Khung nằm DƯỚI dây nối
+   và node (z-index 0 < wires 1 < huy hiệu bước 2 < node 3) nên đường nối
+   và node được phép xuyên viền khung. Thứ bậc chuẩn: Cloud ⊃ Region ⊃
+   VPC ⊃ AZ ⊃ Subnet. Dùng qua frames:[] trong variant của DG (app.js). */
+.dg-frame{position:absolute;z-index:0;border-radius:14px;pointer-events:none;border:1.5px solid rgba(127,147,173,.5)}
+.dg-frame-t{position:absolute;top:-11px;left:12px;background:#060b16;padding:2px 10px;border-radius:99px;font-size:clamp(9px,1.15cqw,13px);font-weight:800;letter-spacing:.02em;white-space:nowrap;border:1.5px solid;border-color:inherit;color:#cbd5e1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.dg-frame.f-aws{border-color:rgba(255,153,0,.6);background:rgba(255,153,0,.045)}
+.dg-frame.f-aws .dg-frame-t{color:#ffb84d;border-color:rgba(255,153,0,.6)}
+.dg-frame.f-region{border-color:rgba(34,211,238,.5);border-style:dashed;background:rgba(34,211,238,.03)}
+.dg-frame.f-region .dg-frame-t{color:#67e8f9;border-color:rgba(34,211,238,.5)}
+.dg-frame.f-vpc{border-color:rgba(167,139,250,.55);background:rgba(167,139,250,.04)}
+.dg-frame.f-vpc .dg-frame-t{color:#c4b5fd;border-color:rgba(167,139,250,.55)}
+.dg-frame.f-az{border-color:rgba(74,222,128,.45);border-style:dashed;background:rgba(74,222,128,.025)}
+.dg-frame.f-az .dg-frame-t{color:#86efac;border-color:rgba(74,222,128,.45)}
+.dg-frame.f-pub{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.05)}
+.dg-frame.f-pub .dg-frame-t{color:#7dd3fc;border-color:rgba(56,189,248,.5)}
+.dg-frame.f-priv{border-color:rgba(45,212,191,.42);background:rgba(45,212,191,.04)}
+.dg-frame.f-priv .dg-frame-t{color:#5eead4;border-color:rgba(45,212,191,.42)}
+.dg-frame.f-gcp{border-color:rgba(77,163,255,.55);background:rgba(77,163,255,.04)}
+.dg-frame.f-gcp .dg-frame-t{color:#8fc6ff;border-color:rgba(77,163,255,.55)}
+.dg-frame.f-onprem{border-color:rgba(163,184,138,.6);border-style:dashed;background:rgba(163,184,138,.05)}
+.dg-frame.f-onprem .dg-frame-t{color:#c9d6ae;border-color:rgba(163,184,138,.6)}
+.dg-badge.frame{background:rgba(255,153,0,.14);color:#ffb84d;border-color:rgba(255,153,0,.55);text-transform:none;letter-spacing:0}
+/* Huy hiệu số thứ tự bước trên mũi tên */
+.dg-step{position:absolute;z-index:2;transform:translate(-50%,-50%);width:21px;height:21px;border-radius:50%;background:#2f7fd1;color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(47,127,209,.75);pointer-events:none}
+.dg-stage svg.wires{z-index:1}
+.dg-stage .dg-node{z-index:3}
+@media(max-width:620px){.dg-frame-t{top:-9px;left:8px;padding:1px 7px}}
+@media (prefers-reduced-motion: reduce){.dg-step{box-shadow:0 0 6px rgba(47,127,209,.6)}}
+
 /* ============================================================
    MOBILE RESPONSIVE — điện thoại & tablet (≤1023px)
    Nguyên tắc: không cuộn ngang cấp trang; bảng/code/sơ đồ chỉ

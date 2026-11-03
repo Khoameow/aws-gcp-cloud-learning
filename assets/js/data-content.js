@@ -981,6 +981,57 @@ var DG=[
 }
 ];
 
+/* ---------- SHOWCASE KHUNG MÔI TRƯỜNG: Hybrid Certificate Lifecycle ----------
+   Sơ đồ tự vẽ theo kiểu reference architecture: khung Corporate data center
+   (on-premise) cạnh khung AWS Cloud ⊃ Region, 14 bước đánh số trên mũi tên.
+   frames: bộ khung chuẩn (kind: aws/region/vpc/az/pub/priv/gcp/onprem —
+   style ở .dg-frame trong main.css). steps: danh sách bước đọc riêng vì
+   14 bước nghiệp vụ không ánh xạ 1-1 với node. */
+DG.splice(1,0,{id:'hybrid-cert',feat:1,fbadge:1,grp:'C',cloud:'aws',
+ t:'Showcase khung môi trường — Tự động kiểm tra & cấp phát chứng chỉ cho server on-premise (Hybrid Certificate Lifecycle)',
+ tj:'環境フレーム付きショーケース — オンプレミスサーバー証明書の自動点検・発行（ハイブリッド証明書ライフサイクル）',
+ prob:'Server đặt tại data center công ty vẫn cần chứng chỉ X.509 (cho dịch vụ nội bộ và để xác thực với AWS), nhưng việc theo dõi hết hạn, tạo CSR, xin cấp và cài chứng chỉ làm tay rất dễ quên và dễ lỗi. Kiến trúc này tự động hoá toàn bộ vòng đời chứng chỉ: phía AWS định kỳ kiểm tra hạn trong DynamoDB, cấp cert mới qua ACM Private CA, rồi dùng Systems Manager Run Command đẩy xuống server on-premise; server dùng chính chứng chỉ của mình qua IAM Roles Anywhere để đổi lấy thông tin xác thực AWS tạm thời.',
+ probj:'社内データセンターのサーバーにも X.509 証明書が必要ですが（社内サービス用と AWS 認証用）、期限監視・CSR 作成・発行申請・配置を手作業で行うのは漏れやすく危険です。本構成は証明書ライフサイクル全体を自動化します。AWS 側が DynamoDB の期限を定期点検し、ACM プライベート CA で新規発行、Systems Manager Run Command でオンプレミスへ配置。サーバーは自らの証明書を IAM Roles Anywhere で一時的な AWS 認証情報に交換します。',
+ why:'Tách rõ hai môi trường bằng khung lồng nhau đúng quy ước sơ đồ kiến trúc: mọi logic điều phối và “sổ theo dõi hạn” nằm trong Region phía AWS (serverless, không máy chủ để vận hành), data center chỉ giữ đúng một server đích và nhận lệnh qua Run Command. Private CA là nguồn cấp duy nhất nên mọi chứng chỉ đều truy vết được; IAM Roles Anywhere cho phép workload on-prem xác thực với AWS bằng chứng chỉ thay vì access key dài hạn.',
+ whyj:'2つの環境を入れ子のフレームで明確に分けます。統括ロジックと「期限台帳」は AWS リージョン側（サーバーレス）に置き、データセンター側は対象サーバー1台と Run Command の受信だけ。発行元はプライベート CA に一本化され全証明書が追跡可能で、IAM Roles Anywhere により長期アクセスキーの代わりに証明書で AWS 認証できます。',
+ rem:'Đây là kiến trúc AWS hybrid nên không có bản GCP (ghi rõ như sơ đồ Data Pipeline). Điểm cần nhớ: private key không bao giờ rời server on-prem — chỉ CSR đi lên AWS và chứng chỉ đi xuống; Run Command tới được server on-prem nhờ SSM hybrid activations / agent trên máy ngoài AWS. Bước 8 và 9 có hai huy hiệu riêng đặt lệch nhau trên cùng một mũi tên PCA → CertIssue (cấp mới và trả cert là hai mặt của cùng một lần gọi IssueCertificate).',
+ remj:'AWS ハイブリッド構成のため GCP 版はありません（データパイプライン図と同様に明記）。要点：秘密鍵はオンプレミスから決して出ず、上るのは CSR、下るのは証明書のみ。Run Command は SSM ハイブリッドアクティベーション経由でオンプレミスのサーバーに届きます。ステップ8と9は同じ矢印（PCA → CertIssue）を共有します。',
+ lab:'Phần 3 Migration — kiến trúc hybrid (chiến lược Retain); Phần 5 Networking — kết nối hybrid on-prem ↔ cloud.',
+ variants:{aws:Object.assign(V([
+  N(null,'aws','Server On-premise','Đích cuối: tạo CSR + private key tại chỗ, cài chứng chỉ mới và nạp lại dịch vụ','対象：CSRと秘密鍵を現地生成し、新証明書を配置してサービスを再読込',172,320,0,'🖥️'),
+  N('Amazon EventBridge','aws','EventBridge Scheduler','Kích hoạt CertCheck theo lịch định kỳ (vd: mỗi ngày)','定期スケジュールで CertCheck を起動',472,150,0),
+  N('AWS Lambda','aws','Lambda CertCheck','Quét hạn chứng chỉ, quyết định cert nào cần cấp mới/cấp bổ sung','期限を走査し、発行対象を判定',664,150,0),
+  N('Amazon DynamoDB','aws','DynamoDB','Bảng theo dõi: chứng chỉ nào sắp hết hạn hoặc còn thiếu','期限間近・未発行の証明書台帳',884,150,0),
+  N('AWS Lambda','aws','Lambda CertIssue','Điều phối tạo CSR, xin cấp cert tại Private CA','CSR 作成を統括し、プライベート CA へ発行申請',664,300,0),
+  N('AWS Certificate Manager (ACM)','aws','ACM Private CA','CA riêng của tổ chức — gọi IssueCertificate để ký CSR','組織専用 CA — IssueCertificate で CSR に署名',884,300,0),
+  N('Amazon EventBridge','aws','EventBridge','Event bus nhận sự kiện “đã cấp cert” và phát cho bên triển khai','「発行完了」イベントのバス',472,300,0),
+  N('AWS Lambda','aws','Lambda CertDeploy','Nhận sự kiện cấp cert, triển khai chứng chỉ xuống server đích','発行イベントを受け、対象サーバーへ配置',472,448,0),
+  N('AWS Systems Manager','aws','Systems Manager','Run Command: kênh ra lệnh xuyên biên AWS → server on-premise','Run Command：AWS からオンプレミスへ命令を届ける経路',664,448,0),
+  N('AWS IAM','aws','IAM Roles Anywhere','Server dùng chứng chỉ X.509 (trust anchor = Private CA) đổi lấy thông tin xác thực AWS tạm thời','サーバーが X.509 証明書（トラストアンカー＝プライベート CA）で一時認証情報に交換',318,548,0)
+ ],[[1,2,1],[2,3,2,0.38],[3,2,3,0.38],[2,4,4],[4,8,5],[8,0],[0,4,6],[4,5,7,0.38],[5,4,8,0.38],[4,6,10],[6,7,11],[7,8,12],[8,0,13,0.62],[0,9,14],[9,8],[5,4,9,0.62]]),
+ {frames:[
+   {kind:'onprem',x:24,y:70,w:296,h:530,icon:'🏢',t:'Corporate data center — On-premise',tj:'コーポレートデータセンター — オンプレミス'},
+   {kind:'aws',x:352,y:14,w:704,h:612,icon:'☁',t:'AWS Cloud',tj:'AWS Cloud'},
+   {kind:'region',x:376,y:62,w:656,h:540,icon:'🌐',t:'Region — ap-northeast-1 (Tokyo)',tj:'リージョン — ap-northeast-1（東京）'}
+  ],
+  steps:[
+   ['EventBridge Scheduler kích hoạt Lambda CertCheck theo lịch định kỳ.','EventBridge Scheduler が定期スケジュールで Lambda CertCheck を起動する。'],
+   ['CertCheck truy vấn DynamoDB tìm chứng chỉ sắp hết hạn hoặc còn thiếu.','CertCheck が DynamoDB を照会し、期限間近・未発行の証明書を探す。'],
+   ['DynamoDB trả về danh sách chứng chỉ cần xử lý.','DynamoDB が処理対象の証明書リストを返す。'],
+   ['CertCheck gọi Lambda CertIssue cho từng chứng chỉ cần cấp mới / cấp bổ sung.','CertCheck が対象ごとに Lambda CertIssue を呼び出す。'],
+   ['CertIssue nhờ Systems Manager Run Command yêu cầu server on-premise tạo CSR + private key (mũi tên CertIssue → SSM mang số 5, lệnh được SSM chuyển tiếp xuống server).','CertIssue が Systems Manager Run Command 経由で、オンプレミスサーバーに CSR＋秘密鍵の生成を依頼する（番号5は CertIssue → SSM の矢印、命令は SSM がサーバーへ転送）。'],
+   ['Server tạo CSR/khoá ngay tại chỗ và gửi CSR về CertIssue — private key không rời khỏi server.','サーバーが現地で CSR と鍵を生成し CSR を CertIssue へ返す — 秘密鍵はサーバーから出ない。'],
+   ['CertIssue chuyển CSR sang ACM Private CA bằng lệnh IssueCertificate.','CertIssue が CSR を ACM プライベート CA へ渡し IssueCertificate を呼ぶ。'],
+   ['ACM Private CA ký và cấp chứng chỉ mới (huy hiệu 8 và 9 đặt lệch nhau trên cùng mũi tên PCA → CertIssue).','ACM プライベート CA が新しい証明書を発行する（番号8と9は PCA → CertIssue の同じ矢印上にずらして配置）。'],
+   ['Chứng chỉ mới được trả về cho CertIssue.','新しい証明書が CertIssue へ返される。'],
+   ['CertIssue phát sự kiện “đã cấp cert” lên EventBridge (event bus).','CertIssue が「発行完了」イベントを EventBridge（イベントバス）へ発する。'],
+   ['EventBridge kích hoạt Lambda CertDeploy theo rule khớp sự kiện.','EventBridge がルールに一致し Lambda CertDeploy を起動する。'],
+   ['CertDeploy nhờ Systems Manager Run Command cài chứng chỉ mới xuống server on-premise.','CertDeploy が Systems Manager Run Command 経由で新証明書をオンプレミスへ配置する。'],
+   ['SSM chuyển lệnh cài đặt xuống server; server cài chứng chỉ và nạp lại dịch vụ để dùng cert mới (số 13 nằm trên mũi tên SSM → Server).','SSM が配置命令をサーバーへ転送し、サーバーが証明書を配置してサービスを再読込する（番号13は SSM → Server の矢印上）。'],
+   ['IAM Roles Anywhere: server dùng chứng chỉ của mình (trust anchor là Private CA) đổi lấy thông tin xác thực AWS tạm thời — nền xác thực cho các tương tác AWS của server mà không cần access key dài hạn.','IAM Roles Anywhere：サーバーが自らの証明書（トラストアンカーはプライベート CA）で一時的な AWS 認証情報に交換する — 長期アクセスキーなしで AWS とやり取りするための認証基盤。']
+  ]})}
+});
+
 /* V3 · nhóm B, C, D */
 DG.push(
 {id:'b6',grp:'B',cloud:'both',

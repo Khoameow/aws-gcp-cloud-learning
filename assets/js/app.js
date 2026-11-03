@@ -653,7 +653,7 @@ document.querySelector('main').appendChild(page);
 /* hub card on home */
 var hubGrid=document.querySelector('.hub-grid');
 if(hubGrid){ var a=document.createElement('a'); a.className='hub-card'; a.href='#/diagrams';
- a.innerHTML='<span class="hub-ic">🗺️</span><b>Thư viện Sơ đồ Architect</b><p>25 sơ đồ tự vẽ bằng SVG: dự án nhỏ → lớn, migration, networking — bản AWS & GCP, bấm từng node để xem giải thích, có phóng to và tải xuống.</p>';
+ a.innerHTML='<span class="hub-ic">🗺️</span><b>Thư viện Sơ đồ Architect</b><p>26 sơ đồ tự vẽ bằng SVG: dự án nhỏ → lớn, migration, networking — bản AWS & GCP, bấm từng node để xem giải thích, có phóng to và tải xuống. Mới: sơ đồ showcase có khung môi trường (on-premise ↔ AWS Cloud/Region).</p>';
  hubGrid.appendChild(a); }
 
 function curVar(d){
@@ -669,6 +669,34 @@ function svcDesc(cloud,name){
     if(f.item) return f.item[2]||'';
   }catch(e){}
   return '';
+}
+/* ---- BỘ KHUNG CHUẨN (frame kit) ----
+   Variant có thể khai báo frames:[{kind,x,y,w,h,icon,t,tj}] — khung môi
+   trường lồng nhau vẽ DƯỚI dây nối và node (node/dây được phép xuyên viền
+   khung, đúng quy ước reference architecture). kind: aws (cam) · region
+   (cyan) · vpc (tím) · az (xanh lá, đứt nét) · pub / priv (subnet, hai
+   tông xanh) · gcp (xanh dương) · onprem (xám/xanh rêu, đứt nét).
+   Style: .dg-frame trong main.css. Cạnh có thể mang số bước: [from,to,
+   stepNo, t?] — huy hiệu số tròn đặt tại vị trí t dọc mũi tên (.dg-step). */
+function frameHTML(cv,W,H){
+  var fr=cv.v.frames||[]; if(!fr.length) return '';
+  return fr.map(function(f){
+    return '<div class="dg-frame f-'+escS(f.kind)+'" style="left:'+(f.x/W*100).toFixed(2)+'%;top:'+(f.y/H*100).toFixed(2)+'%;width:'+(f.w/W*100).toFixed(2)+'%;height:'+(f.h/H*100).toFixed(2)+'%">'
+      +'<span class="dg-frame-t">'+(f.icon?escS(f.icon)+' ':'')+escS(L(f.t,f.tj))+'</span></div>';
+  }).join('');
+}
+function stepBadgesHTML(cv,W,H){
+  var nodes=cv.v.nodes, out='';
+  (cv.v.edges||[]).forEach(function(e){
+    if(!e[2]) return;
+    var a=nodes[e[0]],b=nodes[e[1]]; if(!a||!b) return;
+    var t=(typeof e[3]==='number')?e[3]:0.5, px,py;
+    if(Math.abs(a.y-b.y)>40&&Math.abs(a.x-b.x)>40){ var cx=(a.x+b.x)/2, cy=a.y;
+      px=(1-t)*(1-t)*a.x+2*(1-t)*t*cx+t*t*b.x; py=(1-t)*(1-t)*a.y+2*(1-t)*t*cy+t*t*b.y;
+    } else { px=a.x+(b.x-a.x)*t; py=a.y+(b.y-a.y)*t; }
+    out+='<span class="dg-step" style="left:'+(px/W*100).toFixed(2)+'%;top:'+(py/H*100).toFixed(2)+'%">'+e[2]+'</span>';
+  });
+  return out;
 }
 function stageHTML(d,zoom){
   var cv=curVar(d), nodes=cv.v.nodes, edges=cv.v.edges;
@@ -691,10 +719,16 @@ function stageHTML(d,zoom){
       +(n.num?'<span class="num">'+n.num+'</span>':'')+inner+'<span class="nl">'+escS(n.l)+'</span>'
       +((n.u||n.uj)?'<span class="nu">'+escS(L(n.u,n.uj))+'</span>':'')+'</button>';
   });
-  return '<div class="dg-stage-wrap"><div class="dg-stage" style="aspect-ratio:'+W+'/'+H+'">'+svg+nh+'</div></div>';
+  return '<div class="dg-stage-wrap"><div class="dg-stage" style="aspect-ratio:'+W+'/'+H+'">'+frameHTML(cv,W,H)+svg+stepBadgesHTML(cv,W,H)+nh+'</div></div>';
 }
 function stepsHTML(d){
-  var cv=curVar(d); var numbered=cv.v.nodes.filter(function(n){return n.num>0;}).slice().sort(function(a,b){return a.num-b.num;});
+  var cv=curVar(d);
+  /* Variant có steps riêng ([vi,ja] theo số trên mũi tên) thì dùng danh
+     sách đó — dành cho sơ đồ mà bước nghiệp vụ không ánh xạ 1-1 với node. */
+  if(cv.v.steps&&cv.v.steps.length){
+    return '<ol class="dg-steps">'+cv.v.steps.map(function(s){ return '<li>'+escS(L(s[0],s[1]))+'</li>'; }).join('')+'</ol>';
+  }
+  var numbered=cv.v.nodes.filter(function(n){return n.num>0;}).slice().sort(function(a,b){return a.num-b.num;});
   if(!numbered.length) numbered=cv.v.nodes;
   return '<ol class="dg-steps">'+numbered.map(function(n){ return '<li><b>'+escS(n.l)+'</b>'+(n.u?' — '+escS(L(n.u,n.uj)):'')+'</li>'; }).join('')+'</ol>';
 }
@@ -702,6 +736,7 @@ function cardHTML(d){
   var ja=window.LANG==='ja';
   var h='<article class="dg-card'+(d.feat?' feat':'')+'" id="dg-'+d.id+'">';
   h+='<div class="dg-top"><span class="dg-badge">'+(d.feat?(ja?'特集・描き直し':'Nổi bật · Vẽ lại'):(ja?'図':'Sơ đồ'))+'</span>'
+    +(d.fbadge?'<span class="dg-badge frame">🖼️ '+(ja?'環境フレーム付き':'Có khung môi trường')+'</span>':'')
     +'<span class="dg-badge grp">'+escS(L(GRPS[d.grp],GRPS[d.grp+'j']))+'</span>'
     +'<span class="dg-badge grp">'+(d.cloud==='both'?'AWS ⇄ GCP':(d.cloud==='multi'?'AWS + GCP':(d.cloud==='gcp'?'Google Cloud':'AWS')))+'</span></div>';
   h+='<h3>'+escS(L(d.t,d.tj))+'</h3><p class="dg-prob">'+escS(L(d.prob,d.probj))+'</p>';
@@ -781,8 +816,20 @@ function buildSVG(d){
   var s='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
   s+='<rect width="'+W+'" height="'+H+'" fill="#060b16"/>';
   s+='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93ad"/></marker></defs>';
+  /* Khung môi trường (frame kit) trong bản xuất: rect + nhãn theo màu kind */
+  var FCOL={aws:'#ff9900',region:'#22d3ee',vpc:'#a78bfa',az:'#4ade80',pub:'#38bdf8',priv:'#2dd4bf',gcp:'#4da3ff',onprem:'#a3b88a'};
+  (cv.v.frames||[]).forEach(function(f){ var col=FCOL[f.kind]||'#7f93ad';
+    s+='<rect x="'+f.x+'" y="'+f.y+'" width="'+f.w+'" height="'+f.h+'" rx="14" fill="none" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="'+((f.kind==='az'||f.kind==='onprem'||f.kind==='region')?'7 5':'none')+'"/>';
+    s+='<text x="'+(f.x+14)+'" y="'+(f.y+22)+'" font-size="13" font-weight="bold" fill="'+col+'" font-family="sans-serif">'+escS(L(f.t,f.tj))+'</text>'; });
   edges.forEach(function(e){ var a=nodes[e[0]],b=nodes[e[1]]; if(!a||!b)return;
     s+='<path d="M'+a.x+','+a.y+' Q '+((a.x+b.x)/2)+','+a.y+' '+b.x+','+b.y+'" stroke="#5b7ba6" stroke-width="2" fill="none" marker-end="url(#ah)"/>'; });
+  /* Huy hiệu số bước trên mũi tên trong bản xuất */
+  edges.forEach(function(e){ if(!e[2])return; var a=nodes[e[0]],b=nodes[e[1]]; if(!a||!b)return;
+    var t=(typeof e[3]==='number')?e[3]:0.5, px,py;
+    if(Math.abs(a.y-b.y)>40&&Math.abs(a.x-b.x)>40){ var cx=(a.x+b.x)/2, cy=a.y;
+      px=(1-t)*(1-t)*a.x+2*(1-t)*t*cx+t*t*b.x; py=(1-t)*(1-t)*a.y+2*(1-t)*t*cy+t*t*b.y;
+    } else { px=a.x+(b.x-a.x)*t; py=a.y+(b.y-a.y)*t; }
+    s+='<circle cx="'+px+'" cy="'+py+'" r="11" fill="#2f7fd1"/><text x="'+px+'" y="'+(py+4)+'" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#fff" font-family="sans-serif">'+e[2]+'</text>'; });
   nodes.forEach(function(n){
     var w=170,h=86,x=n.x-w/2,y=n.y-h/2;
     var col='#33507e', glyph='';
