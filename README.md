@@ -14,6 +14,15 @@ Trang web học Cloud song song **AWS** và **Google Cloud**, deploy bằng GitH
 - **AWS & GCP Networking đến bậc thầy** — VPC, load balancing, hybrid connectivity, Direct Connect / Cloud Interconnect
 - **Thiết kế & phân tích dự án** — từ yêu cầu đến kiến trúc, chi phí, bảo mật và triển khai
 
+## Lộ trình Cloud Architect (AWS & GCP)
+
+- **Terraform (IaC)** — HCL, provider AWS & Google, remote state (S3 + DynamoDB lock / GCS), module, policy as code, CI/CD bằng GitHub Actions; lab triển khai cùng kiến trúc 3-tier lên cả AWS và GCP
+- **Kubernetes** — Pod, Deployment, Service, Ingress/Gateway API, Helm, Kustomize, GitOps (Argo CD/Flux), HPA, NetworkPolicy, RBAC; so sánh sâu EKS vs GKE (IRSA vs Workload Identity, Autopilot)
+- **Kiến thức nền tảng** — Linux, mạng (TCP/IP, DNS, TLS), Git/GitHub, Docker, CI/CD, Bash/Python, SQL & NoSQL, REST/gRPC/GraphQL, microservices, event-driven, serverless
+- **Kiến trúc hệ thống** — AWS Well-Architected Framework & Google Cloud Architecture Framework, HA/DR (RTO/RPO, multi-AZ, multi-region), FinOps, bảo mật zero trust, observability (SLI/SLO/SLA)
+- **Lộ trình chứng chỉ song song** — AWS Solutions Architect Associate/Professional & Networking/Security Specialty ↔ Google Associate Cloud Engineer / Professional Cloud Architect / Professional Cloud Network & Security Engineer
+- **Capstone project** — phân tích yêu cầu doanh nghiệp → chọn cloud → vẽ kiến trúc → Terraform → Kubernetes → CI/CD → monitoring → tài liệu vận hành & chi phí
+
 ## Giao diện
 
 Nền cyberpunk / cyberfunk tương lai: nền tối, lưới neon, thẻ glassmorphism phát sáng, code block kiểu terminal.
