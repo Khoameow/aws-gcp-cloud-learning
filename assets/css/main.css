@@ -551,3 +551,160 @@ nav.top.can-r .nav-fade.r{opacity:1}
 .dg-zoom-box{width:min(1560px,98vw)}
 .dg-zoom-box .dg-stage-wrap{box-shadow:0 0 50px rgba(34,211,238,.25)}
 .dg-note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:10px}
+
+/* ============================================================
+   MOBILE RESPONSIVE — điện thoại & tablet (≤1023px)
+   Nguyên tắc: không cuộn ngang cấp trang; bảng/code/sơ đồ chỉ
+   cuộn ngang bên trong khung chứa của chính nó; vùng chạm ≥44px;
+   ô nhập liệu ≥16px để iOS không tự phóng to.
+   Desktop ≥1024px giữ nguyên toàn bộ rule phía trên.
+   ============================================================ */
+html,body{overflow-x:clip}
+img{max-width:100%;height:auto}
+.sub-scroll{max-width:100%;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+
+@media (max-width:1023px){
+  /* lưới thẻ chính không bao giờ ép cột tối thiểu vượt khung nhìn */
+  .lab-grid,.mig-grid,.net-grid{grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}
+  .net-grid{grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+}
+
+@media (max-width:768px){
+  .wrap{padding:0 14px}
+  section{padding:40px 0 4px}
+  .sec-head{margin-bottom:20px}
+
+  /* ---- Vùng chạm tối thiểu ~44px ---- */
+  nav.top a{padding:12px 9px}
+  nav.top a.brand{padding:12px 9px}
+  .lang-toggle button{padding:12px 14px;font-size:13px}
+  .chip{min-height:44px;display:inline-flex;align-items:center;padding:10px 16px}
+  .ctab{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+  .btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}
+  .pgbar{gap:10px}
+  .pgbar .pg-btn{min-width:44px;min-height:44px;padding:10px 14px}
+  .pgbar select{min-height:44px}
+  .pgbar .pg-status{flex:1 1 100%;margin-right:0}
+  .dg-btn{min-height:44px;display:inline-flex;align-items:center;padding:10px 15px}
+  .dg-tools .dg-btn,.dg-tools .chip{justify-content:center}
+  .modal .x{width:44px;height:44px;font-size:19px}
+  .copy-btn{min-height:44px;padding:10px 14px;font-size:12.5px;display:inline-flex;align-items:center}
+  .lab-tools select,.cmd-controls select{min-height:44px}
+  .lab-detail-btn{padding:12px 18px}
+  .dg-info .go{padding:11px 16px}
+  .flow-svc{min-height:44px;padding:8px 14px 8px 8px}
+  .flow-links a{padding:10px 14px}
+  .flow-check{padding:11px 6px;min-height:44px;margin:-4px 0 -4px auto}
+  .flow-check input{width:22px;height:22px}
+  .check-list li{padding:12px 14px}
+  .check-list input{width:22px;height:22px;margin-top:1px}
+  .lab-card summary,.dstep summary{padding:9px 0}
+  .ex-mc button{min-height:48px}
+  .term-actions button,.term-actions .btn{min-height:44px}
+
+  /* ---- Ô nhập liệu ≥16px (chặn iOS tự zoom) ---- */
+  .svc-search input[type=search],.svc-search select,
+  .calc input,.calc select,
+  .lab-tools select,.cmd-controls select,
+  .pgbar select,.term-line input{font-size:16px}
+
+  /* ---- Hero ---- */
+  .hero{padding:38px 0 34px}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .hstat{min-width:0;padding:12px 14px}
+  .hstat b{font-size:20px}
+  .hero-cta .btn{flex:1 1 150px}
+  .arch-strip{padding:10px 6px 4px;margin-top:26px}
+  .author{padding:18px 16px;margin-top:22px}
+  .author .a-name{font-size:19px}
+  .cert{flex:1 1 100%;padding:12px 13px}
+  .cert-row{gap:10px}
+
+  /* ---- Services ---- */
+  .svc-search{flex-direction:column;align-items:stretch;gap:9px}
+  .svc-search input[type=search]{flex:none;width:100%;min-height:48px}
+  .svc-search select{width:100%;min-height:48px}
+  .svc-count{align-self:flex-start}
+  .cloud-tabs .ctab{flex:1 1 30%;padding:10px 8px;font-size:13.5px}
+
+  /* ---- Trang chi tiết service / lab ---- */
+  .dsec{padding:16px 15px}
+  .d-head{gap:12px}
+  .modal{padding:20px 16px 30px}
+  .modal h3{font-size:19px}
+  .kv{grid-template-columns:1fr 1fr}
+
+  /* ---- Labs / Migration / Networking / Architect ---- */
+  .lab-grid,.mig-grid,.net-grid,.checklist{grid-template-columns:1fr}
+  .lab-card,.net-card{padding:17px 16px}
+  .diagram-card{padding:16px 14px}
+  .legend{gap:9px 12px}
+
+  /* ---- Máy tính CIDR: nhập liệu & nút full-width ---- */
+  .calc{padding:17px 15px}
+  .calc .row{flex-direction:column;align-items:stretch;gap:14px}
+  .calc .row>div{width:100%}
+  .calc input,.calc select{width:100%;min-height:48px}
+  .calc .row .btn{width:100%}
+  .addr-grid{grid-template-columns:1fr 1fr}
+
+  /* ---- Sơ đồ ---- */
+  .dg-card{padding:16px 14px}
+  .dg-card h3{font-size:17px}
+  .dg-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .dg-tools .dg-btn,.dg-tools .chip{width:100%}
+  .dg-filters .chip{flex:1 1 auto;justify-content:center}
+  .dg-zoom-bk{padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+  .dg-zoom-box{width:100%}
+  .dg-meta{grid-template-columns:1fr}
+
+  /* ---- Flow Học ---- */
+  .flow-topbar{padding:16px 15px}
+  .flow-topbar .ft-pct{font-size:29px}
+  .flow-bar{flex:1 1 100%;order:3}
+  .flow-stage-head{padding:13px 14px}
+  .flow-stage-head .fs-prog{margin-left:0}
+  .flow-node{padding:15px 14px}
+  .flow-node-top{gap:7px}
+
+  /* ---- Luyện Command / terminal ---- */
+  .cmd-controls{flex-direction:column;align-items:stretch;gap:10px}
+  .cmd-controls label{justify-content:space-between}
+  .cmd-controls select{flex:1 1 auto;min-width:0}
+  .cmd-score{margin-left:0;min-width:0}
+  .term-body{padding:14px 12px}
+  .term-head{flex-wrap:wrap;row-gap:3px;padding:8px 12px}
+  .term-line{flex-wrap:wrap;row-gap:8px;padding:11px 12px}
+  .term-ps{font-size:12.5px}
+  .term-line input{flex:1 1 150px}
+  .ex-prompt{font-size:15px}
+  pre.code{font-size:13px;padding:14px 12px}
+  .sample-out pre{font-size:13px;padding:12px}
+
+  /* ---- Footer & nút về đầu trang ---- */
+  footer{padding:28px 0 calc(38px + env(safe-area-inset-bottom));margin-top:48px}
+  #toTop{right:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:12px 15px}
+}
+
+@media (max-width:640px){
+  .svc-grid{grid-template-columns:1fr}
+  .hub-grid{grid-template-columns:1fr}
+  .hero h1{font-size:clamp(26px,7.8vw,34px)}
+}
+
+@media (max-width:480px){
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .kv{grid-template-columns:1fr}
+  .addr-grid{grid-template-columns:1fr}
+  .dg-tools{grid-template-columns:1fr 1fr}
+  .flow-topbar .ft-row{gap:10px}
+  #toTop span{display:none}
+  #toTop{padding:13px 15px;border-radius:50%;font-size:16px}
+  .hstat span{font-size:11.5px}
+  .phase div,.step,.pillar,.r7 div{padding:13px}
+}
+
+@media (max-width:380px){
+  .hero-stats{grid-template-columns:1fr}
+  .dg-tools{grid-template-columns:1fr}
+}
