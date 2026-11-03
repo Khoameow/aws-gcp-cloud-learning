@@ -431,6 +431,52 @@ details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(
 .cert.gcp .code{color:#bcd8f7;background:rgba(77,163,255,.13);border-color:rgba(77,163,255,.55)}
 
 </style>
+<style>
+/* ===== V4 · FLOW HỌC — lộ trình học theo thứ tự ===== */
+.flow-topbar{background:linear-gradient(160deg,rgba(17,27,50,.88),rgba(8,13,26,.95));border:1px solid rgba(34,211,238,.45);border-radius:16px;padding:20px 22px;margin-bottom:22px;box-shadow:0 0 26px rgba(34,211,238,.12)}
+.flow-topbar .ft-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.flow-topbar .ft-pct{font-size:34px;font-weight:800;color:#fff;line-height:1}
+.flow-topbar .ft-pct small{font-size:15px;color:var(--cyan)}
+.flow-bar{flex:1 1 260px;height:13px;border-radius:99px;background:var(--panel2);border:1px solid var(--line2);overflow:hidden}
+.flow-bar div{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--teal));border-radius:99px;transition:width .45s ease;box-shadow:0 0 14px rgba(34,211,238,.55)}
+.flow-topbar .ft-note{font-size:13.5px;color:var(--ink2);margin:10px 0 0}
+.flow-stage{margin-bottom:30px}
+.flow-stage-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(13,24,48,.85);border:1px solid rgba(167,139,250,.45);border-radius:13px;padding:14px 18px;margin-bottom:6px}
+.flow-stage-head h3{font-size:18.5px;color:#fff}
+.flow-stage-head p{width:100%;font-size:13.8px;color:var(--ink2);margin:2px 0 0}
+.flow-stage-head .fs-prog{margin-left:auto;font-size:13px;font-weight:700;color:var(--teal);white-space:nowrap}
+.flow-stage-head .fs-bar{width:130px;height:8px;border-radius:99px;background:var(--panel2);border:1px solid var(--line2);overflow:hidden}
+.flow-stage-head .fs-bar div{height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .4s ease}
+.flow-arrow{text-align:center;color:var(--orange-d);font-size:17px;line-height:1;padding:5px 0;animation:nudgeY 1.8s ease-in-out infinite}
+@keyframes nudgeY{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+.flow-node{background:linear-gradient(160deg,rgba(17,27,50,.85),rgba(8,13,26,.94));border:1.5px solid rgba(64,100,160,.55);border-radius:14px;padding:16px 18px;transition:border-color .2s,box-shadow .2s}
+.flow-node.flash{border-color:var(--orange);box-shadow:0 0 0 2px rgba(255,153,0,.55),0 0 30px rgba(255,153,0,.35)}
+.flow-node.done{border-color:rgba(74,222,128,.6)}
+.flow-node-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.flow-step{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:var(--orange-soft);color:var(--orange-d);border:1px solid rgba(255,153,0,.5);padding:3px 10px;border-radius:99px}
+.flow-hrs{font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line2);background:var(--panel2);padding:3px 10px;border-radius:99px}
+.flow-check{margin-left:auto;display:inline-flex;gap:8px;align-items:center;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer}
+.flow-check input{width:19px;height:19px;accent-color:#4ade80;cursor:pointer;flex:none}
+.flow-node.done .flow-check{color:var(--green)}
+.flow-node h4{font-size:16.5px;color:#fff;margin-bottom:8px}
+.flow-svcs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:9px}
+.flow-svc{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:13.5px;font-weight:700;color:var(--ink);background:rgba(13,24,48,.9);border:1px solid var(--line);border-radius:10px;padding:5px 12px 5px 6px}
+.flow-svc:hover{border-color:var(--cyan)}
+.flow-pair{color:var(--orange-d);font-weight:800;font-size:14px}
+.flow-why{font-size:14px;color:var(--ink2);margin:0}
+.flow-links{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.flow-links a{font-size:12.5px;font-weight:700;text-decoration:none;color:#ffd9ae;background:rgba(255,153,0,.1);border:1px solid rgba(255,153,0,.45);border-radius:99px;padding:4px 12px}
+.flow-links a:hover{background:rgba(255,153,0,.22)}
+.flow-pre{margin-top:11px;font-size:13px;color:#ffd9ae;background:rgba(70,45,10,.45);border:1px dashed rgba(255,184,77,.65);border-radius:10px;padding:8px 12px}
+.flow-pre b{color:var(--orange-d)}
+.flow-branches{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:900px){.flow-branches{grid-template-columns:1fr 1fr 1fr;gap:14px}.flow-branches .flow-node{height:100%}}
+.flow-branch-tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#0b1220;background:var(--cyan);border-radius:99px;padding:3px 11px;margin-bottom:9px}
+.flow-plan-note{font-size:13.5px;color:var(--muted);margin-top:10px}
+.svc-nav-cols{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:700px){.svc-nav-cols{grid-template-columns:1fr 1fr}}
+.svc-nav-cols h4{margin-top:0}
+</style>
 </head>
   <body>
     <canvas id="bgCanvas" aria-hidden="true"></canvas>
@@ -444,6 +490,7 @@ details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(
       <div class="wrap">
         <a class="brand" href="#top"><span class="aws-dot"></span>Học AWS &amp; GCP</a>
         <a href="#services">Services</a>
+        <a href="#/flow">Flow Học</a>
         <a href="#labs">Labs thực hành</a>
         <a href="#migration">Migration</a>
         <a href="#diagrams">Sơ đồ</a>
@@ -510,7 +557,8 @@ details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(
           <div class="hstat"><b data-count="16">0</b><span>chủ đề networking chuyên sâu</span></div>
         </div>
         <div class="hero-cta">
-          <a class="btn btn-o" href="#labs">Bắt đầu làm lab</a>
+          <a class="btn btn-o" href="#/flow">Bắt đầu theo Flow học</a>
+          <a class="btn btn-g" href="#labs">Bắt đầu làm lab</a>
           <a class="btn btn-g" href="#networking">Vào phần Networking</a>
         </div>
 
@@ -2966,10 +3014,10 @@ var langT=document.querySelector('.lang-toggle');
 var PAGES={
  home:['TOP','homeHub'], services:['services'], compare:['comparePage'],
  labs:['labs'], migration:['migration'], networking:['diagrams','networking'], diagrams:['archLibPage'],
- architect:['du-an','architect'], command:['command'], glossary:['glossary','deploy'],
+ architect:['du-an','architect'], command:['command'], glossary:['glossary','deploy'], flow:['flowPage'],
  svcDetail:['svcDetailPage'], labDetail:['labDetailPage']
 };
-var ALLIDS=['homeHub','services','labs','migration','diagrams','networking','du-an','architect','command','glossary','deploy','svcDetailPage','labDetailPage','comparePage','archLibPage'];
+var ALLIDS=['homeHub','services','labs','migration','diagrams','networking','du-an','architect','command','glossary','deploy','svcDetailPage','labDetailPage','comparePage','archLibPage','flowPage'];
 function showPage(name){
   var show=PAGES[name]||PAGES.home;
   var hero=document.querySelector('header.hero');
@@ -3235,7 +3283,7 @@ function parseRoute(){
   if((m=h.match(/^#\/service\/(aws|gcp)\/(.+)$/))) return {page:'svcDetail',cloud:m[1],name:decodeURIComponent(m[2])};
   if((m=h.match(/^#\/lab\/(\d+)$/))) return {page:'labDetail',kind:'lab',idx:+m[1]};
   if((m=h.match(/^#\/miglab\/(\d+)$/))) return {page:'labDetail',kind:'mig',idx:+m[1]};
-  if((m=h.match(/^#\/(services|labs|migration|networking|architect|command|compare|glossary|diagrams)$/))) return {page:m[1]};
+  if((m=h.match(/^#\/(services|labs|migration|networking|architect|command|compare|glossary|diagrams|flow)$/))) return {page:m[1]};
   if((m=h.match(/^#\/(diagrams|du-an|deploy)$/))) return {page: m[1]==='deploy'?'glossary':(m[1]==='du-an'?'architect':'networking')};
   return {page:'home'};
 }
@@ -4077,6 +4125,335 @@ if((location.hash||'')==='#/diagrams'){
   var hh=document.querySelector('header.hero'); if(hh) hh.classList.add('page-off');
   var hub=document.getElementById('homeHub'); if(hub) hub.classList.add('page-off');
 }
+})();
+</script>
+<script>
+/* ================= V4 · FLOW HỌC — LỘ TRÌNH HỌC THEO THỨ TỰ ================= */
+(function(){
+"use strict";
+function $(id){ return document.getElementById(id); }
+function E(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function L(vi,ja){ return (window.LANG==='ja'&&ja)?ja:vi; }
+try{ if(typeof JAD!=='undefined') Object.assign(JAD,{
+ 'Flow Học':'学習フロー','Bắt đầu theo Flow học':'学習フローから始める',
+ 'Học trước':'先に学ぶ','Học tiếp theo':'次に学ぶ','Điều hướng học tập theo Flow':'学習フローによる学習ナビ',
+ 'Xem Flow học đầy đủ →':'学習フロー全体を見る →','Đã học xong':'学習済み'
+}); }catch(e){}
+
+/* ---------- Dữ liệu Flow: 9 giai đoạn (0–8), node chạy theo thứ tự ---------- */
+/* sv: [[cloud, tên service],...] · lk: [[href, nhãn VI, nhãn JA],...] · pre: id node tiên quyết (mặc định = node liền trước) */
+var FSTAGES=[
+ {n:0,t:'Giai đoạn 0 · Nền tảng — trước khi vào service',tj:'ステージ0 · 基礎 — サービスに入る前に',d:'Chưa đụng vào service nào. Giai đoạn này quyết định bạn học cloud nhanh hay vật lộn: hiểu cloud chạy ở đâu, gõ được lệnh, đọc được mạng, và có tài khoản an toàn để thực hành.',dj:'サービスにはまだ触れません。クラウドがどこで動くか、コマンドが打てるか、ネットワークが読めるか、安全な実習アカウントがあるか — ここが学習速度を決めます。'},
+ {n:1,t:'Giai đoạn 1 · Cốt lõi bảo mật & mạng',tj:'ステージ1 · セキュリティとネットワークの核心',d:'Mọi service đều sống trong mạng và bị IAM gác cổng. Học IAM + VPC trước thì mọi service sau này đều “có chỗ đứng” rõ ràng.',dj:'全サービスはネットワークの中にあり、IAMが入口を守ります。IAMとVPCを先に学ぶと、後の全サービスに「置き場所」ができます。'},
+ {n:2,t:'Giai đoạn 2 · Compute & Storage đầu tiên',tj:'ステージ2 · 最初のコンピュートとストレージ',d:'Dựng được “máy + ổ đĩa + kho file” là dựng được 80% hệ thống truyền thống trên cloud.',dj:'「マシン＋ディスク＋ファイル保管」が作れれば、従来型システムの8割はクラウドで作れます。'},
+ {n:3,t:'Giai đoạn 3 · Mở rộng web — từ 1 server thành hệ thống web hoàn chỉnh',tj:'ステージ3 · Webの拡張 — 1台から完全なWebシステムへ',d:'Thêm cân bằng tải, tự co giãn, DNS và CDN lên bộ khung Giai đoạn 2 — đây là lúc bạn dựng được web 3-tier hoàn chỉnh đầu tiên.',dj:'ステージ2の骨格に負荷分散、自動スケーリング、DNS、CDNを加え、最初の完全な3層Webを構築します。'},
+ {n:4,t:'Giai đoạn 4 · Database',tj:'ステージ4 · データベース',d:'Dữ liệu là phần khó thay nhất của hệ thống — học sau khi đã vững mạng & compute để đặt DB đúng chỗ private ngay từ đầu.',dj:'データは最も交換しにくい部分です。ネットワークとコンピュートが固まってから学び、最初から正しくプライベートに置きます。'},
+ {n:5,t:'Giai đoạn 5 · Serverless & ứng dụng hiện đại',tj:'ステージ5 · サーバーレスとモダンなアプリ',d:'Bỏ quản lý server: hàm sự kiện, API, hàng đợi và workflow — kiểu kiến trúc cloud-native phổ biến nhất hiện nay.',dj:'サーバー管理を手放します。イベント関数、API、キュー、ワークフロー — 現在主流のクラウドネイティブな形です。'},
+ {n:6,t:'Giai đoạn 6 · DevOps & IaC',tj:'ステージ6 · DevOps と IaC',d:'Từ “bấm tay trên console” lên “hạ tầng dạng code + pipeline tự động” — ranh giới giữa người học cloud và kỹ sư cloud.',dj:'「コンソールで手作業」から「コード化されたインフラ＋自動パイプライン」へ。学習者とエンジニアの境界です。'},
+ {n:7,t:'Giai đoạn 7 · Dữ liệu & AI',tj:'ステージ7 · データとAI',d:'Khi hệ thống đã chạy ổn, giá trị tiếp theo nằm ở dữ liệu: phân tích, streaming và GenAI trên nền Bedrock/Vertex AI.',dj:'システムが安定したら、次の価値はデータにあります。分析、ストリーミング、Bedrock／Vertex AI の生成AIです。'},
+ {n:8,t:'Giai đoạn 8 · Chuyên sâu theo hướng chọn — rẽ 3 nhánh',tj:'ステージ8 · 進路別の専門 — 3つの分岐',d:'Đến đây bạn đã đi hết trục chính. Chọn 1 nhánh chính theo mục tiêu nghề nghiệp (đi sâu cả 3 vẫn được, theo thứ tự ưu tiên của bạn) — cả 3 nhánh đều bắt đầu từ cuối Giai đoạn 7.',dj:'ここまでで本筋は終了です。キャリア目標に合わせて主軸を1つ選びます（3つ全て進んでも構いません）。3分岐ともステージ7の終わりから始まります。'}
+];
+var FN=[
+ /* GĐ0 */
+ {id:'s0-1',st:0,t:'Khái niệm Cloud & Region/AZ ↔ Zone',tj:'クラウドの概念と Region/AZ ↔ Zone',why:'Mọi quyết định sau này (đặt tài nguyên ở đâu, chịu lỗi ra sao, chi phí bao nhiêu) đều bắt đầu từ bản đồ Region — AZ — Zone. Học xong bạn đọc được mọi sơ đồ kiến trúc.',wj:'配置、耐障害性、費用の判断は全て Region — AZ — Zone の地図から始まります。修了後は全てのアーキテクチャ図が読めます。',hrs:'2–3 giờ',sv:[],lk:[['#/diagrams','Sơ đồ mẫu để luyện đọc vùng/AZ','AZの読み方を図で練習']]},
+ {id:'s0-2',st:0,t:'Linux & command cơ bản',tj:'Linux とコマンドの基礎',why:'Cloud vận hành bằng dòng lệnh. Thuộc ls/cd/chmod/ps/ss/grep trước thì CloudShell, SSH debug và đọc log sau này không còn đáng sợ.',wj:'クラウド運用はコマンドラインです。基本コマンドを先に覚えると、CloudShell も SSH デバッグも怖くなくなります。',hrs:'4–6 giờ',sv:[],lk:[['#/command','Phần Luyện Command — lộ trình Linux','コマンド演習 — Linuxコース']]},
+ {id:'s0-3',st:0,t:'Mạng cơ bản: TCP/IP, DNS, HTTP/TLS, CIDR',tj:'ネットワーク基礎：TCP/IP、DNS、HTTP/TLS、CIDR',why:'90% lỗi cloud là lỗi mạng. Hiểu IP/subnet/CIDR, DNS phân giải thế nào và HTTPS bắt tay ra sao trước khi học VPC sẽ tiết kiệm hàng chục giờ debug mò.',wj:'クラウド障害の9割はネットワークです。VPC の前に IP/CIDR、DNS、HTTPS の仕組みを理解すると、デバッグ時間が大幅に減ります。',hrs:'4–6 giờ',sv:[],lk:[['#/networking','Phần Networking — chủ đề nền tảng & máy tính CIDR','ネットワーキング — 基礎とCIDR計算ツール']]},
+ {id:'s0-4',st:0,t:'Git & GitHub',tj:'Git と GitHub',why:'Mọi thứ của Architect đều là code trong Git: Terraform, Kubernetes YAML, pipeline. Commit/push/branch/pull request thạo trước, Giai đoạn 6 sẽ rất nhẹ.',wj:'Terraform、Kubernetes YAML、パイプライン — アーキテクトの成果物は全て Git の中のコードです。先に慣れるとステージ6が軽くなります。',hrs:'3–4 giờ',sv:[],lk:[['#/architect','Khối nền tảng ở trang Architect','アーキテクトページの基礎ブロック']]},
+ {id:'s0-5',st:0,t:'Tạo tài khoản AWS & GCP + Billing alert + MFA',tj:'AWS／GCP アカウント作成＋請求アラート＋MFA',why:'Có “sân chơi” an toàn là điều kiện để làm lab: tài khoản riêng cho học, cảnh báo ngân sách ngay từ ngày đầu và MFA cho tài khoản gốc — tránh cú sốc hoá đơn kinh điển của người mới.',wj:'安全な実験場がラボの前提です。学習専用アカウント、初日からの予算アラート、ルートのMFAで「請求ショック」を防ぎます。',hrs:'1–2 giờ',sv:[],lk:[['#/glossary','Thuật ngữ & hướng dẫn deploy (quy trình làm việc)','用語集とデプロイ手順']]},
+ /* GĐ1 */
+ {id:'s1-1',st:1,t:'IAM ↔ Cloud IAM — danh tính & phân quyền',tj:'IAM ↔ Cloud IAM — IDと権限',why:'Service đầu tiên phải học vì mọi lệnh gọi đều qua IAM. Học xong bạn cấp đúng quyền tối thiểu (least-privilege) thay vì gắn quyền quản trị khắp nơi.',wj:'全ての呼び出しが IAM を通るため最初に学びます。修了後は最小権限を正しく付与できます。',hrs:'4–5 giờ',sv:[['aws','AWS IAM'],['gcp','Cloud IAM']],lk:[['#/lab/11','Lab 12 · Nền tảng bảo mật','ラボ12 · セキュリティ基盤']]},
+ {id:'s1-2',st:1,t:'VPC nền tảng ↔ VPC toàn cầu',tj:'VPCの基礎 ↔ グローバルVPC',why:'VPC là “mảnh đất” mọi tài nguyên đứng trên đó. Khác biệt lớn nhất hai cloud nằm ở đây: AWS regional theo AZ, GCP global với subnet theo region.',wj:'VPC は全リソースの「土地」です。両クラウド最大の違いがここにあります：AWSはAZ単位のリージョナル、GCPはグローバルでサブネットがリージョナルです。',hrs:'5–6 giờ',sv:[['aws','Amazon VPC'],['gcp','Virtual Private Cloud (VPC)']],lk:[['#/lab/0','Lab 1 · Dựng mạng nền VPC','ラボ1 · VPC基盤の構築'],['#/networking','Phần Networking','ネットワーキング']]},
+ {id:'s1-3',st:1,t:'Subnet, Route Table, Security Group ↔ Firewall Rule',tj:'サブネット、ルート表、Security Group ↔ ファイアウォールルール',why:'Ba khái niệm này quyết định gói tin đi được đến đâu — là kỹ năng debug mạng số 1. Học ngay sau VPC, khi sơ đồ còn trong đầu.',wj:'この3概念がパケットの到達範囲を決め、ネットワークデバッグの最重要スキルです。VPC の直後に学びます。',hrs:'4–5 giờ',sv:[['aws','Amazon VPC'],['gcp','Virtual Private Cloud (VPC)']],lk:[['#/lab/0','Lab 1 · Dựng mạng nền VPC','ラボ1 · VPC基盤の構築'],['#/networking','Phần Networking — Route, SG vs NACL','ネットワーキング — ルートとSG/NACL']]},
+ {id:'s1-4',st:1,t:'Làm quen CLI: AWS CloudShell ↔ Google Cloud Shell',tj:'CLI入門：AWS CloudShell ↔ Google Cloud Shell',why:'Từ bước này, mọi lab đều làm bằng CLI thay vì bấm console — nhanh hơn, lặp lại được và đúng cách kỹ sư cloud làm việc thật.',wj:'このステップ以降、ラボはコンソールではなく CLI で行います。速く、再現可能で、実務のやり方そのものです。',hrs:'2–3 giờ',sv:[['aws','AWS CloudShell'],['gcp','Cloud Shell & gcloud CLI']],lk:[['#/command','Phần Luyện Command — AWS CLI & gcloud','コマンド演習 — AWS CLI と gcloud']]},
+ /* GĐ2 */
+ {id:'s2-1',st:2,t:'EC2 ↔ Compute Engine — máy ảo đầu tiên',tj:'EC2 ↔ Compute Engine — 最初の仮想マシン',why:'Compute là trái tim của cloud. Có IAM + VPC ở Giai đoạn 1 rồi, giờ bạn đặt máy ảo đúng subnet, đúng quyền, đúng cách.',wj:'コンピュートはクラウドの心臓です。ステージ1の IAM と VPC があるので、正しいサブネットと権限で VM を置けます。',hrs:'4–6 giờ',sv:[['aws','Amazon EC2'],['gcp','Compute Engine']],lk:[['#/lab/1','Lab 2 · Web server đầu tiên','ラボ2 · 初めてのWebサーバー']]},
+ {id:'s2-2',st:2,t:'EBS ↔ Persistent Disk — ổ đĩa block & snapshot',tj:'EBS ↔ Persistent Disk — ブロックディスクとスナップショット',why:'Máy ảo cần ổ đĩa tách rời để dữ liệu sống sót khi máy chết. Học kèm snapshot ngay — đó là bản backup đầu tiên của bạn.',wj:'データがマシンの死後も残るよう、ディスクは分離します。スナップショットも同時に学び、最初のバックアップとします。',hrs:'2–3 giờ',sv:[['aws','Amazon EBS'],['gcp','Persistent Disk']],lk:[['#/lab/1','Lab 2 · Web server đầu tiên','ラボ2 · 初めてのWebサーバー']]},
+ {id:'s2-3',st:2,t:'S3 ↔ Cloud Storage — object storage',tj:'S3 ↔ Cloud Storage — オブジェクトストレージ',why:'Kho file phổ quát của cloud: web tĩnh, backup, data lake đều bắt đầu từ đây. Cũng là service dễ dính lỗi public dữ liệu nhất — học cùng IAM bạn vừa học.',wj:'クラウドの万能ファイル保管庫です。静的サイト、バックアップ、データレイクの起点であり、公開ミスが最も起きやすい場所でもあります。',hrs:'3–4 giờ',sv:[['aws','Amazon S3'],['gcp','Cloud Storage']],lk:[['#/lab/2','Lab 3 · Web tĩnh toàn cầu','ラボ3 · グローバル静的サイト']]},
+ {id:'s2-4',st:2,t:'AMI / Machine Image & Snapshot — đóng gói máy mẫu',tj:'AMI／マシンイメージとスナップショット — 黄金イメージ',why:'Đóng gói một máy đã cấu hình chuẩn thành image mẫu để nhân bản hàng loạt — bước đệm bắt buộc trước khi học Auto Scaling ở Giai đoạn 3.',wj:'設定済みマシンをイメージ化して量産できるようにします。ステージ3の Auto Scaling の必須の前提です。',hrs:'2 giờ',sv:[['aws','Amazon EC2'],['gcp','Compute Engine']],lk:[['#/lab/1','Lab 2 · phần chụp AMI / machine image','ラボ2 · AMI／イメージ作成']]},
+ /* GĐ3 */
+ {id:'s3-1',st:3,t:'Load Balancer: ALB ↔ Cloud Load Balancing',tj:'ロードバランサー：ALB ↔ Cloud Load Balancing',why:'Một server thì mong manh — LB là cửa ngõ chia tải và che giấu việc từng máy chết/sống phía sau. Điều kiện: đã có nhiều EC2/VM từ Giai đoạn 2.',wj:'1台では脆弱です。LB が負荷を分散し、背後の生死を隠します。前提はステージ2の複数 VM です。',hrs:'3–4 giờ',sv:[['aws','Elastic Load Balancing'],['gcp','Cloud Load Balancing']],lk:[['#/diagrams','Sơ đồ web 3-tier Multi-AZ','3層Web（Multi-AZ）の図']]},
+ {id:'s3-2',st:3,t:'Auto Scaling ↔ Managed Instance Group',tj:'Auto Scaling ↔ マネージドインスタンスグループ',why:'Cho hệ thống tự thêm/bớt máy theo tải bằng chính image mẫu của Bước 2.4 — học ngay sau LB vì ASG/MIG luôn đứng sau LB.',wj:'ステップ2.4のイメージで負荷に応じて自動増減させます。ASG/MIG は常に LB の背後にあるため、LB の直後に学びます。',hrs:'3–4 giờ',sv:[['aws','Amazon EC2'],['gcp','Compute Engine']],lk:[['#/diagrams','Sơ đồ web 3-tier Multi-AZ','3層Web（Multi-AZ）の図']]},
+ {id:'s3-3',st:3,t:'Route 53 ↔ Cloud DNS',tj:'Route 53 ↔ Cloud DNS',why:'Hệ thống có tên miền riêng mới “ra hồn” sản phẩm. DNS cũng là công cụ failover rẻ nhất khi kết hợp health check.',wj:'独自ドメインで初めて製品らしくなります。DNS はヘルスチェックと組む最安のフェイルオーバー手段でもあります。',hrs:'2–3 giờ',sv:[['aws','Amazon Route 53'],['gcp','Cloud DNS']],lk:[['#/lab/2','Lab 3 · gắn domain cho web tĩnh','ラボ3 · 静的サイトへのドメイン設定']]},
+ {id:'s3-4',st:3,t:'CloudFront ↔ Cloud CDN',tj:'CloudFront ↔ Cloud CDN',why:'Đưa nội dung ra edge gần người dùng: giảm latency, giảm tải origin, thêm lớp WAF phía trước. Học sau DNS vì CDN luôn gắn với domain.',wj:'コンテンツをエッジへ寄せ、遅延とオリジン負荷を下げ、前に WAF の層を加えます。ドメインとセットのため DNS の後に学びます。',hrs:'3 giờ',sv:[['aws','Amazon CloudFront'],['gcp','Cloud CDN']],lk:[['#/lab/2','Lab 3 · Web tĩnh toàn cầu','ラボ3 · グローバル静的サイト']]},
+ {id:'s3-5',st:3,t:'Mốc Giai đoạn 3: dựng hoàn chỉnh web 3-tier',tj:'ステージ3の到達点：3層Webの完全構築',why:'Ghép toàn bộ Giai đoạn 1–3 thành một kiến trúc chạy thật: DNS → CDN → LB → ASG → (DB ở giai đoạn sau). Đây là sơ đồ phỏng vấn kinh điển nhất.',wj:'ステージ1〜3を実働アーキテクチャに統合します：DNS → CDN → LB → ASG。面接で最も定番の図です。',hrs:'4–5 giờ',sv:[],lk:[['#/diagrams','Sơ đồ 3-tier trong Thư viện Sơ đồ','図ライブラリの3層Web図'],['#/lab/0','Lab 1 · Mạng nền','ラボ1 · ネットワーク基盤'],['#/lab/1','Lab 2 · Web server','ラボ2 · Webサーバー']]},
+ /* GĐ4 */
+ {id:'s4-1',st:4,t:'RDS / Aurora ↔ Cloud SQL / AlloyDB — DB quan hệ managed',tj:'RDS／Aurora ↔ Cloud SQL／AlloyDB — マネージド関係DB',why:'Thay DB tự cài bằng managed: backup, failover Multi-AZ/HA, patch — cloud lo. Điều kiện cứng: DB phải nằm ở private subnet của Giai đoạn 1.',wj:'自前DBをマネージドへ置き換え、バックアップ、Multi-AZ/HA、パッチをクラウドに任せます。DB はステージ1のプライベートサブネットに置くのが絶対条件です。',hrs:'5–6 giờ',sv:[['aws','Amazon RDS'],['aws','Amazon Aurora'],['gcp','Cloud SQL'],['gcp','AlloyDB for PostgreSQL']],lk:[['#/lab/3','Lab 4 · Database managed','ラボ4 · マネージドDB']]},
+ {id:'s4-2',st:4,t:'DynamoDB ↔ Firestore / Bigtable — NoSQL',tj:'DynamoDB ↔ Firestore／Bigtable — NoSQL',why:'Khi mẫu truy cập đơn giản nhưng quy mô cực lớn, NoSQL serverless thắng DB quan hệ. Học sau RDS để thấy rõ ranh giới chọn bên nào.',wj:'アクセスパターンが単純で規模が巨大なら、サーバーレス NoSQL が勝ちます。RDS の後に学ぶと比較軸が明確になります。',hrs:'4 giờ',sv:[['aws','Amazon DynamoDB'],['gcp','Firestore'],['gcp','Cloud Bigtable']],lk:[['#/lab/4','Lab 5 · API serverless (DynamoDB/Firestore)','ラボ5 · サーバーレスAPI']]},
+ {id:'s4-3',st:4,t:'ElastiCache ↔ Memorystore — cache tăng tốc',tj:'ElastiCache ↔ Memorystore — 高速キャッシュ',why:'Cache là đòn bẩy hiệu năng rẻ nhất: gánh 80% lượt đọc lặp để DB thở được trong giờ cao điểm.',wj:'キャッシュは最も安い性能改善策です。繰り返し読み取りの8割を引き受け、ピーク時の DB を守ります。',hrs:'2–3 giờ',sv:[['aws','Amazon ElastiCache'],['gcp','Memorystore']],lk:[['#/diagrams','Sơ đồ TMĐT quy mô lớn (có cache)','大規模ECの図（キャッシュ付き）']]},
+ /* GĐ5 */
+ {id:'s5-1',st:5,t:'Lambda ↔ Cloud Run functions — hàm serverless',tj:'Lambda ↔ Cloud Run functions — サーバーレス関数',why:'Việc ngắn theo sự kiện thì đừng thuê server: hàm chạy khi có sự kiện, scale về 0 khi rảnh. Nền của mọi kiến trúc serverless phía sau.',wj:'短いイベント処理にサーバーは不要です。イベントで動き、暇な時はゼロに縮みます。後続のサーバーレス構成の土台です。',hrs:'4 giờ',sv:[['aws','AWS Lambda'],['gcp','Cloud Run functions']],lk:[['#/lab/4','Lab 5 · API serverless','ラボ5 · サーバーレスAPI']]},
+ {id:'s5-2',st:5,t:'API Gateway — cửa ngõ API',tj:'API Gateway — APIの入口',why:'Hàm và container cần một cửa ngõ có xác thực, throttle và log. Học ngay sau Lambda/functions vì đây là cặp đôi mặc định.',wj:'関数とコンテナには認証、スロットル、ログを持つ入口が必要です。Lambda／functions の定番ペアとして直後に学びます。',hrs:'3 giờ',sv:[['aws','Amazon API Gateway'],['gcp','API Gateway']],lk:[['#/lab/4','Lab 5 · API serverless','ラボ5 · サーバーレスAPI']]},
+ {id:'s5-3',st:5,t:'Cloud Run / ECS — container không quản node, và làm quen GKE',tj:'Cloud Run／ECS — ノード管理不要のコンテナと GKE 入門',why:'Khi hàm bị giới hạn (chạy dài, cần môi trường riêng), container là bước tiếp tự nhiên. GKE chỉ làm quen ở bước này — chuyên sâu để dành Giai đoạn 8.',wj:'関数の制限（長時間実行、専用環境）に当たったらコンテナが自然な次の一手です。GKE はここでは入門のみ、専門化はステージ8です。',hrs:'5–6 giờ',sv:[['aws','Amazon ECS'],['gcp','Cloud Run'],['gcp','Google Kubernetes Engine (GKE)']],lk:[['#/lab/5','Lab 6 · Container ECS Fargate vs Cloud Run','ラボ6 · コンテナ実践']]},
+ {id:'s5-4',st:5,t:'SQS / SNS ↔ Pub/Sub — hàng đợi & sự kiện',tj:'SQS／SNS ↔ Pub/Sub — キューとイベント',why:'Tách các thành phần bằng message để một phần chậm/hỏng không kéo sập cả hệ thống — tư duy bất đồng bộ cốt lõi của Architect.',wj:'メッセージで分離すると、一部の遅延や障害が全体に波及しません。アーキテクトの非同期思考の核心です。',hrs:'4 giờ',sv:[['aws','Amazon SQS'],['aws','Amazon SNS'],['gcp','Pub/Sub']],lk:[['#/lab/9','Lab 10 · Kiến trúc sự kiện','ラボ10 · イベント駆動']]},
+ {id:'s5-5',st:5,t:'EventBridge ↔ Eventarc & Step Functions ↔ Workflows — điều phối',tj:'EventBridge ↔ Eventarc と Step Functions ↔ Workflows — 統括',why:'Nhiều hàm + nhiều sự kiện cần người điều phối: event bus định tuyến sự kiện, state machine điều phối các bước có retry rõ ràng.',wj:'関数とイベントが増えたら統括役が必要です。イベントバスが配送し、状態機械がリトライ付きで手順を統括します。',hrs:'4 giờ',sv:[['aws','Amazon EventBridge'],['aws','AWS Step Functions'],['gcp','Eventarc'],['gcp','Workflows']],lk:[['#/lab/9','Lab 10 · Kiến trúc sự kiện','ラボ10 · イベント駆動'],['#/diagrams','Sơ đồ đặt hàng event-driven','イベント駆動の注文システム図']]},
+ /* GĐ6 */
+ {id:'s6-1',st:6,t:'Docker — đóng gói container',tj:'Docker — コンテナ化',why:'Terraform/Kubernetes đều vô nghĩa nếu chưa hiểu image/container. Một buổi Docker vững sẽ gỡ rối cho toàn bộ phần container phía sau.',wj:'イメージとコンテナが分からなければ Terraform も Kubernetes も意味を持ちません。Docker の基礎が後半全体を軽くします。',hrs:'4–5 giờ',sv:[],lk:[['#/lab/5','Lab 6 · Container thực chiến','ラボ6 · コンテナ実践'],['#/architect','Khối nền tảng Architect — Docker','アーキテクト基礎 — Docker']]},
+ {id:'s6-2',st:6,t:'ECR ↔ Artifact Registry — kho image riêng',tj:'ECR ↔ Artifact Registry — プライベートなイメージ保管庫',why:'Image build ra phải có nơi lưu an toàn, quét lỗ hổng và cấp cho ECS/Cloud Run/GKE kéo về.',wj:'ビルドしたイメージには、安全な保管、脆弱性スキャン、実行基盤への配布経路が必要です。',hrs:'2 giờ',sv:[['aws','Amazon ECR'],['gcp','Artifact Registry']],lk:[['#/lab/5','Lab 6 · Container thực chiến','ラボ6 · コンテナ実践']]},
+ {id:'s6-3',st:6,t:'CI/CD: CodePipeline / GitHub Actions ↔ Cloud Build',tj:'CI/CD：CodePipeline／GitHub Actions ↔ Cloud Build',why:'Deploy tay là nguồn lỗi lớn nhất. Pipeline build một lần — deploy nhiều nơi, có kiểm thử và phê duyệt production.',wj:'手動デプロイは最大の事故源です。一度ビルドして複数環境へ、テストと本番承認つきで届けます。',hrs:'5 giờ',sv:[['aws','AWS CodePipeline'],['aws','AWS CodeBuild'],['gcp','Cloud Build']],lk:[['#/lab/7','Lab 8 · CI/CD hai cloud','ラボ8 · 両クラウドのCI/CD']]},
+ {id:'s6-4',st:6,t:'Terraform — hạ tầng dạng code đa cloud',tj:'Terraform — マルチクラウドの IaC',why:'Đỉnh của Giai đoạn 6: viết lại toàn bộ những gì đã bấm tay ở Giai đoạn 1–5 thành code — cùng một workflow cho cả AWS và GCP.',wj:'ステージ6の頂点です。ステージ1〜5で手作業した全てをコード化し、AWS と GCP で同じワークフローを使います。',hrs:'8–10 giờ',sv:[],lk:[['#/lab/6','Lab 7 · IaC đa cloud bằng Terraform','ラボ7 · Terraform のマルチクラウドIaC'],['#/architect','Trang Architect — Khối Terraform','アーキテクト — Terraform編']]},
+ {id:'s6-5',st:6,t:'CloudWatch ↔ Cloud Monitoring & Logging — observability',tj:'CloudWatch ↔ Cloud Monitoring と Logging — 可観測性',why:'Hệ thống không có giám sát là hệ thống mù. Học ở cuối Giai đoạn 6 để gắn alarm/log/SLO lên mọi thứ bạn đã dựng.',wj:'監視のないシステムは盲目です。ステージ6の最後に、これまで作った全てへアラーム、ログ、SLO を付けます。',hrs:'4 giờ',sv:[['aws','Amazon CloudWatch'],['gcp','Cloud Monitoring'],['gcp','Cloud Logging']],lk:[['#/lab/10','Lab 11 · Giám sát & cảnh báo','ラボ11 · 監視とアラート']]},
+ /* GĐ7 */
+ {id:'s7-1',st:7,t:'Athena / Glue ↔ BigQuery / Dataflow — phân tích dữ liệu',tj:'Athena／Glue ↔ BigQuery／Dataflow — データ分析',why:'Data lake trên S3/Cloud Storage (Giai đoạn 2) giờ mới phát huy giá trị: truy vấn SQL serverless và ETL/streaming có quản lý.',wj:'ステージ2のデータレイクがここで価値を生みます。サーバーレス SQL とマネージド ETL／ストリーミングです。',hrs:'6 giờ',sv:[['aws','Amazon Athena'],['aws','AWS Glue'],['gcp','BigQuery'],['gcp','Dataflow']],lk:[['#/diagrams','Sơ đồ streaming data pipeline','ストリーミングパイプライン図']]},
+ {id:'s7-2',st:7,t:'Kinesis ↔ Pub/Sub streaming — dữ liệu thời gian thực',tj:'Kinesis ↔ Pub/Sub ストリーミング — リアルタイムデータ',why:'Pub/Sub bạn đã học ở Giai đoạn 5 cho sự kiện ứng dụng; bước này nâng lên bài toán stream dữ liệu lớn: clickstream, IoT, log thời gian thực.',wj:'Pub/Sub はステージ5でアプリのイベントとして学びました。ここではクリックストリーム、IoT、リアルタイムログの大規模ストリームへ進みます。',hrs:'4 giờ',sv:[['aws','Amazon Kinesis Data Streams'],['gcp','Pub/Sub']],lk:[['#/diagrams','Sơ đồ data pipeline xe tự lái (vẽ lại)','自動運転データパイプライン図（描き直し）']]},
+ {id:'s7-3',st:7,t:'Bedrock ↔ Vertex AI / Gemini — GenAI ứng dụng',tj:'Bedrock ↔ Vertex AI／Gemini — 生成AIの活用',why:'Dùng model có sẵn qua API để làm RAG/chatbot doanh nghiệp — không cần train model. Điều kiện: hiểu IAM (phân quyền dữ liệu) và S3/GCS (kho tài liệu).',wj:'既製モデルを API で使い、企業の RAG やチャットボットを作ります。前提は IAM（データ権限）と S3/GCS（文書保管）の理解です。',hrs:'6 giờ',sv:[['aws','Amazon Bedrock'],['gcp','Vertex AI']],lk:[['#/diagrams','Sơ đồ nền tảng AI / RAG','AI／RAG 基盤の図']]},
+ {id:'s7-4',st:7,t:'SageMaker ↔ Vertex AI — ML chuyên sâu',tj:'SageMaker ↔ Vertex AI — 本格的な機械学習',why:'Khi cần train/fine-tune model riêng và MLOps bài bản mới xuống tầng này — đa số bài toán GenAI dừng ở Bước 7.3 là đủ.',wj:'独自モデルの学習や本格 MLOps が必要な時だけこの層へ。大半の生成AI案件はステップ7.3で十分です。',hrs:'6–8 giờ',sv:[['aws','Amazon SageMaker'],['gcp','Vertex AI']],lk:[['#/services','Chi tiết SageMaker / Vertex AI ở danh mục','カタログの SageMaker／Vertex AI 詳細']]},
+ /* GĐ8 — 3 nhánh, mọi node đều bắt đầu từ s7-4 */
+ {id:'s8-a',st:8,pre:'s7-4',branch:'A',t:'Nhánh A · Architect: Well-Architected, HA/DR, Migration & Capstone',tj:'分岐A · アーキテクト：Well-Architected、HA/DR、移行、キャップストーン',why:'Tổng hợp toàn bộ flow thành năng lực thiết kế: đánh giá kiến trúc theo Well-Architected, thiết kế chịu lỗi & thảm hoạ, dẫn một chương trình migration và bảo vệ một capstone hoàn chỉnh.',wj:'フロー全体を設計力に統合します。Well-Architected による評価、耐障害・災害設計、移行プログラムの主導、キャップストーンの完成です。',hrs:'20–30 giờ',sv:[],lk:[['#/architect','Trang Architect — framework & capstone','アーキテクト — フレームワークとキャップストーン'],['#/migration','Trang Migration — 7R & labs','移行 — 7R とラボ']]},
+ {id:'s8-b',st:8,pre:'s7-4',branch:'B',t:'Nhánh B · Networking chuyên sâu: VPC nâng cao, Transit Gateway ↔ NCC, Direct Connect ↔ Interconnect',tj:'分岐B · ネットワーク専門：VPC応用、Transit Gateway ↔ NCC、Direct Connect ↔ Interconnect',why:'Đi sâu con đường mạng: hub & spoke đa VPC, kết nối lai on-prem ↔ cloud, DNS lai và bảo mật mạng nhiều lớp — đến cấp bậc thầy.',wj:'ネットワークを極めます。複数VPCのハブ＆スポーク、オンプレミスとのハイブリッド接続、ハイブリッドDNS、多層のネットワークセキュリティです。',hrs:'20–30 giờ',sv:[['aws','AWS Transit Gateway'],['aws','AWS Direct Connect'],['gcp','Network Connectivity Center'],['gcp','Cloud Interconnect']],lk:[['#/networking','Phần Networking — các chủ đề nâng cao','ネットワーキング — 応用トピック'],['#/diagrams','Nhóm sơ đồ Networking (D)','図ライブラリ D群（ネットワーク）']]},
+ {id:'s8-c',st:8,pre:'s7-4',branch:'C',t:'Nhánh C · Security & DevOps: KMS, WAF, GuardDuty ↔ SCC, Kubernetes chuyên sâu EKS ↔ GKE',tj:'分岐C · セキュリティとDevOps：KMS、WAF、GuardDuty ↔ SCC、EKS ↔ GKE の専門化',why:'Cứng hoá bảo mật (mã hoá, WAF, phát hiện đe doạ) và vận hành Kubernetes ở mức production: autoscaling, GitOps, service mesh, bảo mật chuỗi cung ứng.',wj:'セキュリティを固め（暗号化、WAF、脅威検出）、Kubernetes を本番レベルで運用します：自動スケーリング、GitOps、サービスメッシュ、サプライチェーン保護です。',hrs:'20–30 giờ',sv:[['aws','AWS KMS'],['aws','AWS WAF'],['aws','Amazon GuardDuty'],['aws','Amazon EKS'],['gcp','Cloud KMS'],['gcp','Security Command Center'],['gcp','Google Kubernetes Engine (GKE)']],lk:[['#/lab/11','Lab 12 · Nền tảng bảo mật','ラボ12 · セキュリティ基盤'],['#/lab/8','Lab 9 · Kubernetes EKS vs GKE','ラボ9 · Kubernetes']]}
+];
+FN.forEach(function(n,i){ n.step=i+1; if(!n.pre) n.pre=(i===0?null:FN[i-1].id); });
+var FBYID={}; FN.forEach(function(n){ FBYID[n.id]=n; });
+function preChain(id){ var out=[],cur=FBYID[id],seen={}; while(cur&&cur.pre&&!seen[cur.pre]){ seen[cur.pre]=1; out.push(cur.pre); cur=FBYID[cur.pre]; } return out; }
+
+/* ---------- Tiến độ: localStorage phía trình duyệt người dùng ---------- */
+var FKEY='khoameow_flow_v1', FDONE={};
+try{ var raw=localStorage.getItem(FKEY); if(raw) FDONE=JSON.parse(raw)||{}; }catch(e){ FDONE={}; }
+function saveFlow(){ try{ localStorage.setItem(FKEY, JSON.stringify(FDONE)); }catch(e){} }
+function isDone(id){ return !!FDONE[id]; }
+
+/* ---------- Trang Flow ---------- */
+var page=document.createElement('section'); page.id='flowPage'; page.className='page-off';
+document.querySelector('main').appendChild(page);
+var hubGrid=document.querySelector('.hub-grid');
+if(hubGrid){ var hc=document.createElement('a'); hc.className='hub-card'; hc.href='#/flow';
+ hc.innerHTML='<span class="hub-ic">🧭</span><b>Flow Học — học theo thứ tự</b><p>Lộ trình từng bước qua 8 giai đoạn: service nào học trước, service nào học sau, điều kiện tiên quyết, lab phải làm ở mỗi bước và ô đánh dấu tiến độ — cho người mới không bị ngợp giữa 340+ service.</p>';
+ hubGrid.insertBefore(hc, hubGrid.firstChild); }
+
+function svcChip(sv){
+  var ic=''; try{ ic=iconOf(sv[1],24); }catch(e){}
+  return '<a class="flow-svc" href="#/service/'+sv[0]+'/'+encodeURIComponent(sv[1])+'">'+ic+E(sv[1])+'</a>';
+}
+function nodeHTML(n){
+  var ja=window.LANG==='ja';
+  var aws=n.sv.filter(function(s){return s[0]==='aws';}), gcp=n.sv.filter(function(s){return s[0]==='gcp';});
+  var svh='';
+  if(n.sv.length){
+    svh='<div class="flow-svcs">';
+    if(aws.length&&gcp.length){
+      svh+=aws.map(svcChip).join('')+'<span class="flow-pair">⇄</span>'+gcp.map(svcChip).join('');
+    } else svh+=n.sv.map(svcChip).join('');
+    svh+='</div>';
+  }
+  var h='<div class="flow-node'+(isDone(n.id)?' done':'')+'" id="flownode-'+n.id+'" data-node="'+n.id+'">';
+  if(n.branch) h+='<span class="flow-branch-tag">'+(ja?'分岐 ':'Nhánh ')+n.branch+'</span>';
+  h+='<div class="flow-node-top"><span class="flow-step">'+(ja?'ステップ ':'Bước ')+n.step+'</span>'
+    +'<span class="flow-hrs">⏱ '+E(ja?n.hrs.replace('giờ','時間'):n.hrs)+'</span>'
+    +'<label class="flow-check"><input type="checkbox" data-flowck="'+n.id+'"'+(isDone(n.id)?' checked':'')+' /><span>'+(ja?'学習済み':'Đã học xong')+'</span></label></div>';
+  h+='<h4>'+E(L(n.t,n.tj))+'</h4>'+svh+'<p class="flow-why">'+E(L(n.why,n.wj))+'</p>';
+  if(n.lk&&n.lk.length) h+='<div class="flow-links">'+n.lk.map(function(x){ return '<a href="'+x[0]+'">🧪 '+E(ja?x[2]:x[1])+'</a>'; }).join('')+'</div>';
+  h+='<div class="flow-pre" data-flowpre="'+n.id+'" hidden></div>';
+  h+='</div>';
+  return h;
+}
+function planTables(){
+  var ja=window.LANG==='ja';
+  var p12=[
+   ['1','Giai đoạn 0 · Nền tảng','Không có lab service — luyện Linux ở Phần Luyện Command mỗi ngày 20 phút'],
+   ['2','Giai đoạn 1 · IAM, VPC, CLI','Lab 1 (VPC) · Lab 12 (bảo mật)'],
+   ['3','Giai đoạn 2 · EC2, đĩa, S3','Lab 2 (web server) · Lab 3 (web tĩnh)'],
+   ['4','Giai đoạn 3 · LB, ASG, DNS, CDN + mốc 3-tier','Ghép Lab 1 + 2 thành kiến trúc 3-tier, đối chiếu Sơ đồ 3-tier'],
+   ['5','Giai đoạn 4 · Database','Lab 4 (DB managed) · phần DB của Lab 5'],
+   ['6','Giai đoạn 5 · Serverless & sự kiện','Lab 5 (API serverless) · Lab 10 (sự kiện)'],
+   ['7','Giai đoạn 6 · DevOps & IaC','Lab 6 (container) · Lab 7 (Terraform) · Lab 8 (CI/CD)'],
+   ['8','Giai đoạn 7 · Dữ liệu & AI','Lab 11 (giám sát) + dựng mini data pipeline theo Sơ đồ streaming'],
+   ['9–10','Giai đoạn 8 · Nhánh chuyên sâu đã chọn','Lab của nhánh: Architect → capstone; Networking → Lab 1 nâng cao; Security/DevOps → Lab 9 + 12'],
+   ['11–12','Capstone & ôn tập','Hoàn thiện 1 dự án trọn vẹn ở Trang Architect, ôn lại các node chưa tự tin, làm lại các bài Luyện Command còn yếu']
+  ];
+  var p12j=[
+   ['1','ステージ0 · 基礎','サービスラボなし — コマンド演習の Linux を毎日20分'],
+   ['2','ステージ1 · IAM、VPC、CLI','ラボ1（VPC）・ラボ12（セキュリティ）'],
+   ['3','ステージ2 · EC2、ディスク、S3','ラボ2（Webサーバー）・ラボ3（静的サイト）'],
+   ['4','ステージ3 · LB、ASG、DNS、CDN＋3層の到達点','ラボ1＋2を3層構成に統合し、3層Web図と照合'],
+   ['5','ステージ4 · データベース','ラボ4（マネージドDB）・ラボ5のDB部分'],
+   ['6','ステージ5 · サーバーレスとイベント','ラボ5（サーバーレスAPI）・ラボ10（イベント）'],
+   ['7','ステージ6 · DevOps と IaC','ラボ6（コンテナ）・ラボ7（Terraform）・ラボ8（CI/CD）'],
+   ['8','ステージ7 · データとAI','ラボ11（監視）＋ストリーミング図で小さなパイプライン構築'],
+   ['9–10','ステージ8 · 選択した専門分岐','分岐のラボ：アーキテクト→キャップストーン、ネットワーク→ラボ1応用、セキュリティ/DevOps→ラボ9＋12'],
+   ['11–12','キャップストーンと復習','アーキテクトページのプロジェクトを1件完成させ、自信のないノードと弱いコマンド演習を復習']
+  ];
+  var p4=[
+   ['1','Giai đoạn 0 (lướt phần đã biết) + Giai đoạn 1 + Giai đoạn 2','Lab 1 · Lab 2 · Lab 3 — làm liền tay, bỏ qua lý thuyết đã thạo'],
+   ['2','Giai đoạn 3 + Giai đoạn 4','Mốc 3-tier trong 1 buổi · Lab 4 (DB)'],
+   ['3','Giai đoạn 5 + Giai đoạn 6','Lab 5 · Lab 6 · Lab 7 · Lab 8 — ưu tiên Terraform'],
+   ['4','Giai đoạn 7 + Giai đoạn 8 (1 nhánh) + capstone thu gọn','Lab 10 · Lab 11 + 1 sơ đồ capstone tự vẽ lại theo mẫu ở Thư viện Sơ đồ']
+  ];
+  var p4j=[
+   ['1','ステージ0（既知は流す）＋ステージ1＋ステージ2','ラボ1・2・3 を一気に。既知の理論は飛ばす'],
+   ['2','ステージ3＋ステージ4','3層の到達点を1セッションで ・ ラボ4（DB）'],
+   ['3','ステージ5＋ステージ6','ラボ5・6・7・8 — Terraform を優先'],
+   ['4','ステージ7＋ステージ8（1分岐）＋小型キャップストーン','ラボ10・11 ＋ 図ライブラリの例でキャップストーン図を1枚描く']
+  ];
+  function tbl(rows){ return '<div class="sub-scroll"><table class="cmp"><tr><th style="width:12%">'+(ja?'週':'Tuần')+'</th><th style="width:38%">'+(ja?'内容':'Nội dung')+'</th><th>'+(ja?'必須ラボ／成果物':'Lab / việc phải làm')+'</th></tr>'+rows.map(function(r){ return '<tr><td><b>'+E(r[0])+'</b></td><td>'+E(r[1])+'</td><td>'+E(r[2])+'</td></tr>'; }).join('')+'</table></div>'; }
+  return '<div class="dsec"><h3>📅 '+(ja?'学習プランA · 標準12週間':'Kế hoạch A · Học chuẩn 12 tuần')+'</h3>'
+   +'<p>'+(ja?'1日1〜2時間の想定です。週の前半で各ノードの理論とサービス詳細を読み、週の後半で表のラボを行います。週末はチェックを付け、詰まったノードだけを復習します。':'Thiết kế cho nhịp <b>mỗi ngày 1–2 giờ</b>: nửa đầu tuần đọc lý thuyết + trang chi tiết của các node, nửa cuối tuần làm lab trong bảng, cuối tuần đánh dấu hoàn thành và chỉ ôn lại node còn vướng.')+'</p>'
+   +tbl(ja?p12j:p12)+'</div>'
+   +'<div class="dsec"><h3>🚀 '+(ja?'学習プランB · 速習4週間（IT経験者向け）':'Kế hoạch B · Học tăng tốc 4 tuần (đã có nền IT)')+'</h3>'
+   +'<p>'+(ja?'Linux とネットワークの実務経験がある方向けです。ステージ0は既知部分を流し、毎日2時間前後＋週末にラボをまとめて行う想定です。詰まったら、そのノードだけ標準プランの週に戻って深掘りしてください。':'Dành cho người đã làm IT (đã biết Linux/mạng): Giai đoạn 0 chỉ lướt phần đã biết, nhịp <b>mỗi ngày khoảng 2 giờ + cuối tuần dồn lab</b>. Node nào vướng thì quay lại đúng tuần của nó trong Kế hoạch 12 tuần để học kỹ.')+'</p>'
+   +tbl(ja?p4j:p4)
+   +'<p class="flow-plan-note">'+(ja?'どちらのプランでも、順序は下のフローそのものです。チェックした進捗はこのブラウザに保存されます。':'Ở cả hai kế hoạch, thứ tự học chính là Flow bên dưới — đánh dấu xong bước nào, tiến độ được lưu ngay trong trình duyệt này.')+'</p></div>';
+}
+function renderFlow(){
+  var ja=window.LANG==='ja';
+  var total=FN.length, done=FN.filter(function(n){return isDone(n.id);}).length;
+  var pct=total?Math.round(done/total*100):0;
+  var h='<div class="wrap"><div class="sec-head"><span class="sec-tag">'+(ja?'専用ページ · 学習フロー':'Trang riêng · Flow học')+'</span>'
+   +'<h2>'+(ja?'学習フロー — どのサービスを先に、どれを後に学ぶか':'Flow học — học service nào trước, service nào sau')+'</h2>'
+   +'<p>'+(ja?'340以上のサービスを前に途方に暮れないための順序表です。ステージ0から8までを順に進み、各ノードでサービス詳細と必須ラボを開き、終わったら「学習済み」にチェックを入れます。前提が未完了のノードには「先に学ぶべきもの」が表示されます（ロックはされません。あくまで推奨です）。':'Thứ tự chinh phục 340+ service mà không bị ngợp: đi lần lượt từ Giai đoạn 0 đến 8, mỗi node mở trang chi tiết service + lab phải làm, học xong thì tích “Đã học xong”. Node nào chưa xong phần tiên quyết sẽ hiện gợi ý “Nên học X trước” — chỉ khuyến nghị, không khoá cứng.')+'</p></div>';
+  h+='<div class="flow-topbar"><div class="ft-row"><div class="ft-pct">'+pct+'<small>%</small></div>'
+   +'<div class="flow-bar"><div id="flowBarFill" style="width:'+pct+'%"></div></div>'
+   +'<button type="button" class="btn btn-o" id="flowNextBtn">'+(ja?'次に学ぶ →':'Học tiếp theo →')+'</button>'
+   +'<button type="button" class="btn btn-g" id="flowResetBtn" style="color:var(--ink2)">'+(ja?'進捗をリセット':'Đặt lại tiến độ')+'</button></div>'
+   +'<p class="ft-note" id="flowCountNote">'+(ja?('全'+total+'ステップ中 '+done+' 件完了 — 進捗はこのブラウザの localStorage に保存されます。'):('Đã hoàn thành '+done+' / '+total+' bước — tiến độ được lưu trong trình duyệt này (localStorage) để lần sau học tiếp đúng chỗ.'))+'</p></div>';
+  h+=planTables();
+  FSTAGES.forEach(function(st){
+    var nodes=FN.filter(function(n){return n.st===st.n;});
+    var sd=nodes.filter(function(n){return isDone(n.id);}).length;
+    var sp=nodes.length?Math.round(sd/nodes.length*100):0;
+    h+='<div class="flow-stage"><div class="flow-stage-head"><h3>'+E(ja?st.tj:st.t)+'</h3>'
+      +'<span class="fs-prog" data-fsprog="'+st.n+'">'+sd+'/'+nodes.length+' · '+sp+'%</span><span class="fs-bar"><div data-fsbar="'+st.n+'" style="width:'+sp+'%"></div></span>'
+      +'<p>'+E(ja?st.dj:st.d)+'</p></div>';
+    if(st.n===8){
+      h+='<div class="flow-branches">'+nodes.map(nodeHTML).join('')+'</div>';
+    } else {
+      h+=nodes.map(function(n,i){ return (i?'<div class="flow-arrow" aria-hidden="true">▼</div>':'')+nodeHTML(n); }).join('');
+    }
+    h+='</div>';
+    if(st.n<8) h+='<div class="flow-arrow" aria-hidden="true" style="font-size:22px">⬇</div>';
+  });
+  h+='<div class="dsec"><h3>'+(ja?'フローの使い方':'Cách dùng Flow này')+'</h3><ul>'
+   +'<li>'+(ja?'迷ったら常に「次に学ぶ →」ボタン：未完了の最初のステップへ案内します。':'Khi phân vân, cứ bấm nút “Học tiếp theo →” ở đầu trang — trang sẽ chỉ tới bước chưa hoàn thành tiếp theo đúng thứ tự.')+'</li>'
+   +'<li>'+(ja?'各サービスチップはサービス詳細ページを開きます。詳細ページの先頭にも「先に学ぶ／次に学ぶ」ナビが出ます。':'Mỗi chip service mở thẳng trang chi tiết của service đó; trên đầu mỗi trang chi tiết cũng có khối “Học trước / Học tiếp theo” cùng hệ với Flow này.')+'</li>'
+   +'<li>'+(ja?'ステージ8は3分岐ともステージ7の完了が前提です。主軸を1つ決めてから、残りを回すのがおすすめです。':'Giai đoạn 8: cả 3 nhánh đều lấy cuối Giai đoạn 7 làm tiên quyết — chọn 1 nhánh chính trước, hai nhánh còn lại học sau.')+'</li></ul></div>';
+  h+='</div>';
+  page.innerHTML=h;
+  page.querySelectorAll('input[type=checkbox][data-flowck]').forEach(function(cb){
+    cb.addEventListener('change',function(){
+      var id=cb.getAttribute('data-flowck');
+      if(cb.checked) FDONE[id]=1; else delete FDONE[id];
+      saveFlow(); updateFlowUI();
+      var card=document.getElementById('flownode-'+id); if(card) card.classList.toggle('done',cb.checked);
+    });
+  });
+  var nb=$('flowNextBtn'); if(nb) nb.addEventListener('click',gotoNext);
+  var rb=$('flowResetBtn'); if(rb) rb.addEventListener('click',function(){
+    if(rb.getAttribute('data-arm')){ FDONE={}; saveFlow(); renderFlow(); window.scrollTo({top:0,behavior:'smooth'}); }
+    else { rb.setAttribute('data-arm','1'); rb.textContent=(window.LANG==='ja'?'本当に消しますか？ もう一度押す':'Chắc chắn xoá? Bấm lại lần nữa'); setTimeout(function(){ rb.removeAttribute('data-arm'); rb.textContent=(window.LANG==='ja'?'進捗をリセット':'Đặt lại tiến độ'); },3500); }
+  });
+  updateFlowUI();
+}
+function renderFlowSoft(){ var rb=$('flowResetBtn'); if(rb&&!rb.getAttribute('data-arm')) rb.textContent=(window.LANG==='ja'?'進捗をリセット':'Đặt lại tiến độ'); }
+function updateFlowUI(){
+  var ja=window.LANG==='ja';
+  var total=FN.length, done=FN.filter(function(n){return isDone(n.id);}).length;
+  var pct=total?Math.round(done/total*100):0;
+  var fill=$('flowBarFill'); if(fill) fill.style.width=pct+'%';
+  var pctEl=page.querySelector('.ft-pct'); if(pctEl) pctEl.innerHTML=pct+'<small>%</small>';
+  var note=$('flowCountNote'); if(note) note.textContent=ja?('全'+total+'ステップ中 '+done+' 件完了 — 進捗はこのブラウザの localStorage に保存されます。'):('Đã hoàn thành '+done+' / '+total+' bước — tiến độ được lưu trong trình duyệt này (localStorage) để lần sau học tiếp đúng chỗ.');
+  FSTAGES.forEach(function(st){
+    var nodes=FN.filter(function(n){return n.st===st.n;});
+    var sd=nodes.filter(function(n){return isDone(n.id);}).length;
+    var sp=nodes.length?Math.round(sd/nodes.length*100):0;
+    var pe=page.querySelector('[data-fsprog="'+st.n+'"]'); if(pe) pe.textContent=sd+'/'+nodes.length+' · '+sp+'%';
+    var be=page.querySelector('[data-fsbar="'+st.n+'"]'); if(be) be.style.width=sp+'%';
+  });
+  FN.forEach(function(n){
+    var box=page.querySelector('[data-flowpre="'+n.id+'"]'); if(!box) return;
+    if(isDone(n.id)){ box.hidden=true; return; }
+    var missing=preChain(n.id).filter(function(pid){ return !isDone(pid); });
+    if(!missing.length){ box.hidden=true; return; }
+    var first=FBYID[missing[missing.length-1]];
+    box.innerHTML='⚠ <b>'+(ja?'先に学ぶべきもの：':'Nên học trước: ')+'</b>'+E(ja?first.tj:first.t)+' — '+(ja?'前提ステップが未完了です（ロックはされません。先にそちらを終えると理解が速くなります）。':'bước tiên quyết chưa hoàn thành (không khoá — học trước bước này sẽ dễ vào hơn nhiều).');
+    box.hidden=false;
+  });
+  var nb=$('flowNextBtn');
+  if(nb){ var nxt=FN.filter(function(n){return !isDone(n.id);})[0];
+    nb.textContent=nxt?((ja?'次に学ぶ → ステップ':'Học tiếp theo → Bước ')+nxt.step):(ja?'🎉 フロー完了！':'🎉 Đã hoàn thành toàn bộ Flow!');
+  }
+}
+function gotoNext(){
+  var nxt=FN.filter(function(n){return !isDone(n.id);})[0];
+  if(!nxt) return;
+  var el=document.getElementById('flownode-'+nxt.id); if(!el) return;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); },2200);
+}
+renderFlow();
+document.getElementById('langVi').addEventListener('click',function(){ setTimeout(renderFlow,0); });
+document.getElementById('langJa').addEventListener('click',function(){ setTimeout(renderFlow,0); });
+if((location.hash||'')==='#/flow'){
+  page.classList.remove('page-off');
+  var hh=document.querySelector('header.hero'); if(hh) hh.classList.add('page-off');
+  var hub=document.getElementById('homeHub'); if(hub) hub.classList.add('page-off');
+}
+
+/* ---------- Khối HỌC TRƯỚC / HỌC TIẾP THEO trên trang chi tiết service ---------- */
+function svcNavFor(cloud,name){
+  var myNode=null,myIdx=-1;
+  FN.forEach(function(n,i){ n.sv.forEach(function(s){ if(s[0]===cloud&&s[1]===name&&myIdx===-1){ myNode=n; myIdx=i; } }); });
+  if(myNode){
+    var preSv=[],nextSv=[];
+    if(myNode.pre){ var pn=FBYID[myNode.pre]; if(pn) preSv=pn.sv.slice(); }
+    FN.forEach(function(n){ if(n.pre===myNode.id) nextSv=nextSv.concat(n.sv); });
+    if(!nextSv.length&&myIdx+1<FN.length&&FN[myIdx+1].pre===myNode.id) nextSv=FN[myIdx+1].sv.slice();
+    if(!nextSv.length&&myIdx+1<FN.length&&FN[myIdx+1].st!==8&&myNode.st!==8) nextSv=FN[myIdx+1].sv.slice();
+    return {node:myNode,pre:preSv,next:nextSv.slice(0,6),inFlow:true};
+  }
+  /* Ngoài flow: gợi ý theo nhóm — service liền trước/liền sau trong cùng nhóm của danh mục */
+  try{
+    var cat=(cloud==='aws'&&typeof AWS_CAT!=='undefined')?AWS_CAT:((typeof GCP_CAT!=='undefined')?GCP_CAT:null);
+    if(cat){
+      for(var gi=0;gi<cat.length;gi++){
+        var items=cat[gi].items;
+        for(var ii=0;ii<items.length;ii++){
+          if(items[ii][0]===name){
+            var pre=[],next=[];
+            if(ii>0) pre=[[cloud,items[ii-1][0]]];
+            else if(gi>0) pre=[[cloud,cat[gi-1].items[cat[gi-1].items.length-1][0]]];
+            if(ii<items.length-1) next=[[cloud,items[ii+1][0]]];
+            else if(gi<cat.length-1) next=[[cloud,cat[gi+1].items[0][0]]];
+            return {node:null,pre:pre,next:next,inFlow:false};
+          }
+        }
+      }
+    }
+  }catch(e){}
+  return null;
+}
+function chipLink(sv){
+  var ic=''; try{ ic=iconOf(sv[1],22); }catch(e){}
+  return '<a class="flow-svc" href="#/service/'+sv[0]+'/'+encodeURIComponent(sv[1])+'">'+ic+E(sv[1])+'</a>';
+}
+function injectSvcNav(){
+  var host=$('svcDetailBody'); if(!host||!host.innerHTML) return;
+  if(host.querySelector('[data-svcnav]')) return;
+  var m=(location.hash||'').match(/^#\/service\/(aws|gcp)\/(.+)$/); if(!m) return;
+  var cloud=m[1], name=decodeURIComponent(m[2]);
+  var nav=svcNavFor(cloud,name); if(!nav) return;
+  var ja=window.LANG==='ja';
+  var h='<div class="dsec" data-svcnav="1"><h3>🧭 '+(ja?'学習フローによる学習ナビ':'Điều hướng học tập theo Flow')+'</h3>';
+  if(nav.inFlow){
+    h+='<p style="margin-top:0">'+E(name)+' '+(ja?('は学習フローの <b>ステージ'+nav.node.st+' · ステップ'+nav.node.step+'</b> にあります。'):('nằm ở <b>Giai đoạn '+nav.node.st+' · Bước '+nav.node.step+'</b> trong Flow học.'))+'</p>';
+  } else {
+    h+='<p style="margin-top:0">'+(ja?'このサービスはフローの本筋には含まれていません。下記は同じグループ内での推奨順序です。':'Service này chưa nằm trong trục chính của Flow — dưới đây là gợi ý thứ tự theo nhóm gần nhất trong danh mục.')+'</p>';
+  }
+  h+='<div class="svc-nav-cols"><div><h4>⬅ '+(ja?'先に学ぶ':'Học trước')+'</h4>'
+    +(nav.pre.length?'<div class="flow-svcs">'+nav.pre.map(chipLink).join('')+'</div>':'<p>'+(ja?'前提なし — ここから始められます。':'Không có tiên quyết — bắt đầu ngay từ đây được.')+'</p>')
+    +'</div><div><h4>'+(ja?'次に学ぶ':'Học tiếp theo')+' ➡</h4>'
+    +(nav.next.length?'<div class="flow-svcs">'+nav.next.map(chipLink).join('')+'</div>':'<p>'+(ja?'これは分岐の到達点です。下のフロー全体で続きを確認してください。':'Đây là điểm cuối của một nhánh — xem toàn bộ Flow để chọn hướng đi tiếp.')+'</p>')
+    +'</div></div>'
+    +'<p style="margin:12px 0 0"><a href="#/flow" style="font-weight:800;color:var(--orange-d)">'+(ja?'学習フロー全体を見る →':'Xem Flow học đầy đủ →')+'</a></p></div>';
+  var anchor=host.querySelector('.d-actions');
+  if(anchor&&anchor.nextSibling) host.insertBefore(buildFrag(h),anchor.nextSibling);
+  else if(anchor) host.appendChild(buildFrag(h));
+  else host.insertBefore(buildFrag(h),host.firstChild);
+  if(window.__applyJA) window.__applyJA();
+}
+function buildFrag(html){ var t=document.createElement('template'); t.innerHTML=html; return t.content.firstChild; }
+var svcBody=$('svcDetailBody');
+if(svcBody){ new MutationObserver(function(){ injectSvcNav(); }).observe(svcBody,{childList:true}); }
+injectSvcNav();
+window.addEventListener('hashchange',function(){ setTimeout(injectSvcNav,0); });
 })();
 </script>
 
