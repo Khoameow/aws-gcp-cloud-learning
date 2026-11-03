@@ -653,7 +653,7 @@ document.querySelector('main').appendChild(page);
 /* hub card on home */
 var hubGrid=document.querySelector('.hub-grid');
 if(hubGrid){ var a=document.createElement('a'); a.className='hub-card'; a.href='#/diagrams';
- a.innerHTML='<span class="hub-ic">🗺️</span><b>Thư viện Sơ đồ Architect</b><p>26 sơ đồ tự vẽ bằng SVG: dự án nhỏ → lớn, migration, networking — bản AWS & GCP, bấm từng node để xem giải thích, có phóng to và tải xuống. Mới: sơ đồ showcase có khung môi trường (on-premise ↔ AWS Cloud/Region).</p>';
+ a.innerHTML='<span class="hub-ic">🗺️</span><b>Thư viện Sơ đồ Architect</b><p>26 sơ đồ tự vẽ bằng SVG: dự án nhỏ → lớn, migration, networking — bản AWS & GCP, bấm từng node để xem giải thích, có phóng to và tải xuống. Tất cả sơ đồ đều có khung môi trường đúng kiến trúc thật (AWS Cloud ⊃ Region ⊃ VPC ⊃ AZ ⊃ Subnet · Google Cloud ⊃ VPC toàn cầu ⊃ Region ⊃ Zone · Corporate data center / On-premise).</p>';
  hubGrid.appendChild(a); }
 
 function curVar(d){
@@ -701,6 +701,7 @@ function stepBadgesHTML(cv,W,H){
 function stageHTML(d,zoom){
   var cv=curVar(d), nodes=cv.v.nodes, edges=cv.v.edges;
   var H=d.feat?640:560, W=1080;
+  var sz=d.sz||'', isz=sz==='xs'?18:(sz==='s'?20:(sz==='m'?24:30));
   var paths='',packets='';
   edges.forEach(function(e,i){
     var a=nodes[e[0]],b=nodes[e[1]]; if(!a||!b) return;
@@ -714,12 +715,12 @@ function stageHTML(d,zoom){
   var nh='';
   nodes.forEach(function(n,i){
     var left=(n.x/W*100).toFixed(2)+'%', top=(n.y/H*100).toFixed(2)+'%';
-    var inner=n.actor?'<span class="actor-ic">'+n.actor+'</span>':iconOf(n.s,30);
+    var inner=n.actor?'<span class="actor-ic">'+n.actor+'</span>':iconOf(n.s,isz);
     nh+='<button type="button" class="dg-node'+(n.actor?' actor':'')+'" data-dg="'+d.id+'" data-node="'+i+'" style="left:'+left+';top:'+top+'" aria-label="'+escS(n.l)+'">'
       +(n.num?'<span class="num">'+n.num+'</span>':'')+inner+'<span class="nl">'+escS(n.l)+'</span>'
       +((n.u||n.uj)?'<span class="nu">'+escS(L(n.u,n.uj))+'</span>':'')+'</button>';
   });
-  return '<div class="dg-stage-wrap"><div class="dg-stage" style="aspect-ratio:'+W+'/'+H+'">'+frameHTML(cv,W,H)+svg+stepBadgesHTML(cv,W,H)+nh+'</div></div>';
+  return '<div class="dg-stage-wrap"><div class="dg-stage'+(sz?' sz-'+sz:'')+'" style="aspect-ratio:'+W+'/'+H+'">'+frameHTML(cv,W,H)+svg+stepBadgesHTML(cv,W,H)+nh+'</div></div>';
 }
 function stepsHTML(d){
   var cv=curVar(d);
@@ -791,7 +792,7 @@ function showNodeInfo(did,idx,btn){
   page.querySelectorAll('.dg-node.sel').forEach(function(x){x.classList.remove('sel');}); if(btn) btn.classList.add('sel');
   var ja=window.LANG==='ja';
   var h='<b>'+escS(n.l)+'</b>';
-  if(n.s){ var desc=svcDesc(n.c,n.s); if(desc) h+='<br>'+escS(desc); }
+  if(n.s){ var desc=svcDesc(n.c,n.s); if(desc) h+='<br>'+escS(desc); if(n.u) h+='<br><span style="color:var(--cyan);font-weight:700">'+(ja?'この図での役割：':'Vai trò trong sơ đồ này: ')+'</span>'+escS(L(n.u,n.uj)); }
   else if(n.u){ h+='<br>'+escS(L(n.u,n.uj)); }
   if(n.s&&svcExists(n.c,n.s)) h+='<br><a class="go" href="#/service/'+n.c+'/'+encodeURIComponent(n.s)+'">'+(ja?'サービス詳細を開く →':'Mở trang chi tiết service →')+'</a>';
   else if(n.s) h+='<br><span style="font-size:12.5px;color:var(--muted)">'+escS(n.s)+'</span>';
@@ -817,9 +818,9 @@ function buildSVG(d){
   s+='<rect width="'+W+'" height="'+H+'" fill="#060b16"/>';
   s+='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93ad"/></marker></defs>';
   /* Khung môi trường (frame kit) trong bản xuất: rect + nhãn theo màu kind */
-  var FCOL={aws:'#ff9900',region:'#22d3ee',vpc:'#a78bfa',az:'#4ade80',pub:'#38bdf8',priv:'#2dd4bf',gcp:'#4da3ff',onprem:'#a3b88a'};
+  var FCOL={aws:'#ff9900',region:'#22d3ee',vpc:'#a78bfa',az:'#4ade80',zone:'#34d399',pub:'#38bdf8',priv:'#2dd4bf',gcp:'#4da3ff',onprem:'#a3b88a'};
   (cv.v.frames||[]).forEach(function(f){ var col=FCOL[f.kind]||'#7f93ad';
-    s+='<rect x="'+f.x+'" y="'+f.y+'" width="'+f.w+'" height="'+f.h+'" rx="14" fill="none" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="'+((f.kind==='az'||f.kind==='onprem'||f.kind==='region')?'7 5':'none')+'"/>';
+    s+='<rect x="'+f.x+'" y="'+f.y+'" width="'+f.w+'" height="'+f.h+'" rx="14" fill="none" stroke="'+col+'" stroke-width="1.6" stroke-dasharray="'+((f.kind==='az'||f.kind==='zone'||f.kind==='onprem'||f.kind==='region')?'7 5':'none')+'"/>';
     s+='<text x="'+(f.x+14)+'" y="'+(f.y+22)+'" font-size="13" font-weight="bold" fill="'+col+'" font-family="sans-serif">'+escS(L(f.t,f.tj))+'</text>'; });
   edges.forEach(function(e){ var a=nodes[e[0]],b=nodes[e[1]]; if(!a||!b)return;
     s+='<path d="M'+a.x+','+a.y+' Q '+((a.x+b.x)/2)+','+a.y+' '+b.x+','+b.y+'" stroke="#5b7ba6" stroke-width="2" fill="none" marker-end="url(#ah)"/>'; });
@@ -831,7 +832,7 @@ function buildSVG(d){
     } else { px=a.x+(b.x-a.x)*t; py=a.y+(b.y-a.y)*t; }
     s+='<circle cx="'+px+'" cy="'+py+'" r="11" fill="#2f7fd1"/><text x="'+px+'" y="'+(py+4)+'" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#fff" font-family="sans-serif">'+e[2]+'</text>'; });
   nodes.forEach(function(n){
-    var w=170,h=86,x=n.x-w/2,y=n.y-h/2;
+    var w=d.sz==='xs'?136:(d.sz==='s'?148:(d.sz==='m'?160:170)),h=86,x=n.x-w/2,y=n.y-h/2;
     var col='#33507e', glyph='';
     try{ var m=NAME2I[n.s]; if(m){ col=(n.c==='gcp'?(GCP_GC[m.group]||'#4285F4'):(AWS_GC[m.group]||'#E07700')); glyph=GLYPHS[m.glyph]||''; } }catch(e){}
     s+='<g><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="#0d1730" stroke="#40649f" stroke-width="1.5"/>';

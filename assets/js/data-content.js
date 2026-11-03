@@ -1465,6 +1465,178 @@ DG.push(
 }
 );
 
+/* ================= ÁP BỘ KHUNG MÔI TRƯỜNG RA TOÀN BỘ THƯ VIỆN SƠ ĐỒ =================
+   Đợt triển khai diện rộng của frame kit (ra mắt ở sơ đồ showcase
+   hybrid-cert): gắn frames:[] cho MỌI biến thể của MỌI sơ đồ còn lại và
+   dời một số node (chỉ toạ độ x/y — thứ tự node, cạnh, tour, giả lập sự
+   cố đều tham chiếu theo chỉ số nên không đổi) để node nằm đúng khung
+   theo kiến trúc thật:
+   · AWS: Cloud ⊃ Region ⊃ VPC ⊃ AZ ⊃ Subnet; service toàn cục (Route 53,
+     CloudFront, IAM…) nằm trong khung Cloud nhưng NGOÀI khung Region.
+   · GCP: Cloud ⊃ VPC (GLOBAL — bao ngoài Region, khác thứ bậc AWS) ⊃
+     Region ⊃ Zone/Subnet; Global LB nằm ở biên ngoài Region/VPC.
+   · Migration/Hybrid: khung On-premise ở phía nguồn ↔ khung Cloud ở
+     phía đích, công cụ migration/đường truyền nằm vắt trên biên.
+   Đồng thời gán d.sz = thang mật độ node ('m' vừa · 's' đông — engine
+   thu nhỏ icon + chữ + bề ngang node theo thang này, nhất quán cả hai
+   biến thể; showcase hybrid-cert giữ nguyên kích cỡ gốc) và bật nhãn
+   "Có khung môi trường" (fbadge) cho mọi sơ đồ đã có khung. */
+function FRM(kind,x,y,w,h,lb,icon){ return {kind:kind,x:x,y:y,w:w,h:h,t:lb[0],tj:lb[1],icon:icon||''}; }
+var LBL_AWSC=['AWS Cloud','AWS Cloud'], LBL_GCPC=['Google Cloud','Google Cloud'],
+ LBL_ONP=['Corporate data center — On-premise','コーポレートデータセンター — オンプレミス'],
+ LBL_RAT=['Region — ap-northeast-1 (Tokyo)','リージョン — ap-northeast-1（東京）'],
+ LBL_RAO=['Region — ap-northeast-3 (Osaka)','リージョン — ap-northeast-3（大阪）'],
+ LBL_RAS=['Region — ap-southeast-1 (Singapore)','リージョン — ap-southeast-1（シンガポール）'],
+ LBL_RGT=['Region — asia-northeast1 (Tokyo)','リージョン — asia-northeast1（東京）'],
+ LBL_RGO=['Region — asia-northeast2 (Osaka)','リージョン — asia-northeast2（大阪）'],
+ LBL_RGS=['Region — asia-southeast1 (Singapore)','リージョン — asia-southeast1（シンガポール）'],
+ LBL_VPG=['VPC — Global','VPC — グローバル'],
+ LBL_PUB=['Public Subnet','パブリックサブネット'], LBL_PRIV=['Private Subnet','プライベートサブネット'];
+var DGFR={
+/* ----- Featured: Data Pipeline — Cloud ⊃ Region; cơ sở khách hàng trong
+   khung on-premise, Direct Connect vắt trên biên hai môi trường ----- */
+pipe:{aws:{f:[FRM('aws',214,12,860,616,LBL_AWSC,'☁'),FRM('region',230,50,738,562,LBL_RAT,'🌐'),FRM('onprem',4,204,200,200,LBL_ONP,'🏢')]}},
+/* ----- A1 · Website tĩnh: Route 53/CloudFront/WAF/Lambda@Edge là global
+   (trong Cloud, ngoài Region); S3 là regional nên nằm trong Region ----- */
+a1:{aws:{f:[FRM('aws',170,24,900,512,LBL_AWSC,'☁'),FRM('region',612,196,330,230,LBL_RAT,'🌐')]},
+    gcp:{f:[FRM('gcp',170,24,900,512,LBL_GCPC,'☁'),FRM('region',630,196,320,230,LBL_RGT,'🌐')]}},
+/* ----- A2 · Web 3-tier: đủ VPC + 2 AZ + public/private subnet từng AZ.
+   ALB/ASG/RDS là node logic trải 2 AZ nên đặt vắt trên biên hai khung AZ;
+   ElastiCache nằm ở subnet app AZ-c; S3 trong Region nhưng ngoài VPC.
+   Bản GCP: VPC global bao ngoài Region, subnet regional chứa 2 Zone,
+   Global LB toàn cục nằm ở biên Cloud, ngoài VPC/Region ----- */
+a2:{aws:{f:[FRM('aws',144,12,928,536,LBL_AWSC,'☁'),FRM('region',160,48,896,486,LBL_RAT,'🌐'),FRM('vpc',176,90,704,428,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('az',188,132,338,372,['AZ — ap-northeast-1a','AZ — ap-northeast-1a']),FRM('az',538,132,330,372,['AZ — ap-northeast-1c','AZ — ap-northeast-1c']),FRM('pub',198,168,318,106,['Public Subnet — 10.0.1.0/24','パブリックサブネット — 10.0.1.0/24']),FRM('pub',548,168,310,106,['Public Subnet — 10.0.2.0/24','パブリックサブネット — 10.0.2.0/24']),FRM('priv',198,288,318,106,['Private Subnet — App · 10.0.11.0/24','プライベートサブネット — アプリ · 10.0.11.0/24']),FRM('priv',548,288,310,106,['Private Subnet — App · 10.0.12.0/24','プライベートサブネット — アプリ · 10.0.12.0/24']),FRM('priv',198,408,318,88,['Private Subnet — Data · 10.0.21.0/24','プライベートサブネット — データ · 10.0.21.0/24']),FRM('priv',548,408,310,88,['Private Subnet — Data · 10.0.22.0/24','プライベートサブネット — データ · 10.0.22.0/24'])]},
+    gcp:{f:[FRM('gcp',140,12,932,536,LBL_GCPC,'☁'),FRM('vpc',380,44,676,490,LBL_VPG),FRM('region',396,88,644,430,LBL_RGT,'🌐'),FRM('priv',408,136,620,366,['Subnet — Regional · 10.0.1.0/24','サブネット — リージョナル · 10.0.1.0/24']),FRM('zone',420,180,288,306,['Zone — asia-northeast1-a','ゾーン — asia-northeast1-a']),FRM('zone',720,180,288,306,['Zone — asia-northeast1-c','ゾーン — asia-northeast1-c'])]}},
+/* ----- A3 · API serverless: mọi thành phần đều regional → Cloud ⊃ Region ----- */
+a3:{aws:{f:[FRM('aws',170,20,902,520,LBL_AWSC,'☁'),FRM('region',186,58,870,466,LBL_RAT,'🌐')]},
+    gcp:{f:[FRM('gcp',170,20,902,520,LBL_GCPC,'☁'),FRM('region',186,58,870,466,LBL_RGT,'🌐')]}},
+/* ----- A4 · WordPress: CDN/WAF (AWS) và Global LB (GCP) là global — ngoài
+   Region; tầng app/data nằm trong VPC, chia public/private subnet ----- */
+a4:{aws:{f:[FRM('aws',160,16,912,528,LBL_AWSC,'☁'),FRM('region',420,54,636,474,LBL_RAT,'🌐'),FRM('vpc',436,92,604,420,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('pub',448,200,196,164,LBL_PUB),FRM('priv',652,100,380,404,LBL_PRIV)]},
+    gcp:{f:[FRM('gcp',160,16,912,528,LBL_GCPC,'☁'),FRM('vpc',420,54,636,474,LBL_VPG),FRM('region',436,92,604,420,LBL_RGT,'🌐'),FRM('priv',500,196,250,170,['Private Subnet — App','プライベートサブネット — アプリ']),FRM('priv',752,100,280,404,['Private Subnet — Data','プライベートサブネット — データ'])]}},
+/* ----- A5 · Backup & DR: HAI khung Region (chính + DR) trong một Cloud;
+   Route 53 / Cloud DNS là global nên nằm ngoài cả hai Region ----- */
+a5:{aws:{f:[FRM('aws',110,16,962,528,LBL_AWSC,'☁'),FRM('region',126,60,420,440,LBL_RAT,'🌐'),FRM('region',562,60,286,440,LBL_RAO,'🌐')]},
+    gcp:{f:[FRM('gcp',110,16,962,528,LBL_GCPC,'☁'),FRM('region',126,60,440,440,LBL_RGT,'🌐'),FRM('region',582,60,210,440,LBL_RGO,'🌐')]}},
+/* ----- B6 · Microservices K8s: ALB ở public subnet, EKS/pods/cache/DB ở
+   private subnet (AWS). GCP: Global LB ở biên Cloud ngoài VPC; GKE +
+   workload trong subnet của VPC global; Pub/Sub là global → ngoài Region ----- */
+b6:{aws:{f:[FRM('aws',150,12,922,536,LBL_AWSC,'☁'),FRM('region',166,50,890,482,LBL_RAT,'🌐'),FRM('vpc',182,88,858,428,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('pub',190,190,190,180,LBL_PUB),FRM('priv',392,100,640,404,LBL_PRIV)]},
+    gcp:{f:[FRM('gcp',150,12,922,536,LBL_GCPC,'☁'),FRM('vpc',330,44,726,488,LBL_VPG),FRM('region',346,88,694,428,LBL_RGT,'🌐'),FRM('priv',430,100,602,404,['Subnet — GKE & Workloads','サブネット — GKEとワークロード'])]}},
+/* ----- B7 · CI/CD: toàn bộ pipeline nằm trong một Region ----- */
+b7:{aws:{f:[FRM('aws',150,20,922,520,LBL_AWSC,'☁'),FRM('region',166,58,890,464,LBL_RAT,'🌐')]},
+    gcp:{f:[FRM('gcp',150,20,922,520,LBL_GCPC,'☁'),FRM('region',166,58,890,464,LBL_RGT,'🌐')]}},
+/* ----- B8 · Streaming: AWS mọi thành phần regional. GCP: Pub/Sub là
+   global → ở biên Cloud ngoài Region; Dataflow/GCS/BigQuery trong Region ----- */
+b8:{aws:{f:[FRM('aws',150,16,922,528,LBL_AWSC,'☁'),FRM('region',166,54,890,474,LBL_RAT,'🌐')]},
+    gcp:{f:[FRM('gcp',150,16,922,528,LBL_GCPC,'☁'),FRM('region',360,54,696,474,LBL_RGT,'🌐')]}},
+/* ----- B9 · Event-driven: AWS mọi thành phần regional. GCP: Pub/Sub là
+   global → ngoài Region; phần còn lại trong Region ----- */
+b9:{aws:{f:[FRM('aws',60,16,1012,528,LBL_AWSC,'☁'),FRM('region',76,54,980,474,LBL_RAT,'🌐')]},
+    gcp:{f:[FRM('gcp',60,16,1012,528,LBL_GCPC,'☁'),FRM('region',76,54,790,474,LBL_RGT,'🌐')]}},
+/* ----- B10 · Landing Zone: khung Cloud + khung tài khoản quản trị
+   (Organizations/Control Tower/IAM) + khung các tài khoản thành viên ----- */
+b10:{aws:{f:[FRM('aws',170,12,902,536,LBL_AWSC,'☁'),FRM('vpc',186,30,330,490,['Management Account — tài khoản quản trị','管理アカウント']),FRM('region',520,30,536,490,['Member Accounts — Security · Workloads · Log','メンバーアカウント — セキュリティ・ワークロード・ログ'])]},
+     gcp:{f:[FRM('gcp',170,12,902,536,LBL_GCPC,'☁'),FRM('vpc',186,30,330,490,['Organization — cây tài nguyên','組織 — リソース階層']),FRM('region',520,30,536,490,['Folders & Projects thành viên','メンバーのフォルダとプロジェクト'])]}},
+/* ----- B11 · E-commerce: Route 53 + CloudFront (AWS) / Cloud DNS +
+   Global LB (GCP) là global — ngoài Region; mặt dữ liệu trong VPC.
+   GCP: Cloud Storage và Pub/Sub là global/nằm ngoài VPC → ở biên Cloud ----- */
+b11:{aws:{f:[FRM('aws',100,12,972,536,LBL_AWSC,'☁'),FRM('region',420,48,636,484,LBL_RAT,'🌐'),FRM('vpc',436,86,604,430,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('pub',452,196,190,168,LBL_PUB),FRM('priv',644,98,388,406,LBL_PRIV)]},
+     gcp:{f:[FRM('gcp',130,12,942,536,LBL_GCPC,'☁'),FRM('vpc',470,44,586,488,LBL_VPG),FRM('region',486,88,554,428,LBL_RGT,'🌐'),FRM('priv',494,110,538,392,['Subnet — GKE & Data','サブネット — GKEとデータ'])]}},
+/* ----- B12 · AI/RAG: tài liệu & nhân viên là tác nhân ngoài Cloud; toàn
+   bộ pipeline ingestion/retrieval/generation nằm trong Region ----- */
+b12:{aws:{f:[FRM('aws',250,40,822,480,LBL_AWSC,'☁'),FRM('region',266,78,790,428,LBL_RAT,'🌐')]},
+     gcp:{f:[FRM('gcp',250,40,822,480,LBL_GCPC,'☁'),FRM('region',266,78,790,428,LBL_RGT,'🌐')]}},
+/* ----- B13 · Video streaming: pipeline chuyển mã trong Region;
+   CloudFront / Cloud CDN là edge toàn cục → ngoài Region ----- */
+b13:{aws:{f:[FRM('aws',170,60,902,440,LBL_AWSC,'☁'),FRM('region',186,98,640,364,LBL_RAT,'🌐')]},
+     gcp:{f:[FRM('gcp',170,60,902,440,LBL_GCPC,'☁'),FRM('region',186,98,640,364,LBL_RGT,'🌐')]}},
+/* ----- B14 · Multi-region active–active: HAI khung Region trong một
+   Cloud; Route 53 / Global LB / DynamoDB Global Tables / Spanner là
+   global, nằm ngoài các Region. GCP thêm khung VPC global bao 2 Region ----- */
+b14:{aws:{f:[FRM('aws',150,12,922,536,LBL_AWSC,'☁'),FRM('region',380,40,280,200,LBL_RAT,'🌐'),FRM('region',380,320,280,200,LBL_RAS,'🌐')]},
+     gcp:{f:[FRM('gcp',150,12,922,536,LBL_GCPC,'☁'),FRM('vpc',384,28,300,504,LBL_VPG),FRM('region',400,40,280,200,LBL_RGT,'🌐'),FRM('region',400,320,280,200,LBL_RGS,'🌐')]}}
+,
+/* ----- C15/C16 · Migration lift & shift: khung On-premise ở nguồn ↔
+   khung Cloud ⊃ Region ở đích; Discovery/Migration Center và đường
+   truyền (DX/Interconnect) vắt trên biên; DNS đích là global → ngoài Region ----- */
+c15:{aws:{f:[FRM('onprem',8,170,210,230,LBL_ONP,'🏢'),FRM('aws',232,16,840,528,LBL_AWSC,'☁'),FRM('region',248,54,632,474,LBL_RAT,'🌐')]}},
+c16:{gcp:{f:[FRM('onprem',8,170,210,230,LBL_ONP,'🏢'),FRM('gcp',232,16,840,528,LBL_GCPC,'☁'),FRM('region',248,54,632,474,LBL_RGT,'🌐')]}},
+/* ----- C17 · VMware → cloud: On-premise ở nguồn, hai khung Cloud đích
+   (AWS cho EVS/MGN, Google Cloud cho GCVE) ----- */
+c17:{multi:{f:[FRM('onprem',16,170,212,230,LBL_ONP,'🏢'),FRM('aws',318,48,318,324,LBL_AWSC,'☁'),FRM('gcp',318,380,318,168,LBL_GCPC,'☁')]}},
+/* ----- C18 · DB migration cross-cloud: khung Cloud nguồn ⊃ Region chứa
+   DB nguồn + công cụ CDC; khung Cloud đích ⊃ Region chứa DB đích;
+   DX/Interconnect + VPN vắt trên biên hai cloud ----- */
+c18:{aws:{f:[FRM('aws',20,170,474,230,LBL_AWSC,'☁'),FRM('region',34,208,444,176,LBL_RAT,'🌐'),FRM('gcp',700,170,372,230,LBL_GCPC,'☁'),FRM('region',716,208,340,176,LBL_RGT,'🌐')]},
+     gcp:{f:[FRM('gcp',20,170,474,230,LBL_GCPC,'☁'),FRM('region',34,208,444,176,LBL_RGT,'🌐'),FRM('aws',700,170,372,230,LBL_AWSC,'☁'),FRM('region',716,208,340,176,LBL_RAT,'🌐')]}},
+/* ----- C19 · Hybrid: On-premise ↔ Cloud; DX/Interconnect + VPN vắt
+   trên biên; hub (TGW/NCC) và workload nằm phía Cloud ----- */
+c19:{aws:{f:[FRM('onprem',24,170,214,230,LBL_ONP,'🏢'),FRM('aws',300,16,772,528,LBL_AWSC,'☁'),FRM('region',560,54,496,474,LBL_RAT,'🌐'),FRM('vpc',762,186,286,188,['VPC — Workload','VPC — ワークロード'])]},
+     gcp:{f:[FRM('onprem',24,170,214,230,LBL_ONP,'🏢'),FRM('gcp',300,16,772,528,LBL_GCPC,'☁'),FRM('vpc',540,54,516,474,LBL_VPG),FRM('region',700,98,340,414,LBL_RGT,'🌐')]}},
+/* ----- D20 · VPC cơ bản (chủ thể là mạng): Cloud ⊃ Region ⊃ VPC ⊃ AZ ⊃
+   Public/Private Subnet; IGW vắt trên viền VPC; NAT nằm trong public
+   subnet. GCP: LB toàn cục ở biên Cloud; VPC global ⊃ Region ⊃ Subnet ----- */
+d20:{aws:{f:[FRM('aws',140,12,932,536,LBL_AWSC,'☁'),FRM('region',156,50,900,482,LBL_RAT,'🌐'),FRM('vpc',172,88,868,428,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('az',344,102,692,344,['AZ — ap-northeast-1a','AZ — ap-northeast-1a']),FRM('pub',360,110,660,150,['Public Subnet — 10.0.1.0/24','パブリックサブネット — 10.0.1.0/24']),FRM('priv',360,280,320,150,['Private Subnet — App · 10.0.11.0/24','プライベートサブネット — アプリ · 10.0.11.0/24']),FRM('priv',700,280,320,150,['Private Subnet — Data · 10.0.21.0/24','プライベートサブネット — データ · 10.0.21.0/24'])]},
+     gcp:{f:[FRM('gcp',140,12,932,536,LBL_GCPC,'☁'),FRM('vpc',330,44,726,488,LBL_VPG),FRM('region',346,88,694,428,LBL_RGT,'🌐'),FRM('priv',362,110,662,392,['Subnet — Regional · 10.0.0.0/24','サブネット — リージョナル · 10.0.0.0/24'])]}},
+/* ----- D21 · VPC nâng cao: app ở 2 AZ trong VPC, endpoints là thành
+   phần cấp VPC (vắt biên AZ), S3/Secrets nằm ngoài VPC trong Region,
+   NAT trong VPC. GCP: workload + PSC + Cloud NAT trong VPC global ⊃
+   Region; Google APIs và service đích nằm ở mạng nhà cung cấp riêng ----- */
+d21:{aws:{f:[FRM('aws',60,12,1012,536,LBL_AWSC,'☁'),FRM('region',76,50,980,482,LBL_RAT,'🌐'),FRM('vpc',92,88,700,428,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('az',108,100,330,150,['AZ — ap-northeast-1a','AZ — ap-northeast-1a']),FRM('az',108,300,330,150,['AZ — ap-northeast-1c','AZ — ap-northeast-1c'])]},
+     gcp:{f:[FRM('gcp',60,12,1012,536,LBL_GCPC,'☁'),FRM('vpc',76,50,620,482,LBL_VPG),FRM('region',92,94,588,424,LBL_RGT,'🌐'),FRM('vpc',720,100,336,360,['Producer VPC — mạng nhà cung cấp','プロデューサー VPC — 提供側ネットワーク'])]}},
+/* ----- D22 · Hub & spoke: các VPC spoke + TGW nằm trong Region chính,
+   TGW region 2 trong khung Region thứ hai, on-prem ngoài Cloud.
+   GCP: NCC là hub toàn cục (ngoài Region), các VPC spoke là global ----- */
+d22:{aws:{f:[FRM('aws',60,12,1012,536,LBL_AWSC,'☁'),FRM('region',76,40,700,472,LBL_RAT,'🌐'),FRM('region',790,300,266,212,LBL_RAO,'🌐')]},
+     gcp:{f:[FRM('gcp',60,12,1012,536,LBL_GCPC,'☁'),FRM('vpc',92,40,330,472,['Các VPC spoke — Global','スポーク VPC 群 — グローバル']),FRM('region',790,300,266,212,LBL_RGO,'🌐')]}},
+/* ----- D23 · Hybrid networking: On-premise ↔ Cloud, DX/Interconnect +
+   VPN vắt trên biên, hub + DNS lai + các VPC nằm phía Cloud ----- */
+d23:{aws:{f:[FRM('onprem',14,170,216,230,LBL_ONP,'🏢'),FRM('aws',290,16,782,528,LBL_AWSC,'☁'),FRM('region',540,54,516,474,LBL_RAT,'🌐'),FRM('vpc',766,306,284,182,['VPC — Các VPC đích','VPC — 宛先 VPC 群'])]},
+     gcp:{f:[FRM('onprem',14,170,216,230,LBL_ONP,'🏢'),FRM('gcp',290,16,782,528,LBL_GCPC,'☁'),FRM('vpc',540,54,516,474,LBL_VPG),FRM('region',556,98,484,414,LBL_RGT,'🌐')]}},
+/* ----- D24 · Defense in depth: Shield/CloudFront/WAF (AWS) và Cloud
+   Armor (GCP) là lớp edge toàn cục — ngoài Region/VPC; Network Firewall/
+   NGFW + ALB/LB + app + DB nằm trong VPC, chia public/private subnet ----- */
+d24:{aws:{f:[FRM('aws',140,12,932,536,LBL_AWSC,'☁'),FRM('region',430,48,626,484,LBL_RAT,'🌐'),FRM('vpc',446,86,604,430,['VPC — 10.0.0.0/16','VPC — 10.0.0.0/16']),FRM('pub',678,200,184,160,LBL_PUB),FRM('priv',868,100,176,404,LBL_PRIV)]},
+     gcp:{f:[FRM('gcp',140,12,932,536,LBL_GCPC,'☁'),FRM('vpc',400,48,656,484,LBL_VPG),FRM('region',404,92,636,424,LBL_RGT,'🌐'),FRM('priv',746,100,286,404,LBL_PRIV)]}}
+};
+var DGMV={
+pipe:{aws:{1:[325,145],5:[462,112],6:[598,300],7:[740,300],8:[878,300],9:[740,118],10:[598,470],11:[740,470],12:[878,470],13:[878,118],14:[1015,320]}},
+a2:{aws:{1:[532,221],2:[532,341],3:[532,452],4:[700,341],5:[970,160]},gcp:{2:[714,300],3:[714,430],4:[255,110]}},
+a3:{aws:{1:[300,140],5:[740,140]},gcp:{1:[300,140],5:[740,140]}},
+a4:{aws:{2:[545,280],3:[760,280]},gcp:{2:[620,280],3:[860,170],4:[860,400]}},
+a5:{aws:{0:[230,280],4:[956,280]},gcp:{0:[230,280],2:[688,280],3:[948,280]}},
+b6:{aws:{1:[280,280],2:[490,280],3:[640,160],4:[640,400],5:[850,160],7:[850,440]},gcp:{1:[240,280],2:[520,280],3:[660,160],4:[660,400],6:[240,450]}},
+b7:{aws:{1:[265,280],6:[600,140]},gcp:{5:[470,140]}},
+b8:{gcp:{1:[250,280]}},
+b9:{aws:{0:[180,280],1:[340,280],2:[510,280],3:[690,280],6:[510,455]},gcp:{0:[180,280],1:[340,280],4:[540,455],5:[968,170]}},
+b10:{aws:{0:[300,110]},gcp:{0:[300,110]}},
+b11:{aws:{1:[190,280],2:[345,280],3:[545,280],4:[730,280],5:[900,160],6:[900,300],7:[730,445],8:[900,445]},gcp:{1:[215,280],5:[330,110],6:[330,450]}},
+b12:{aws:{1:[350,140],2:[515,140],3:[680,140],4:[680,400],5:[515,400],6:[150,400]},gcp:{1:[350,140],2:[515,140],3:[680,140],4:[680,400],5:[515,400],6:[150,400]}},
+b14:{aws:{1:[245,280]},gcp:{2:[495,140],3:[495,420],4:[780,280]}},
+c15:{aws:{4:[490,460],5:[680,300],6:[972,300]}},
+c16:{gcp:{4:[490,460],5:[680,300],6:[972,300]}},
+c19:{aws:{3:[660,280],4:[870,280],5:[660,455]},gcp:{3:[660,280],5:[660,455]}},
+d20:{aws:{1:[250,300],2:[480,185],3:[520,355],4:[860,355],5:[800,185]},gcp:{1:[235,280]}},
+d21:{aws:{0:[215,175],1:[215,375],3:[880,175],4:[450,375],5:[880,375],6:[620,280]},gcp:{0:[175,280],2:[830,170],3:[830,390],4:[580,430]}},
+d22:{aws:{3:[200,440],4:[900,110],5:[900,400]},gcp:{3:[200,440],4:[900,110],5:[900,400]}},
+d23:{gcp:{4:[880,170]}},
+d24:{aws:{3:[595,280],4:[770,280],5:[955,170],6:[955,400]},gcp:{2:[495,280],3:[660,280]}}
+};
+/* Áp khung + dời node + gán thang mật độ + bật nhãn "Có khung môi trường" */
+DG.forEach(function(d){
+  var spec=DGFR[d.id]; if(!spec) return;
+  Object.keys(spec).forEach(function(k){
+    var v=d.variants[k]; if(!v) return;
+    var mv=(DGMV[d.id]||{})[k]||{};
+    Object.keys(mv).forEach(function(i){ var n=v.nodes[+i]; if(n){ n.x=mv[i][0]; n.y=mv[i][1]; } });
+    v.frames=spec[k].f;
+  });
+  d.fbadge=1;
+  var mx=0; Object.keys(d.variants).forEach(function(k){ mx=Math.max(mx,d.variants[k].nodes.length); });
+  d.sz=(d.id==='b11')?'s':((d.id==='a2')?'m':(mx>=14?'xs':(mx>=10?'s':(mx>=7?'m':''))));
+});
+
 /* ================= V4 · DỮ LIỆU FLOW HỌC (FSTAGES + FN — engine ở app.js) ================= */
 var FSTAGES=[
  {n:0,t:'Giai đoạn 0 · Nền tảng — trước khi vào service',tj:'ステージ0 · 基礎 — サービスに入る前に',d:'Chưa đụng vào service nào. Giai đoạn này quyết định bạn học cloud nhanh hay vật lộn: hiểu cloud chạy ở đâu, gõ được lệnh, đọc được mạng, và có tài khoản an toàn để thực hành.',dj:'サービスにはまだ触れません。クラウドがどこで動くか、コマンドが打てるか、ネットワークが読めるか、安全な実習アカウントがあるか — ここが学習速度を決めます。'},
