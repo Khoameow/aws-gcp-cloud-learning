@@ -777,3 +777,46 @@ img{max-width:100%;height:auto}
   .ob-strip #goalChange{margin-left:0}
   .ob-strip .btn{flex:1 1 auto;justify-content:center}
 }
+
+/* ============================================================
+   ĐỢT 2 · Labs: nhãn chi phí · Top 3 lỗi hay gặp · Cleanup 1-Click
+   · Đánh dấu hoàn thành lab (localStorage) + thanh tiến độ Labs
+   ============================================================ */
+.lab-prog{background:linear-gradient(160deg,rgba(10,30,28,.88),rgba(8,13,26,.95));border:1px solid rgba(45,212,191,.5);border-radius:16px;padding:18px 22px;margin-bottom:20px;box-shadow:0 0 22px rgba(45,212,191,.10)}
+.lab-prog .lp-top{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.lab-prog .lp-top b{font-size:16.5px;color:#fff}
+.lab-prog .lp-pct{font-size:15px;font-weight:800;color:#5eead4}
+.lab-prog .lp-bar{height:11px;background:rgba(255,255,255,.09);border-radius:99px;overflow:hidden}
+.lab-prog .lp-fill{height:100%;background:linear-gradient(90deg,#2dd4bf,#4ade80);border-radius:99px;transition:width .5s ease}
+.lab-prog .lp-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+@media (prefers-reduced-motion: reduce){ .lab-prog .lp-fill{transition:none} }
+.lab2-zone{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.lab-cost-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.8px;font-weight:700;color:#5eead4;background:rgba(45,212,191,.10);border:1px solid rgba(45,212,191,.45);border-radius:99px;padding:5px 12px;align-self:flex-start;line-height:1.35}
+.lab-done-btn{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;min-height:44px;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:rgba(11,18,32,.9);color:var(--ink2);display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:flex-start;text-align:center}
+.lab-done-btn:hover{border-color:#4ade80;color:var(--ink)}
+.lab-done-btn.on{background:var(--green-soft);border-color:#4ade80;color:#bbf7d0}
+.lab-done-btn.big{font-size:14.5px;padding:12px 20px}
+.lab-card.is-done{border-color:rgba(74,222,128,.65);box-shadow:0 0 0 1px rgba(74,222,128,.22),0 0 18px rgba(74,222,128,.08)}
+.tag.lab-done-badge{background:var(--green-soft);color:var(--green);border:1px solid rgba(74,222,128,.5)}
+.lab2-cost{border:1px solid rgba(45,212,191,.5);background:linear-gradient(160deg,rgba(8,34,32,.85),rgba(6,16,18,.94));border-radius:14px;padding:16px 20px;margin-bottom:16px}
+.lab2-cost .lc-main{font-size:16px;color:#fff;line-height:1.5}
+.lab2-cost p{font-size:13.8px;color:var(--ink2);margin:7px 0 0}
+.lab2-cost .lc-note{font-size:12.8px;color:var(--muted)}
+.lab2-donebar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
+.lab2-donebar span{font-size:13.5px;color:var(--muted)}
+.dsec.pit{border-color:rgba(248,113,113,.5)}
+.dsec.pit h3{color:#fca5a5}
+.pit-list{margin:6px 0;padding-left:21px}
+.pit-list>li{margin-bottom:15px}
+.pit-list p{margin:4px 0 0}
+.pit-cmd{margin-top:6px;font-size:13px;color:var(--muted)}
+.pit-cmd .mono{color:#8fd8ef;word-break:break-all}
+.dsec.cleanup{border-color:rgba(45,212,191,.5)}
+.dsec.cleanup h3{color:#5eead4}
+.clean-warn{font-size:13.8px;color:#fca5a5}
+@media (max-width:768px){
+  .lab-prog{padding:15px 16px}
+  .lab-done-btn{align-self:stretch}
+  .lab2-donebar .lab-done-btn{flex:1 1 100%}
+  .lab2-cost{padding:14px 15px}
+}

@@ -544,6 +544,11 @@ function filteredLabIdx(){
   LABS.forEach(function(l,i){ if(dom!=='all'&&l.dom!==dom) return; if(lv!=='all'&&LVLLAB[l.lv]!==lv) return; out.push(i); });
   return out;
 }
+/* Xuất ra window để upgrade2.js (nạp sau, ngoài IIFE này) ánh xạ đúng
+   chỉ số lab gốc khi gắn nhãn chi phí / nút đã-xong lên thẻ đã lọc.
+   Trước đây hàm chỉ nằm trong IIFE nên bên ngoài không gọi được. */
+window.__filteredLabIdx = filteredLabIdx;
+window.filteredLabIdx = filteredLabIdx;
 function decorateCards(){
   var lg=$('labGrid');
   if(lg){ var idxs=filteredLabIdx(); lg.querySelectorAll('.lab-card').forEach(function(card,pos){ if(card.querySelector('.lab-detail-btn')) return; var a=document.createElement('a'); a.className='lab-detail-btn'; a.href='#/lab/'+(idxs[pos]!==undefined?idxs[pos]:pos); a.textContent='Mở trang chi tiết lab →'; card.appendChild(a); }); }
