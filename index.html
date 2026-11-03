@@ -357,7 +357,81 @@
       .ex-mc button.picked-ng{border-color:var(--red);background:var(--red-soft);color:var(--ink)}
       .ex-lab-link{font-size:13px;color:var(--muted);margin:12px 0 0}
     </style>
-  </head>
+  <style>
+/* ===== V2: multi-page routing + detail pages + sample outputs ===== */
+.page-off{display:none!important}
+nav.top a.act{background:var(--orange);color:#1a1206!important;box-shadow:0 0 14px rgba(255,153,0,.45)}
+.hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-top:8px}
+.hub-card{display:block;text-decoration:none;background:linear-gradient(160deg,rgba(17,27,50,.85),rgba(8,13,26,.94));border:1px solid rgba(64,100,160,.5);border-radius:14px;padding:20px;color:var(--ink);transition:border-color .18s,transform .18s}
+.hub-card:hover{border-color:var(--cyan);transform:translateY(-3px)}
+.hub-card b{display:block;font-size:17px;margin:8px 0 6px}
+.hub-card p{font-size:13.5px;color:var(--ink2);margin:0}
+.hub-card .hub-ic{font-size:22px}
+.road{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:22px 0 6px}
+.road div{background:rgba(13,24,48,.85);border:1px solid var(--line2);border-radius:12px;padding:13px}
+.road b{display:block;color:var(--orange-d);font-size:13px}
+.road span{font-size:12.8px;color:var(--ink2)}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
+.crumb a{color:var(--cyan);text-decoration:none;font-weight:700}
+.d-head{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.d-head h2{font-size:clamp(24px,3.6vw,34px)}
+.d-head .sub{color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.dsec{background:linear-gradient(160deg,rgba(17,27,50,.82),rgba(8,13,26,.93));border:1px solid rgba(64,100,160,.45);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+.dsec h3{font-size:17px;color:var(--orange-d);margin-bottom:10px}
+.dsec h4{font-size:14px;color:var(--cyan);margin:16px 0 6px}
+.dsec p,.dsec li{font-size:14.5px;color:var(--ink2)}
+.dsec ul,.dsec ol{margin:6px 0;padding-left:21px}
+.dsec li{margin-bottom:6px}
+.dsec li b,.dsec p b{color:var(--ink)}
+.flow-mini{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 2px}
+.flow-mini .fn{background:var(--panel2);border:1px solid var(--cyan);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--ink);display:inline-flex;gap:7px;align-items:center}
+.flow-mini .fa{color:var(--orange-d);font-weight:800}
+table.spec{width:100%;border-collapse:collapse;font-size:13.8px}
+table.spec th,table.spec td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+table.spec th{background:#0d1830;width:30%;color:var(--ink)}
+details.dstep{border:1px solid var(--line2);border-radius:11px;padding:12px 15px;margin-bottom:10px;background:rgba(10,17,32,.6)}
+details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--ink)}
+.sample-out{margin-top:10px;border:1px solid rgba(45,212,191,.4);border-radius:10px;overflow:hidden}
+.sample-out .so-head{background:#0a1120;color:#5eead4;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.04em;padding:6px 12px;border-bottom:1px solid rgba(45,212,191,.25)}
+.sample-out pre{background:#030509;color:#a7c4b5;padding:13px 15px;font-family:"JetBrains Mono",monospace;font-size:12.6px;line-height:1.6;overflow-x:auto;white-space:pre;margin:0}
+.sample-out .so-read{padding:9px 13px;font-size:13px;color:var(--ink2);background:rgba(13,24,48,.85);border-top:1px solid rgba(45,212,191,.2)}
+.sample-out .so-read b{color:var(--teal)}
+.check-list{list-style:none;margin:8px 0;padding:0}
+.check-list li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--ink2);padding:9px 12px;border:1px solid var(--line2);border-radius:10px;margin-bottom:8px;background:rgba(10,17,32,.55)}
+.check-list input{width:19px;height:19px;accent-color:#ff9900;flex:none;margin-top:2px;cursor:pointer}
+.check-list li.done{border-color:rgba(74,222,128,.55);color:var(--ink)}
+.d-actions{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0}
+.jp-box{border:1px solid rgba(167,139,250,.5);background:rgba(24,16,54,.5);border-radius:12px;padding:14px 16px;font-size:14px;color:#ddd3fb}
+.jp-box b{color:#c4b0fa}
+.faq-item{border-top:1px solid var(--line2);padding:10px 0}
+.faq-item b{color:var(--ink);font-size:14.5px}
+.faq-item p{margin:4px 0 0}
+.lab-detail-btn{display:inline-block;margin-top:13px;font-size:13px;font-weight:800;color:#1a1206;background:var(--orange);border-radius:9px;padding:8px 14px;text-decoration:none;align-self:flex-start}
+.lab-detail-btn:hover{background:#ffb84d}
+#toTop{opacity:1;pointer-events:auto;transform:none}
+@media(max-width:860px){
+  nav.top .wrap{flex-wrap:wrap;height:auto;min-height:56px;overflow-x:visible;padding-top:7px;padding-bottom:7px;row-gap:3px}
+  .lang-toggle{margin-left:auto}
+}
+/* Author intro + certification badges */
+.author{margin-top:26px;background:rgba(8,13,26,.72);border:1px solid rgba(34,211,238,.4);border-radius:16px;padding:20px 22px;box-shadow:0 0 26px rgba(34,211,238,.12), inset 0 0 24px rgba(167,139,250,.05);backdrop-filter:blur(6px)}
+.author .a-name{font-size:21px;font-weight:800;color:#fff}
+.author .a-name span{color:var(--orange);text-shadow:0 0 14px rgba(255,153,0,.7)}
+.author p{color:#c6d3e8;font-size:14.5px;margin:8px 0 0;max-width:880px}
+.author p.jp{color:#8fd8ef;font-size:13.5px}
+.cert-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px}
+.cert{flex:1 1 230px;display:flex;gap:14px;align-items:center;background:rgba(13,24,48,.75);border:1px solid rgba(64,100,160,.55);border-radius:14px;padding:13px 15px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.cert:hover{transform:translateY(-3px);border-color:var(--cyan)}
+.cert.aws1:hover{box-shadow:0 0 22px rgba(255,153,0,.45)}
+.cert.aws2:hover{box-shadow:0 0 22px rgba(255,90,90,.4)}
+.cert.gcp:hover{box-shadow:0 0 22px rgba(77,163,255,.5)}
+.cert svg{flex:none;filter:drop-shadow(0 0 7px rgba(255,255,255,.22))}
+.cert b{display:block;font-size:13.8px;color:#fff;line-height:1.4}
+.cert .code{display:inline-block;margin-top:5px;font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:700;color:#ffd9ae;background:rgba(255,153,0,.14);border:1px solid rgba(255,153,0,.5);border-radius:99px;padding:2px 9px}
+.cert.gcp .code{color:#bcd8f7;background:rgba(77,163,255,.13);border-color:rgba(77,163,255,.55)}
+
+</style>
+</head>
   <body>
     <canvas id="bgCanvas" aria-hidden="true"></canvas>
     <div class="bg-grid" aria-hidden="true"></div>
@@ -389,6 +463,46 @@
       <div class="wrap">
         <h1>Học <span class="hl">AWS &amp; Google Cloud</span> song song: services, labs, migration &amp; networking<span class="ja-sub">AWS &amp; Google Cloud 並行学習 — サービス・ラボ・移行・ネットワーキング</span></h1>
         <p class="lead">Trang học tập thực chiến trên hai nền tảng cloud hàng đầu — AWS &amp; Google Cloud — hiểu rõ từng service kèm cấu hình mẫu, làm labs từng bước bằng cả <b>aws CLI</b> lẫn <b>gcloud CLI</b>, di chuyển mọi môi trường (kể cả AWS ⇄ GCP), đối chiếu tương đương xuyên suốt, và làm chủ Cloud Networking đến cấp độ thiết kế dự án thật.</p>
+        <div class="author reveal in">
+          <div class="a-name">Xin chào, mình là <span>Khoameow</span> 👋</div>
+          <p>Mình hiện đang học tập và làm việc trong lĩnh vực Cloud tại Nhật Bản. Đây là trang web cá nhân do chính mình tự xây dựng để tổng hợp và hệ thống hoá kiến thức <b>AWS &amp; Google Cloud</b> — chi tiết từng service, labs thực tế, migration, networking, Terraform, Kubernetes và lộ trình Cloud Architect. Mình viết trang này vừa để tự học và ôn tập mỗi ngày, vừa để chia sẻ lại cho cộng đồng những người đang học cloud như mình.</p>
+          <p class="jp">はじめまして、Khoameowです。現在、日本でクラウド関連の学習と業務に携わっています。このサイトは、AWSとGoogle Cloudの知識（サービスの詳細、実践ラボ、移行、ネットワーキング、Terraform、Kubernetes、クラウド アーキテクトへの学習パス）を体系的にまとめるために自分で構築した個人の学習サイトです。自分の学習のため、そしてクラウドを学ぶ皆さんの参考になればと思い公開しています。</p>
+          <div class="cert-row">
+            <div class="cert aws1">
+              <svg width="76" height="76" viewBox="0 0 100 100" role="img" aria-label="Huy hiệu AWS Certified Solutions Architect – Associate">
+                <circle cx="50" cy="50" r="46" fill="#161e2d" stroke="#ff9900" stroke-width="3"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#ff9900" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/>
+                <path d="M50 22 L56 36 L71 37 L59.5 46.5 L63.5 61 L50 52.5 L36.5 61 L40.5 46.5 L29 37 L44 36 Z" fill="#ff9900"/>
+                <text x="50" y="76" text-anchor="middle" font-size="12.5" font-weight="800" fill="#fff" font-family="inherit">AWS</text>
+                <text x="50" y="88" text-anchor="middle" font-size="7.2" fill="#ffb84d" letter-spacing="1.5">CERTIFIED</text>
+              </svg>
+              <div><b>AWS Certified Solutions Architect – Associate</b><span class="code">SAA-C03</span></div>
+            </div>
+            <div class="cert aws2">
+              <svg width="76" height="76" viewBox="0 0 100 100" role="img" aria-label="Huy hiệu AWS Certified CloudOps Engineer – Associate">
+                <circle cx="50" cy="50" r="46" fill="#1d1420" stroke="#e05252" stroke-width="3"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#e05252" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/>
+                <g fill="none" stroke="#fb7185" stroke-width="4.4" stroke-linecap="round"><circle cx="50" cy="41" r="8.5"/><path d="M50 26v6M50 50v6M35 41h6M59 41h6M39.5 30.5l4 4M56.5 47.5l4 4M60.5 30.5l-4 4M43.5 47.5l-4 4"/></g>
+                <text x="50" y="76" text-anchor="middle" font-size="12.5" font-weight="800" fill="#fff" font-family="inherit">AWS</text>
+                <text x="50" y="88" text-anchor="middle" font-size="7.2" fill="#fda4af" letter-spacing="1.5">CERTIFIED</text>
+              </svg>
+              <div><b>AWS Certified CloudOps Engineer – Associate</b><span class="code">SOA-C03 · trước đây: SysOps Administrator</span></div>
+            </div>
+            <div class="cert gcp">
+              <svg width="76" height="76" viewBox="0 0 100 100" role="img" aria-label="Huy hiệu Google Cloud Associate Cloud Engineer">
+                <circle cx="50" cy="50" r="46" fill="#101c30" stroke="#4da3ff" stroke-width="3"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#4da3ff" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/>
+                <path d="M36 55 a10.5 10.5 0 1 1 2.6-20.7 A14.5 14.5 0 0 1 65.5 38 8.8 8.8 0 0 1 63.5 55 Z" fill="none" stroke-width="4.2" stroke-linejoin="round"><animate attributeName="opacity" values="1;.75;1" dur="3s" repeatCount="indefinite"/></path>
+                <path d="M36 55 a10.5 10.5 0 1 1 2.6-20.7" fill="none" stroke="#ea4335" stroke-width="4.2" stroke-linecap="round"/>
+                <path d="M65.5 38 A8.8 8.8 0 0 1 63.5 55 L50 55" fill="none" stroke="#fbbc04" stroke-width="4.2" stroke-linecap="round"/>
+                <path d="M38 55 H63.5" stroke="#34a853" stroke-width="4.2" stroke-linecap="round"/>
+                <text x="50" y="76" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff" font-family="inherit">Google Cloud</text>
+                <text x="50" y="88" text-anchor="middle" font-size="7.2" fill="#8fc6ff" letter-spacing="1.2">CERTIFIED</text>
+              </svg>
+              <div><b>Google Cloud Associate Cloud Engineer</b><span class="code">ACE · Google Cloud Certified</span></div>
+            </div>
+          </div>
+        </div>
         <div class="hero-stats">
           <div class="hstat"><b data-count="340">340+</b><span>services AWS + GCP, tất cả đều có icon riêng</span></div>
           <div class="hstat"><b data-count="20">0</b><span>labs thực hành &amp; migration từng bước</span></div>
@@ -2802,5 +2916,354 @@ jobs:
     document.getElementById('cmdLevel').addEventListener('change', function(){ cmdState.idx = 0; showEx(); });
     showEx(); updateScore();
     </script>
-  </body>
+  
+<script>
+/* ================= V2 · HASH ROUTING — NHIỀU TRANG RIÊNG ================= */
+(function(){
+"use strict";
+function $(id){ return document.getElementById(id); }
+function E(s){ return (typeof esc==='function') ? esc(s) : String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+/* ---- Home hub ---- */
+var HUB=[
+ ['#/services','🧩','Trang Services','Danh mục 340+ service AWS & GCP có icon riêng, phân trang 24/48/96, bấm từng service để mở trang chi tiết sâu.'],
+ ['#/compare','⚖️','So sánh AWS ⇄ GCP','Bảng đối chiếu các cặp service tương đương: điểm giống, khác biệt quyết định và khi nào chọn bên nào.'],
+ ['#/labs','🧪','Trang Labs','12 lab song song AWS ⇄ GCP — mỗi lab có trang chi tiết riêng: sơ đồ, từng bước kèm kết quả mẫu, lỗi hay gặp và cleanup.'],
+ ['#/migration','🚚','Trang Migration','7 chiến lược 7R, 3 giai đoạn Assess → Mobilize → Migrate và 9 lab migration từ mọi môi trường, gồm cả cross-cloud.'],
+ ['#/networking','🌐','Trang Networking & Sơ đồ','Đọc sơ đồ kiến trúc, VPC/CIDR, route, Transit Gateway, hybrid — đến cấp bậc thầy, kèm máy tính chia subnet.'],
+ ['#/architect','🏛️','Trang Architect','Thiết kế dự án 6 bước, Terraform, Kubernetes (EKS ⇄ GKE), nền tảng công nghệ, framework kiến trúc và capstone.'],
+ ['#/command','⌨️','Trang Luyện Command','Terminal giả lập Linux / AWS CLI / gcloud: 21 bài có điểm, gợi ý — và kết quả mẫu (output) hiện ngay dưới mỗi bài.'],
+ ['#/glossary','🇯🇵','Thuật ngữ công ty Nhật & Deploy','Bảng thuật ngữ VN–JP–EN cho quy trình 要件定義→設計→構築→検証→リリース, kèm hướng dẫn deploy GitHub Pages.']
+];
+var hub=document.createElement('section'); hub.id='homeHub';
+hub.innerHTML='<div class="wrap"><div class="sec-head"><span class="sec-tag">Trang chủ · Tổng quan & lộ trình</span><h2>Mỗi phần học là một trang riêng — chọn nơi bạn muốn vào</h2><p>Trang web không còn là một trang cuộn dài: mỗi mục dưới đây mở ra một <b>trang riêng có URL riêng</b> (copy link gửi được, bấm Back của trình duyệt quay lại đúng chỗ). Lộ trình gợi ý: Services → Labs → Migration → Networking → Architect → Luyện Command.</p></div>'
+ +'<div class="road"><div><b>Bước 1 · Services</b><span>Hiểu từng service và cách chọn</span></div><div><b>Bước 2 · Labs</b><span>Làm tay từng bước song song 2 cloud</span></div><div><b>Bước 3 · Migration</b><span>Chuyển mọi môi trường lên cloud</span></div><div><b>Bước 4 · Networking</b><span>Làm chủ mạng cloud</span></div><div><b>Bước 5 · Architect</b><span>Terraform, K8s, thiết kế dự án</span></div><div><b>Bước 6 · Command</b><span>Luyện gõ lệnh đến thuộc</span></div></div>'
+ +'<div class="hub-grid">'+HUB.map(function(x){return '<a class="hub-card" href="'+x[0]+'"><span class="hub-ic">'+x[1]+'</span><b>'+x[2]+'</b><p>'+x[3]+'</p></a>';}).join('')+'</div></div>';
+document.querySelector('main').insertBefore(hub, document.querySelector('main').firstChild);
+
+/* ---- Detail + compare page containers ---- */
+var svcPage=document.createElement('section'); svcPage.id='svcDetailPage'; svcPage.innerHTML='<div class="wrap" id="svcDetailBody"></div>';
+var labPage=document.createElement('section'); labPage.id='labDetailPage'; labPage.innerHTML='<div class="wrap" id="labDetailBody"></div>';
+var cmpPage=document.createElement('section'); cmpPage.id='comparePage';
+cmpPage.innerHTML='<div class="wrap"><div class="sec-head"><span class="sec-tag">Trang riêng · So sánh</span><h2>Đối chiếu AWS ⇄ Google Cloud</h2><p>Mỗi cặp service tương đương: điểm giống, khác biệt quyết định khi thiết kế, và gợi ý chọn bên nào. Bấm tên service để mở trang chi tiết của nó.</p></div><div id="cmpHost"></div></div>';
+var main=document.querySelector('main');
+main.appendChild(svcPage); main.appendChild(labPage); main.appendChild(cmpPage);
+var cmpView=$('cmpView'); if(cmpView) $('cmpHost').appendChild(cmpView);
+
+/* ---- Nav rewrite ---- */
+var NAVMAP={'Services':'#/services','Labs thực hành':'#/labs','Migration':'#/migration','Sơ đồ':'#/networking','Networking':'#/networking','Dự án':'#/architect','Architect':'#/architect','Command':'#/command','Deploy':'#/glossary'};
+document.querySelectorAll('nav.top a').forEach(function(a){
+  if(a.classList.contains('brand')){ a.setAttribute('href','#/'); return; }
+  var t=a.textContent.trim(); if(NAVMAP[t]) a.setAttribute('href',NAVMAP[t]); a.setAttribute('data-route',a.getAttribute('href'));
+});
+var langT=document.querySelector('.lang-toggle');
+[['#/compare','So sánh'],['#/glossary','Thuật ngữ JP']].forEach(function(x){
+  var a=document.createElement('a'); a.href=x[0]; a.textContent=x[1]; a.setAttribute('data-route',x[0]);
+  langT.parentNode.insertBefore(a, langT);
+});
+
+/* ---- Page visibility ---- */
+var PAGES={
+ home:['TOP','homeHub'], services:['services'], compare:['comparePage'],
+ labs:['labs'], migration:['migration'], networking:['diagrams','networking'],
+ architect:['du-an','architect'], command:['command'], glossary:['glossary','deploy'],
+ svcDetail:['svcDetailPage'], labDetail:['labDetailPage']
+};
+var ALLIDS=['homeHub','services','labs','migration','diagrams','networking','du-an','architect','command','glossary','deploy','svcDetailPage','labDetailPage','comparePage'];
+function showPage(name){
+  var show=PAGES[name]||PAGES.home;
+  var hero=document.querySelector('header.hero');
+  hero.classList.toggle('page-off', show.indexOf('TOP')===-1);
+  ALLIDS.forEach(function(id){ var el=$(id); if(el) el.classList.toggle('page-off', show.indexOf(id)===-1); });
+  document.querySelectorAll('nav.top a[data-route]').forEach(function(a){
+    var r=a.getAttribute('data-route'); var on=false;
+    if(name==='home'&&r==='#/') on=true;
+    if(name!=='home'&&r==='#/'+name) on=true;
+    if(name==='svcDetail'&&r==='#/services') on=true;
+    if(name==='labDetail'&&(r==='#/labs'||r==='#/migration')) on=true;
+    a.classList.toggle('act',on);
+  });
+  window.scrollTo(0,0);
+  if(window.__applyJA) window.__applyJA();
+}
+
+/* ================= SERVICE DETAIL PAGE ================= */
+var GINFO={
+ 'Compute':{feat:['Tài nguyên tính toán đàn hồi, scale theo nhu cầu','Tích hợp IAM/VPC/monitoring của cùng cloud','Nhiều mô hình mua: on-demand, cam kết giảm giá, spot/preemptible'],spec:[['Mô hình triển khai','Managed / serverless / IaaS tùy service — xem cấu hình mẫu bên dưới'],['Vùng khả dụng','Chạy multi-AZ/multi-zone để đạt HA; kiểm tra service có mặt ở region Tokyo chưa'],['Giới hạn scale','Quota theo tài khoản/region — xin tăng trước khi launch lớn']],sec:['Không mở cổng quản trị (22/3389) ra 0.0.0.0/0','Dùng role/service account thay access key tĩnh','Mã hoá dữ liệu khi lưu trữ và khi truyền (TLS)'],mon:['Theo dõi CPU/RAM/latency/error rate trên dashboard gốc của cloud','Đặt alarm ngân sách và alarm bất thường','Bật audit log cho mọi thao tác quản trị']},
+ 'Storage':{feat:['Độ bền dữ liệu cao theo thiết kế của nhà cung cấp','Phân lớp lưu trữ nóng/lạnh để tối ưu chi phí','Tích hợp lifecycle, versioning, replication'],spec:[['Độ bền / SLA','Kiểm tra trang SLA chính thức của service tại region sử dụng'],['Replication','Bật versioning + replication khi dữ liệu quan trọng'],['Truy cập','Ưu tiên private endpoint/VPC endpoint, chặn public mặc định']],sec:['Bật Block Public Access / uniform access — không để dữ liệu public','Mã hoá mặc định (SSE) + quản lý key bằng KMS khi nhạy cảm','IAM policy tối thiểu theo từng prefix/thư mục'],mon:['Theo dõi dung lượng theo lớp lưu trữ và chi phí request','Alarm khi có thao tác xoá hàng loạt','Audit log truy cập object']},
+ 'Database':{feat:['Managed: backup, patch, failover do nhà cung cấp vận hành','Scale đọc bằng replica; scale ghi theo kiến trúc service','Bảo mật mạng: chỉ truy cập từ subnet/VPC riêng'],spec:[['HA','Multi-AZ (AWS) / Regional HA (GCP) cho production'],['Backup','Automated backup + PITR; test restore định kỳ'],['Kết nối','Không public IP; dùng proxy/private endpoint']],sec:['Đặt DB ở private subnet, security group chỉ từ tầng app','Mã hoá at-rest + TLS khi kết nối','Tách user ứng dụng khỏi user quản trị, xoay mật khẩu bằng Secrets Manager'],mon:['Theo dõi connections, CPU, IOPS, replication lag','Alarm khi storage sắp đầy và khi failover xảy ra','Slow query log để tối ưu truy vấn']},
+ '_def':{feat:['Service managed của cloud — nhà cung cấp vận hành hạ tầng bên dưới','Tích hợp sẵn IAM, logging, monitoring của cùng hệ sinh thái','Mở rộng theo nhu cầu, trả theo mức sử dụng thực tế'],spec:[['Region','Kiểm tra service đã GA tại region bạn dùng (ưu tiên Tokyo cho công ty Nhật)'],['Quota','Có quota mặc định theo tài khoản — xem mục Giới hạn'],['Tích hợp','Kết nối tốt nhất với các service cùng cloud qua mạng riêng']],sec:['Áp least-privilege cho mọi role/policy liên quan','Mã hoá dữ liệu nhạy cảm at-rest và in-transit','Bật audit log (CloudTrail / Audit Logs)'],mon:['Đưa metric/log của service về trung tâm giám sát (CloudWatch / Cloud Monitoring)','Đặt alarm lỗi và ngân sách','Review quyền truy cập định kỳ bằng công cụ analyzer']}
+};
+function ginfo(g){ return GINFO[g]||GINFO._def; }
+function findSvc(cloud,name){
+  var core=(typeof COREMAP!=='undefined')?COREMAP[cloud+'|'+name]:null;
+  var cat=cloud==='aws'?AWS_CAT:GCP_CAT, item=null, group='';
+  cat.forEach(function(gr){ gr.items.forEach(function(it){ if(it[0]===name){ item=it; group=gr.g; } }); });
+  return {core:core,item:item,group:core?core.g:group};
+}
+var TFMAP={
+'aws|Amazon EC2':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_instance" "app" {\n  ami                    = "ami-0abcdef1234567890"  # Amazon Linux 2023\n  instance_type          = "t3.micro"\n  subnet_id              = var.private_subnet_id\n  vpc_security_group_ids = [aws_security_group.app.id]\n  iam_instance_profile   = aws_iam_instance_profile.app.name\n  tags = { Name = "app-server", Project = "learning" }\n}',
+'aws|AWS Lambda':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_lambda_function" "api" {\n  function_name = "api-fn"\n  runtime       = "python3.12"\n  handler       = "lambda_function.handler"\n  role          = aws_iam_role.lambda_exec.arn\n  filename      = "function.zip"\n  timeout       = 10\n  memory_size   = 512\n}',
+'aws|Amazon S3':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_s3_bucket" "data" {\n  bucket = "my-data-lake-example"\n}\nresource "aws_s3_bucket_versioning" "data" {\n  bucket = aws_s3_bucket.data.id\n  versioning_configuration { status = "Enabled" }\n}\nresource "aws_s3_bucket_public_access_block" "data" {\n  bucket                  = aws_s3_bucket.data.id\n  block_public_acls       = true\n  block_public_policy     = true\n  ignore_public_acls      = true\n  restrict_public_buckets = true\n}',
+'aws|Amazon RDS':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_db_instance" "prod" {\n  identifier           = "prod-db"\n  engine               = "postgres"\n  engine_version       = "16"\n  instance_class       = "db.t3.medium"\n  allocated_storage    = 100\n  multi_az             = true\n  storage_encrypted    = true\n  db_subnet_group_name = aws_db_subnet_group.data.name\n  username             = "admin"\n  password             = var.db_password  # lấy từ Secrets Manager/variable nhạy cảm\n  skip_final_snapshot  = false\n}',
+'aws|Amazon DynamoDB':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_dynamodb_table" "orders" {\n  name         = "Orders"\n  billing_mode = "PAY_PER_REQUEST"\n  hash_key     = "orderId"\n  attribute {\n    name = "orderId"\n    type = "S"\n  }\n  point_in_time_recovery { enabled = true }\n}',
+'aws|Amazon VPC':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_vpc" "main" {\n  cidr_block           = "10.0.0.0/16"\n  enable_dns_hostnames = true\n  tags = { Name = "prod-vpc" }\n}\nresource "aws_subnet" "private_a" {\n  vpc_id            = aws_vpc.main.id\n  cidr_block        = "10.0.11.0/24"\n  availability_zone = "ap-northeast-1a"\n}\nresource "aws_internet_gateway" "main" { vpc_id = aws_vpc.main.id }',
+'aws|AWS Transit Gateway':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_ec2_transit_gateway" "hub" {\n  description = "hub-tokyo"\n}\nresource "aws_ec2_transit_gateway_vpc_attachment" "app" {\n  transit_gateway_id = aws_ec2_transit_gateway.hub.id\n  vpc_id             = var.vpc_id\n  subnet_ids         = var.tgw_subnet_ids\n}',
+'aws|Amazon CloudFront':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_cloudfront_distribution" "site" {\n  enabled             = true\n  default_root_object = "index.html"\n  origin {\n    domain_name = aws_s3_bucket.site.bucket_regional_domain_name\n    origin_id   = "s3-site"\n    s3_origin_config { origin_access_identity = aws_cloudfront_origin_access_identity.site.cloudfront_access_identity_path }\n  }\n  default_cache_behavior {\n    target_origin_id       = "s3-site"\n    viewer_protocol_policy = "redirect-to-https"\n    allowed_methods        = ["GET", "HEAD"]\n    cached_methods         = ["GET", "HEAD"]\n    forwarded_values { query_string = false  cookies { forward = "none" } }\n  }\n  restrictions { geo_restriction { restriction_type = "none" } }\n  viewer_certificate { cloudfront_default_certificate = true }\n}',
+'aws|Elastic Load Balancing (ALB)':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_lb" "web" {\n  name               = "web-alb"\n  load_balancer_type = "application"\n  subnets            = var.public_subnet_ids\n  security_groups    = [aws_security_group.alb.id]\n}\nresource "aws_lb_listener" "https" {\n  load_balancer_arn = aws_lb.web.arn\n  port              = 443\n  protocol          = "HTTPS"\n  certificate_arn   = var.acm_certificate_arn\n  default_action {\n    type             = "forward"\n    target_group_arn = aws_lb_target_group.web.arn\n  }\n}',
+'aws|Amazon Route 53':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_route53_zone" "main" {\n  name = "example.com"\n}\nresource "aws_route53_record" "www" {\n  zone_id = aws_route53_zone.main.zone_id\n  name    = "www"\n  type    = "A"\n  alias {\n    name                   = aws_lb.web.dns_name\n    zone_id                = aws_lb.web.zone_id\n    evaluate_target_health = true\n  }\n}',
+'aws|AWS IAM':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_iam_role" "app" {\n  name = "app-role"\n  assume_role_policy = jsonencode({\n    Version = "2012-10-17"\n    Statement = [{ Effect = "Allow", Action = "sts:AssumeRole",\n      Principal = { Service = "ec2.amazonaws.com" } }]\n  })\n}\nresource "aws_iam_role_policy" "read_bucket" {\n  role = aws_iam_role.app.id\n  policy = jsonencode({\n    Version = "2012-10-17"\n    Statement = [{ Effect = "Allow",\n      Action   = ["s3:GetObject", "s3:ListBucket"],\n      Resource = ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"] }]\n  })\n}',
+'aws|Amazon SQS':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_sqs_queue" "orders_dlq" { name = "order-queue-dlq" }\nresource "aws_sqs_queue" "orders" {\n  name                       = "order-queue"\n  visibility_timeout_seconds = 60\n  redrive_policy = jsonencode({\n    deadLetterTargetArn = aws_sqs_queue.orders_dlq.arn\n    maxReceiveCount     = 3\n  })\n}',
+'aws|Amazon EventBridge':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_cloudwatch_event_rule" "nightly" {\n  name                = "nightly-report"\n  schedule_expression = "cron(0 15 * * ? *)"\n}\nresource "aws_cloudwatch_event_target" "report" {\n  rule = aws_cloudwatch_event_rule.nightly.name\n  arn  = aws_lambda_function.report.arn\n}',
+'aws|Amazon CloudWatch':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_cloudwatch_metric_alarm" "high_cpu" {\n  alarm_name          = "high-cpu"\n  metric_name         = "CPUUtilization"\n  namespace           = "AWS/EC2"\n  statistic           = "Average"\n  period              = 300\n  threshold           = 80\n  comparison_operator = "GreaterThanThreshold"\n  evaluation_periods  = 2\n  alarm_actions       = [aws_sns_topic.alerts.arn]\n  dimensions          = { InstanceId = var.instance_id }\n}',
+'aws|Amazon Athena':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_athena_database" "analytics" { name = "analytics"  bucket = aws_s3_bucket.query_results.id }\nresource "aws_athena_workgroup" "main" {\n  name = "analytics-wg"\n  configuration {\n    result_configuration { output_location = "s3://${aws_s3_bucket.query_results.id}/results/" }\n  }\n}',
+'aws|Amazon SageMaker':'provider "aws" { region = "ap-northeast-1" }\n\nresource "aws_sagemaker_notebook_instance" "dev" {\n  name          = "ml-dev"\n  instance_type = "ml.t3.medium"\n  role_arn      = aws_iam_role.sagemaker.arn\n}',
+'gcp|Compute Engine':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_compute_instance" "web" {\n  name         = "web-1"\n  machine_type = "e2-medium"\n  zone         = "asia-northeast1-a"\n  tags         = ["http-server"]\n  boot_disk { initialize_params { image = "debian-cloud/debian-12" } }\n  network_interface { network = "prod-net" }\n  service_account { email = google_service_account.web.email  scopes = ["cloud-platform"] }\n}',
+'gcp|Cloud Run':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_cloud_run_v2_service" "api" {\n  name     = "api-service"\n  location = "asia-northeast1"\n  template {\n    scaling { min_instance_count = 0  max_instance_count = 20 }\n    containers {\n      image = "asia-northeast1-docker.pkg.dev/${var.project_id}/repo/api:v1"\n      resources { limits = { cpu = "1", memory = "512Mi" } }\n    }\n  }\n}',
+'gcp|Google Kubernetes Engine (GKE)':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_container_cluster" "prod" {\n  name     = "prod-cluster"\n  location = "asia-northeast1"\n  enable_autopilot = true\n}',
+'gcp|Cloud Storage':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_storage_bucket" "data" {\n  name                        = "my-data-lake-example"\n  location                    = "asia-northeast1"\n  uniform_bucket_level_access = true\n  versioning { enabled = true }\n}',
+'gcp|Cloud SQL':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_sql_database_instance" "prod" {\n  name             = "prod-db"\n  database_version = "POSTGRES_15"\n  region           = "asia-northeast1"\n  settings {\n    tier              = "db-custom-2-7680"\n    availability_type = "REGIONAL"\n    backup_configuration { enabled = true  point_in_time_recovery_enabled = true }\n    ip_configuration { ipv4_enabled = false  private_network = var.vpc_id }\n  }\n  deletion_protection = true\n}',
+'gcp|BigQuery':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_bigquery_dataset" "analytics" {\n  dataset_id = "analytics"\n  location   = "asia-northeast1"\n}\nresource "google_bigquery_table" "orders" {\n  dataset_id = google_bigquery_dataset.analytics.dataset_id\n  table_id   = "orders"\n  time_partitioning { type = "DAY"  field = "day" }\n}',
+'gcp|Pub/Sub':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_pubsub_topic" "orders" { name = "order-events" }\nresource "google_pubsub_subscription" "orders" {\n  name                 = "order-sub"\n  topic                = google_pubsub_topic.orders.name\n  ack_deadline_seconds = 60\n  dead_letter_policy { dead_letter_topic = google_pubsub_topic.orders_dlq.id  max_delivery_attempts = 5 }\n}',
+'gcp|Cloud VPC (Google Cloud)':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_compute_network" "prod" {\n  name                    = "prod-net"\n  auto_create_subnetworks = false\n}\nresource "google_compute_subnetwork" "tokyo_app" {\n  name                     = "tokyo-app"\n  ip_cidr_range            = "10.10.0.0/20"\n  region                   = "asia-northeast1"\n  network                  = google_compute_network.prod.id\n  private_ip_google_access = true\n}',
+'gcp|Google Cloud IAM':'provider "google" { project = var.project_id  region = "asia-northeast1" }\n\nresource "google_service_account" "app" {\n  account_id   = "app-sa"\n  display_name = "Application service account"\n}\nresource "google_project_iam_member" "app_run" {\n  project = var.project_id\n  role    = "roles/run.developer"\n  member  = "serviceAccount:${google_service_account.app.email}"\n}\n# Ưu tiên Workload Identity cho GKE thay vì tải key JSON.'
+};
+function tfSnippet(cloud,name,group){
+  var real=TFMAP[cloud+'|'+name];
+  if(real) return '# Terraform — cấu hình thật cho '+name+' (điều chỉnh tên/ID theo dự án của bạn)\n'+real+'\n# Quy trình: terraform init && terraform plan (đọc kỹ diff) && terraform apply';
+  var slug=name.toLowerCase().replace(/^(amazon|aws|google cloud)\s+/,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  if(cloud==='aws') return '# KHUNG MẪU Terraform cho '+name+' — đây là khung để bắt đầu, chưa phải cấu hình chạy ngay:\n# điền resource type thật của service này từ registry.terraform.io/providers/hashicorp/aws\nprovider "aws" { region = "ap-northeast-1" }\n\n# resource "aws_<loại-tài-nguyên>" "'+slug+'" { ... }\n# Sau đó: terraform init && terraform plan && terraform apply';
+  return '# KHUNG MẪU Terraform cho '+name+' — đây là khung để bắt đầu, chưa phải cấu hình chạy ngay:\n# điền resource type thật của service này từ registry.terraform.io/providers/hashicorp/google\nprovider "google" { project = var.project_id  region = "asia-northeast1" }\n\n# resource "google_<loại-tài-nguyên>" "'+slug+'" { ... }\n# Sau đó: terraform init && terraform plan && terraform apply';
+}
+function svcDetailHTML(cloud,name){
+  var f=findSvc(cloud,name); if(!f.item&&!f.core) return '<p>Không tìm thấy service.</p>';
+  var core=f.core, item=f.item, group=f.group, gi=ginfo(group);
+  var desc=core?core.d:item[2]; var lvl=core?core.lvl:item[3]; var st=item?item[4]:null;
+  var glyph=core?core.gl:item[1];
+  var feats=core?core.u.slice():gi.feat;
+  var relLabs=[];
+  if(typeof LABS!=='undefined') LABS.forEach(function(l,i){ if(l.svc.indexOf(name)>-1) relLabs.push(['#/lab/'+i,l.t]); });
+  if(typeof MIGS!=='undefined') MIGS.forEach(function(m,i){ if(m.tool===name||m.to===name) relLabs.push(['#/miglab/'+i,m.t]); });
+  var cli=core?core.cfg:('# Thao tác cơ bản qua '+(cloud==='aws'?'AWS CLI':'gcloud')+' — mở CloudShell/Cloud Shell và tra lệnh của service:\n'+(cloud==='aws'?('aws '+name.toLowerCase().replace(/^(amazon|aws)\s+/,'').replace(/[^a-z0-9]+/g,'')+' help') : ('gcloud '+name.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()+' --help'))+'\n# Mọi thao tác tạo/sửa đều nên làm lại bằng Terraform ở bước sau để có IaC.');
+  var h='<p class="crumb"><a href="#/services">← Trang Services</a> · '+(cloud==='aws'?'AWS':'Google Cloud')+' · '+E(group)+'</p>';
+  h+='<div class="d-head">'+sicon(cloud,group,glyph,name,60)+'<div><span class="sub">'+(cloud==='aws'?'AWS':'Google Cloud')+' · '+E(group)+' · Cấp độ: '+LVL[lvl]+'</span><h2>'+E(name)+'</h2></div></div>';
+  if(st&&st[0]==='dep') h+='<div class="ex-feedback ng" style="margin:14px 0">⚠ Trạng thái: '+E(st[1])+' — chỉ học để nhận biết khi gặp trong hệ thống cũ, không chọn cho dự án mới.</div>';
+  if(st&&st[0]==='new') h+='<div class="ex-feedback ok" style="margin:14px 0">✦ Service mới (2025) thuộc thế hệ mới nhất của '+(cloud==='aws'?'AWS':'Google Cloud')+'.</div>';
+  h+='<div class="d-actions"><a class="btn btn-o" href="#/labs">Làm lab liên quan</a><a class="btn btn-g" href="#/compare">So sánh AWS ⇄ GCP</a><a class="btn btn-g" href="#/command">Luyện command</a></div>';
+  /* Overview + mini diagram */
+  h+='<div class="dsec"><h3>1 · Tổng quan & cách hoạt động</h3><p>'+E(desc)+'</p>'
+    +'<div class="flow-mini"><span class="fn">Người dùng / Ứng dụng</span><span class="fa">➜</span><span class="fn">'+sicon(cloud,group,glyph,name,22)+' '+E(name)+'</span><span class="fa">➜</span><span class="fn">Service liên quan trong '+E(group)+'</span><span class="fa">➜</span><span class="fn">Kết quả cho workload</span></div>'
+    +'<p style="margin-top:10px">Cách đọc sơ đồ mini: request/dữ liệu đi vào '+E(name)+', service xử lý theo cấu hình bạn đặt (mục 4), phát log/metric ra hệ giám sát (mục 7) và thường kết hợp các service liên quan ở cuối trang để thành một kiến trúc hoàn chỉnh.</p>'
+    +'<div class="jp-box"><b>日本語サマリー：</b>'+E(name)+' は '+(cloud==='aws'?'AWS':'Google Cloud')+' の「'+E(group)+'」分野のマネージドサービスです。要件定義では「何を解決するか」、基本設計では「どのサービスと組み合わせるか」、詳細設計では「パラメータと権限」を決めます。本番環境では監視と障害対応の手順まで含めて設計してください。</div></div>';
+  /* Features */
+  h+='<div class="dsec"><h3>2 · Tính năng chính</h3>'+(core?'':'<p style="border:1px dashed rgba(255,184,77,.6);border-radius:9px;padding:8px 12px"><b>Lưu ý:</b> mục này là hướng dẫn chung cho nhóm '+E(group)+' — hãy kiểm tra tính năng và giới hạn riêng của '+E(name)+' tại tài liệu chính thức trước khi thiết kế dự án thật.</p>')+'<ul>'+feats.map(function(x){return '<li>'+E(x)+'</li>';}).join('')+gi.feat.filter(function(x){return feats.indexOf(x)===-1;}).slice(0,2).map(function(x){return '<li>'+E(x)+'</li>';}).join('')+'</ul></div>';
+  /* When to use / not */
+  h+='<div class="dsec"><h3>3 · Khi nào dùng / khi nào không nên dùng</h3><h4>Nên dùng khi</h4><ul>'+(core?core.u.map(function(x){return '<li>'+E(x)+'</li>';}).join(''):'<li>'+E(desc)+'</li>')+'</ul><h4>Không nên dùng / cân nhắc thay thế khi</h4><p>'+(core?E(core.lim):'Bài toán nằm ngoài chuyên môn của service này (xem mục So sánh), hoặc workload quá nhỏ khiến chi phí vận hành managed service không tương xứng — hãy đối chiếu với service đơn giản hơn cùng nhóm ở cuối trang.')+'</p></div>';
+  /* Specs */
+  var specs=gi.spec.slice(); if(core) specs=[['Nhóm',group],['Cấp độ học',LVL[lvl]],['Cloud',cloud==='aws'?'Amazon Web Services':'Google Cloud Platform']].concat(specs);
+  h+='<div class="dsec"><h3>4 · Bảng thông số & cấu hình quan trọng</h3>'+(core?'':'<p style="border:1px dashed rgba(255,184,77,.6);border-radius:9px;padding:8px 12px"><b>Lưu ý:</b> bảng dưới đây là thông số/hướng dẫn chung cho nhóm '+E(group)+', không phải thông số riêng đã kiểm chứng của '+E(name)+' — đối chiếu trang giới hạn (limits) chính thức của service khi làm dự án thật.</p>')+'<div class="sub-scroll"><table class="spec">'+specs.map(function(r){return '<tr><th>'+E(r[0])+'</th><td>'+E(r[1])+'</td></tr>';}).join('')+'</table></div></div>';
+  /* Steps */
+  h+='<div class="dsec"><h3>5 · Hướng dẫn cấu hình từng bước</h3>'
+    +'<details class="dstep" open><summary>Cách A · Trên Console (để hiểu kiến trúc)</summary><ol><li>Mở '+(cloud==='aws'?'AWS Management Console':'Google Cloud Console')+', tìm <b>'+E(name)+'</b>, chọn region Tokyo (ap-northeast-1 / asia-northeast1).</li><li>Tạo tài nguyên với tên theo quy ước <span class="mono">dự-án-môi-trường-vai-trò</span>, gắn tag/label Project & Env ngay từ đầu.</li><li>Đặt cấu hình mạng: chỉ private khi có thể, security group/firewall tối thiểu.</li><li>Gắn quyền bằng role/service account riêng — không dùng quyền quản trị.</li><li>Bật logging/monitoring, kiểm tra kết quả ở mục 7 rồi mới bàn giao.</li></ol></details>'
+    +'<details class="dstep" open><summary>Cách B · Bằng '+(cloud==='aws'?'AWS CLI (CloudShell)':'gcloud (Cloud Shell)')+'</summary><div class="code-wrap"><pre class="code">'+E(cli)+'</pre></div></details>'
+    +'<details class="dstep"><summary>Cách C · Bằng Terraform (chuẩn Architect)</summary><div class="code-wrap"><pre class="code">'+E(tfSnippet(cloud,name,group))+'</pre></div><p>Quy trình chuẩn: <span class="mono">plan</span> → duyệt diff → <span class="mono">apply</span> → commit state an toàn (remote backend). Xem thêm ở <a href="#/architect">Trang Architect</a>.</p></details></div>';
+  /* Pricing */
+  h+='<div class="dsec"><h3>6 · Mô hình giá & ví dụ tính tiền</h3><p>'+(core?E(core.pr):'Trả theo mức sử dụng thực tế của service (dung lượng / request / thời gian chạy tùy loại). Không có chi phí cố định nếu service serverless; service dạng instance/VM tính theo giờ cấu hình đã chọn.')+'</p><div class="lab-out"><b>Ví dụ tính tiền (minh hoạ, số giả sử để luyện cách tính):</b> Chi phí tháng ≈ (mức dùng cơ bản × đơn giá của region) + (lưu lượng truyền ra × đơn giá egress) + (log/lưu trữ phụ trợ). Ví dụ workload nhỏ chạy liên tục ở mức cơ bản thường rơi vào nhóm chi phí “vài USD–vài chục USD/tháng”, còn workload production multi-AZ thì nhân đôi phần hạ tầng dự phòng. Luôn thay đơn giá thật tại '+(cloud==='aws'?'AWS Pricing Calculator':'Google Cloud Pricing Calculator')+' trước khi báo見積もり cho khách.</div></div>';
+  /* Limits + security + monitoring */
+  h+='<div class="dsec"><h3>7 · Giới hạn / quota · Bảo mật · Giám sát</h3>'+(core?'':'<p style="border:1px dashed rgba(255,184,77,.6);border-radius:9px;padding:8px 12px"><b>Lưu ý:</b> các khuyến nghị bảo mật/giám sát ở mục này áp dụng chung cho nhóm '+E(group)+'; giới hạn riêng của từng service xem tại tài liệu chính thức.</p>')+'<h4>Giới hạn & điểm cần nhớ</h4><p>'+(core?E(core.lim):'Chịu quota mặc định theo tài khoản/project và theo region; một số giới hạn tăng được bằng ticket hỗ trợ, một số là giới hạn cứng của kiến trúc. Kiểm tra trang giới hạn chính thức của service trước khi thiết kế tải lớn.')+'</p><h4>Bảo mật — best practice</h4><ul>'+gi.sec.map(function(x){return '<li>'+E(x)+'</li>';}).join('')+'</ul><h4>Monitoring & logging</h4><ul>'+gi.mon.map(function(x){return '<li>'+E(x)+'</li>';}).join('')+'</ul></div>';
+  /* Errors + compare */
+  h+='<div class="dsec"><h3>8 · Lỗi thường gặp & so sánh với service dễ nhầm</h3><h4>Lỗi thường gặp — kèm cách sửa</h4><p>'+(core?E(core.err):'Cấu hình mạng/quyền sai là nguyên nhân số 1: kiểm tra theo thứ tự Route → Firewall/Security Group → IAM → Log của service. Lỗi thứ hai là quên dọn tài nguyên sau khi test khiến chi phí tăng lặng lẽ.')+'</p><h4>So sánh</h4><p>'+(core?E(core.vs):'Mở <a href="#/compare">Trang So sánh AWS ⇄ GCP</a> để xem service tương đương phía cloud còn lại, và xem các service cùng nhóm ở cuối trang này để phân biệt ranh giới sử dụng trong cùng một cloud.')+'</p></div>';
+  /* Related + labs + FAQ */
+  h+='<div class="dsec"><h3>9 · Service liên quan & lab liên quan</h3><div id="svcRelHost"></div>'
+    +(relLabs.length?'<h4>Lab liên quan</h4><ul>'+relLabs.map(function(x){return '<li><a href="'+x[0]+'">'+E(x[1])+'</a></li>';}).join('')+'</ul>':'<p>Chưa có lab gắn trực tiếp service này — hãy làm các lab cùng nhóm ở <a href="#/labs">Trang Labs</a>.</p>')
+    +'<h4>FAQ ngắn</h4>'
+    +'<div class="faq-item"><b>'+E(name)+' có nằm trong Free Tier không?</b><p>Tùy thời điểm và region — nhiều service có mức miễn phí cho tài khoản mới hoặc mức dùng nhỏ. Kiểm tra trang Free Tier chính thức của '+(cloud==='aws'?'AWS':'Google Cloud')+' trước khi thực hành và luôn đặt cảnh báo ngân sách.</p></div>'
+    +'<div class="faq-item"><b>Học '+E(name)+' ở mức nào là đủ?</b><p>Service cốt lõi (nhãn Chi tiết sâu ở danh mục) cần thuộc lòng cấu hình và lỗi thường gặp; service còn lại nắm “giải quyết bài toán gì, đặt ở đâu trong kiến trúc” là đủ, học sâu khi dự án cần.</p></div>'
+    +'<div class="faq-item"><b>Dùng '+E(name)+' ở công ty Nhật cần lưu ý gì?</b><p>Ghi tham số vào パラメータシート, thao tác trên 本番環境 phải có 構築手順書 và kế hoạch 切り戻し (rollback). Ưu tiên region Tokyo để giảm độ trễ và đáp ứng yêu cầu cư trú dữ liệu.</p></div></div>';
+  return h;
+}
+function wireSvcRel(cloud,group,name){
+  var host=$('svcRelHost'); if(!host||typeof relatedHTML!=='function') return;
+  host.innerHTML=relatedHTML(cloud,group,name);
+  host.querySelectorAll('[data-rel]').forEach(function(b){
+    b.addEventListener('click',function(){ location.hash='#/service/'+cloud+'/'+encodeURIComponent(b.getAttribute('data-rel')); });
+  });
+}
+window.__openSvcDetail=function(cloud,name){
+  $('svcDetailBody').innerHTML=svcDetailHTML(cloud,name);
+  wireSvcRel(cloud,findSvc(cloud,name).group,name);
+  showPage('svcDetail');
+  if(window.__applyJA) window.__applyJA();
+};
+window.openSvc=function(cloud,name){ location.hash='#/service/'+cloud+'/'+encodeURIComponent(name); };
+
+/* ================= LAB DETAIL PAGE ================= */
+function sampleForStep(txt, cloud){
+  var t=txt.replace(/<[^>]+>/g,' ').toLowerCase();
+  function o(lines, read){ return {o:lines, r:read}; }
+  if(/create-vpc|networks create/.test(t)) return o(['$ '+(cloud==='aws'?'aws ec2 create-vpc --cidr-block 10.0.0.0/16':'gcloud compute networks create prod-net --subnet-mode=custom'),'{','  "Vpc": { "VpcId": "vpc-0abc1234", "CidrBlock": "10.0.0.0/16", "State": "available" }','}  (GCP: Created [https://www.googleapis.com/compute/v1/projects/PROJECT/global/networks/prod-net].)'],'Tài nguyên được tạo thành công và ở trạng thái available — ghi lại ID (vpc-…) để dùng cho các bước sau.');
+  if(/subnet/.test(t)) return o(['SubnetId: subnet-0a1b2c  CidrBlock: 10.0.1.0/24  AvailabilityZone: ap-northeast-1a  State: available'],'Subnet đã sẵn sàng trong đúng AZ/region đã chọn — đối chiếu CIDR với bảng quy hoạch trước khi đi tiếp.');
+  if(/internet gateway|igw/.test(t)) return o(['InternetGatewayId: igw-0abc1234  Attachments: [{ VpcId: vpc-0abc1234, State: available }]'],'IGW đã gắn vào VPC. Chưa có route trỏ tới IGW thì subnet vẫn chưa ra internet được.');
+  if(/nat/.test(t)) return o(['NatGatewayId: nat-0abc1234  State: available  PublicIp: 203.0.113.10'],'NAT Gateway cần vài phút để sang available. Route private trỏ 0.0.0.0/0 → nat-… là bước tiếp theo.');
+  if(/create-function|functions deploy|lambda/.test(t)) return o(['FunctionName: api-fn  State: Active  LastUpdateStatus: Successful','Function ARN: arn:aws:lambda:ap-northeast-1:123456789012:function:api-fn'],'Function ở trạng thái Active/Successful nghĩa là deploy xong — kiểm tra log lần chạy đầu tiên ngay.');
+  if(/run deploy|cloud run/.test(t)) return o(['Deploying new service... done.','Service [api-service] revision [api-service-00001] has been deployed and is serving 100 percent of traffic.','Service URL: https://api-service-xxxxx-an.a.run.app'],'Có URL service nghĩa là deploy thành công. Mở URL kiểm tra, 403/404 thường do quyền invoker hoặc route của app.');
+  if(/create-db-instance|sql instances create|rds|cloud sql/.test(t)) return o(['DBInstanceStatus: available  Endpoint: prod-db.xxxxx.ap-northeast-1.rds.amazonaws.com:5432','(GCP) Operation done. instance: prod-db  state: RUNNABLE'],'Database cần 5–15 phút mới available/RUNNABLE. Chỉ kết nối được từ mạng riêng đã cấu hình.');
+  if(/terraform|plan|apply/.test(t)) return o(['Plan: 12 to add, 0 to change, 0 to destroy.','Apply complete! Resources: 12 added, 0 changed, 0 destroyed.'],'Đọc kỹ Plan trước Apply: số tài nguyên add/destroy phải khớp thiết kế. Destroy ngoài dự kiến = dừng lại kiểm tra.');
+  if(/eksctl|container clusters|gke|eks|kubectl/.test(t)) return o(['NAME           STATUS   ROLES    VERSION','node-10-0-1    Ready    <none>   v1.29','node-10-0-2    Ready    <none>   v1.29'],'Mọi node Ready nghĩa là cluster khỏe. Chưa Ready sau 10 phút thì kiểm tra sự kiện bằng kubectl describe node.');
+  if(/s3 sync|storage rsync|upload|sync/.test(t)) return o(['upload: ./dist/index.html to s3://my-bucket/index.html','upload: ./dist/app.js to s3://my-bucket/app.js','Total: 2 files, 184 KB transferred'],'Số file và dung lượng khớp nguồn là đạt. Kiểm tra lại bằng lệnh ls ở đích.');
+  if(/create-repository|ecr|artifact registry|docker push|builds submit/.test(t)) return o(['Pushed image asia-northeast1-docker.pkg.dev/PROJECT/repo/app:v1','Digest: sha256:9f2c…e41a  Tag: v1'],'Có digest sha256 nghĩa là image đã lên registry — dùng digest/tag này trong bước deploy.');
+  if(/curl|test|kiểm chứng|kiểm tra/.test(t)) return o(['$ curl -s https://example-app.internal/health','{"status":"ok","version":"1.0.0"}  HTTP 200'],'Trả HTTP 200 và nội dung đúng kỳ vọng là bằng chứng bước này hoàn thành (エビデンス cho tài liệu kiểm chứng).');
+  if(/alarm|dashboard|monitoring|cloudwatch/.test(t)) return o(['AlarmName: high-cpu  State: OK  Metric: CPUUtilization > 80% (2 datapoints)'],'Alarm ở trạng thái OK và có hành động gắn kèm (SNS/notification channel) mới coi là xong.');
+  return o(['✓ Hoàn thành — tài nguyên trả về trạng thái thành công (available / RUNNABLE / Active).','Ghi lại ID/tên tài nguyên vừa tạo vào bảng tham số (パラメータシート) để dùng cho bước sau và cho cleanup.'],'Đối chiếu tên/ID/region của tài nguyên vừa tạo với thiết kế trước khi sang bước tiếp theo — sai region là lỗi hay gặp nhất.');
+}
+window.__labDone={};
+function labStepsHTML(steps, cloud, keyPrefix){
+  return steps.map(function(s,i){
+    var sm=sampleForStep(s,cloud);
+    return '<details class="dstep"'+(i===0?' open':'')+'><summary>Bước '+(i+1)+' · '+(cloud==='aws'?'AWS':'Google Cloud')+'</summary><p>'+s+'</p>'
+      +'<div class="sample-out"><div class="so-head">● ● ●  kết quả mẫu mong đợi — expected output</div><pre>'+E(sm.o.join('\n'))+'</pre><div class="so-read"><b>Cách kiểm chứng:</b> '+E(sm.r)+'</div></div></details>';
+  }).join('');
+}
+function labDetailHTML(kind, idx){
+  var isMig = kind==='mig'; var l = isMig?MIGS[idx]:LABS[idx]; if(!l) return '<p>Không tìm thấy lab.</p>';
+  var title=l.t, goal=isMig?('Di chuyển: '+l.from+' → '+l.to+' bằng '+l.tool):l.goal;
+  var svcList=isMig?[l.tool,l.to]:(l.svc||[]);
+  var key=(isMig?'mig':'lab')+idx;
+  var h='<p class="crumb"><a href="'+(isMig?'#/migration':'#/labs')+'">← '+(isMig?'Trang Migration':'Trang Labs')+'</a></p>';
+  h+='<div class="d-head"><div><span class="sub">'+(isMig?'Lab Migration':'Lab thực hành')+' · ⏱ '+E(l.time||'60 phút')+(isMig?'':' · Mức độ: '+LVLLAB[l.lv])+'</span><h2>'+E(title)+'</h2></div></div>';
+  h+='<div class="dsec"><h3>1 · Mục tiêu & kết quả đạt được</h3><p><b>Mục tiêu:</b> '+E(goal)+'</p><p><b>Kết quả cần đạt:</b> '+E(l.out||l.note)+'</p>'
+    +'<div class="flow-mini">'+svcList.map(function(n,i){ return (i?'<span class="fa">➜</span>':'')+'<span class="fn">'+iconOf(n,22)+' '+E(n)+'</span>'; }).join('')+'</div>'
+    +'<p style="margin-top:8px">Sơ đồ kiến trúc của lab: các service ở trên nối theo chiều mũi tên — làm xong mỗi bước, đối chiếu trạng thái thật với sơ đồ này.</p></div>';
+  h+='<div class="dsec"><h3>2 · Điều kiện chuẩn bị</h3><ul>'
+    +'<li><b>Tài khoản:</b> tài khoản AWS sandbox/Free Tier và Google Cloud project riêng cho học tập — không dùng tài khoản production.</li>'
+    +'<li><b>Quyền:</b> quyền quản trị giới hạn trong phạm vi lab (AdministratorAccess ở sandbox AWS / roles/owner ở project học tập GCP), tắt sau khi học.</li>'
+    +'<li><b>Công cụ:</b> trình duyệt mở sẵn AWS CloudShell và Google Cloud Shell (đã có sẵn aws CLI, gcloud, Terraform, kubectl).</li>'
+    +'<li><b>Chi phí ước tính:</b> phần lớn lab ở mức Free Tier hoặc vài USD nếu dọn dẹp ngay; khoản dễ phát sinh nhất là NAT Gateway, database và load balancer chạy qua đêm.</li>'
+    +'<li><b>Thời gian:</b> '+E(l.time||'60 phút')+' — cộng thêm 15 phút cho cleanup và ghi chép.</li></ul></div>';
+  if(isMig){
+    h+='<div class="dsec"><h3>3 · Các bước thực hiện</h3>'+l.steps.map(function(s,i){ var sm=sampleForStep(s,'aws'); return '<details class="dstep"'+(i===0?' open':'')+'><summary>Bước '+(i+1)+'</summary><p>'+E(s)+'</p><div class="sample-out"><div class="so-head">● ● ●  kết quả mẫu mong đợi</div><pre>'+E(sm.o.join('\n'))+'</pre><div class="so-read"><b>Cách kiểm chứng:</b> '+E(sm.r)+'</div></div></details>'; }).join('')+'</div>';
+  } else {
+    h+='<div class="dsec"><h3>3 · Các bước thực hiện — song song AWS ⇄ GCP</h3><h4>Phía AWS · aws CLI</h4>'+labStepsHTML(l.aws,'aws',key+'a')+'<h4>Phía Google Cloud · gcloud CLI</h4>'+labStepsHTML(l.gcp,'gcp',key+'g')+'</div>';
+  }
+  h+='<div class="dsec"><h3>4 · Lỗi hay gặp trong lab & cách xử lý</h3><ul>'
+    +'<li><b>AccessDenied / PERMISSION_DENIED:</b> kiểm tra danh tính trước (<span class="mono">aws sts get-caller-identity</span> / <span class="mono">gcloud config get-value project</span>), rồi mới tới policy — sai project/region chiếm đa số ca.</li>'
+    +'<li><b>Tạo tài nguyên “thành công” nhưng không kết nối được:</b> đi theo gói tin Route → Security Group/Firewall → NACL → DNS, đúng quy trình ở <a href="#/networking">Trang Networking</a>.</li>'
+    +'<li><b>Lệnh chờ rất lâu / timeout:</b> database và cluster cần 5–15 phút; đừng huỷ giữa chừng — kiểm tra trạng thái bằng lệnh describe/list.</li>'
+    +'<li><b>Chi phí tăng sau lab:</b> gần như luôn do quên NAT Gateway, DB hoặc LB — làm ngay mục 5.</li></ul></div>';
+  h+='<div class="dsec"><h3>5 · Dọn dẹp tài nguyên (cleanup) — bắt buộc</h3><ol>'
+    +'<li>Xoá tài nguyên tính tiền theo giờ trước: NAT Gateway, Load Balancer, database, cluster.</li>'
+    +'<li>Xoá compute (VM/instance, function, service) và image/snapshot không còn dùng.</li>'
+    +'<li>Xoá mạng theo thứ tự ngược lúc tạo: subnet → route table → VPC/network cuối cùng.</li>'
+    +'<li>Kiểm tra lại bằng lệnh list của cả hai cloud và mục Billing: không còn tài nguyên lạ của lab này.</li></ol>'
+    +'<h4>Checklist tự đánh dấu hoàn thành</h4><ul class="check-list" data-labkey="'+key+'">'
+    +['Hoàn thành đủ các bước phía AWS','Hoàn thành đủ các bước phía '+(isMig?'cloud đích':'Google Cloud'),'Đối chiếu kết quả thật với từng khung “kết quả mẫu”','Đã xử lý/hiểu rõ các lỗi gặp trong lúc làm','Đã cleanup toàn bộ tài nguyên và kiểm tra Billing'].map(function(c,i){ return '<li><input type="checkbox" data-ck="'+key+'-'+i+'" '+(window.__labDone[key+'-'+i]?'checked':'')+' /><span>'+c+'</span></li>'; }).join('')+'</ul>'
+    +'<p style="font-size:13px;color:var(--muted)">Checklist chỉ giữ trong phiên học hiện tại để bạn tự theo dõi tiến độ.</p></div>';
+  return h;
+}
+window.__openLabDetail=function(kind,idx){
+  $('labDetailBody').innerHTML=labDetailHTML(kind,idx);
+  $('labDetailBody').querySelectorAll('input[type=checkbox][data-ck]').forEach(function(cb){
+    cb.addEventListener('change',function(){ window.__labDone[cb.getAttribute('data-ck')]=cb.checked; cb.closest('li').classList.toggle('done',cb.checked); });
+    if(cb.checked) cb.closest('li').classList.add('done');
+  });
+  showPage('labDetail');
+  if(window.__applyJA) window.__applyJA();
+};
+/* Add detail buttons into lab / migration cards */
+function filteredLabIdx(){
+  var dom=$('labFilter')?$('labFilter').value:'all', lv=$('labLevel')?$('labLevel').value:'all', out=[];
+  LABS.forEach(function(l,i){ if(dom!=='all'&&l.dom!==dom) return; if(lv!=='all'&&LVLLAB[l.lv]!==lv) return; out.push(i); });
+  return out;
+}
+function decorateCards(){
+  var lg=$('labGrid');
+  if(lg){ var idxs=filteredLabIdx(); lg.querySelectorAll('.lab-card').forEach(function(card,pos){ if(card.querySelector('.lab-detail-btn')) return; var a=document.createElement('a'); a.className='lab-detail-btn'; a.href='#/lab/'+(idxs[pos]!==undefined?idxs[pos]:pos); a.textContent='Mở trang chi tiết lab →'; card.appendChild(a); }); }
+  var mg=$('migGrid');
+  if(mg){ mg.querySelectorAll('.lab-card').forEach(function(card,pos){ if(card.querySelector('.lab-detail-btn')) return; var a=document.createElement('a'); a.className='lab-detail-btn'; a.href='#/miglab/'+pos; a.textContent='Mở trang chi tiết lab →'; card.appendChild(a); }); }
+}
+new MutationObserver(function(){ decorateCards(); }).observe(document.querySelector('main'),{childList:true,subtree:true});
+decorateCards();
+
+/* ================= COMMAND — SAMPLE OUTPUTS ================= */
+var EXOUT=[
+ {o:'total 48\ndrwxr-xr-x  5 user user 4096 Nov  3 09:12 .\ndrwxr-xr-x 20 user user 4096 Nov  3 08:40 ..\n-rw-------  1 user user  212 Nov  2 21:03 .bash_history\ndrwxr-xr-x  2 user user 4096 Nov  3 09:12 project\n-rw-r--r--  1 user user  845 Nov  3 09:10 app.log',r:'Cột đầu là quyền (d = thư mục), tiếp theo là chủ sở hữu, dung lượng (byte) và ngày sửa. File bắt đầu bằng dấu chấm là file ẩn — chỉ hiện nhờ cờ -a.',rj:'先頭列が権限（dはディレクトリ）、続いて所有者、サイズ（バイト）、更新日時です。ドットで始まる隠しファイルは -a で表示されます。'},
+ {o:'Filesystem      Size  Used Avail Use% Mounted on\n/dev/root        29G   24G  5.4G  82% /\ntmpfs           2.0G     0  2.0G   0% /dev/shm\n/dev/sdb1       100G   61G   39G  62% /data',r:'Cột Use% cho biết phân vùng nào sắp đầy; Mounted on là điểm gắn. Ở ví dụ này phân vùng gốc / đã dùng 82% — cần theo dõi.',rj:'Use% 列で満杯に近いパーティションが分かります。この例ではルート / が82%使用済みです。'},
+ {o:'(lệnh chạy im lặng — không có output nghĩa là thành công)\n$ ls project/\ndocs  src',r:'mkdir thành công thường không in gì. Kiểm chứng bằng ls: thấy đủ src và docs là đạt.',rj:'mkdir は成功時に何も出力しません。ls で src と docs が見えれば完了です。'},
+ {o:'(không có output — thành công)\n$ ls -l deploy.sh\n-rwxr-x--- 1 user user 512 Nov  3 09:20 deploy.sh',r:'Chuỗi -rwxr-x--- xác nhận đúng 750: owner rwx, group r-x, others không quyền.',rj:'-rwxr-x--- が 750 の確認です：所有者 rwx、グループ r-x、その他は権限なし。'},
+ {o:'State  Recv-Q Send-Q Local Address:Port  Peer Address:Port Process\nLISTEN 0      4096   0.0.0.0:22          0.0.0.0:*  users:(("sshd",pid=812,fd=3))\nLISTEN 0      511    0.0.0.0:80          0.0.0.0:*  users:(("nginx",pid=1044,fd=6))\nLISTEN 0      511    [::]:80             [::]:*     users:(("nginx",pid=1044,fd=7))',r:'Mỗi dòng LISTEN là một cổng đang chờ kết nối; cột Process cho biết tiến trình nào chiếm cổng (cần sudo mới thấy của mọi user).',rj:'LISTEN の行が待受ポートです。Process 列で使用中プロセスが分かります。'},
+ {o:'$ grep -c "ERROR" app.log\n137',r:'Output chỉ là một con số: 137 dòng chứa ERROR. Số này tự nó chưa nói lỗi gì — bước tiếp theo là grep ERROR app.log | tail để xem nội dung.',rj:'出力は数字のみ：ERROR を含む行が137行あります。次は内容確認です。'},
+ {o:'2026/11/03 09:41:02 [error] 1044#1044: connect() failed (111: Connection refused) while connecting to upstream\n2026/11/03 09:41:05 [notice] 1044#1044: signal process started\n... (log mới tiếp tục chạy theo thời gian thực, Ctrl+C để thoát)',r:'tail -f giữ màn hình mở: dòng mới tự trôi vào. Đây là màn hình bạn nhìn trong lúc tái hiện lỗi để bắt đúng dòng error.',rj:'tail -f では新しい行が流れ続けます。エラー再現中に見る画面です。'},
+ {o:'{\n    "UserId": "AIDACKCEVSQ6C2EXAMPLE",\n    "Account": "123456789012",\n    "Arn": "arn:aws:iam::123456789012:user/dev-taro"\n}',r:'Đọc 3 trường: Account = số tài khoản AWS, Arn = danh tính đầy đủ (user hay role), UserId = mã định danh. Mọi lỗi quyền đều bắt đầu bằng việc đối chiếu Arn này.',rj:'Account はAWSアカウント番号、Arn は完全な身份、UserId は識別子です。権限エラーはまず Arn の確認から。'},
+ {o:'2025-10-21 14:03:11 my-data-lake\n2025-11-01 09:44:52 my-web-assets\n2026-01-15 18:22:07 backup-archive',r:'Mỗi dòng: ngày giờ tạo bucket + tên bucket. Không có bucket nào hiện ra nghĩa là tài khoản chưa có bucket ở mọi region.',rj:'各行は作成日時とバケット名です。'},
+ {o:'upload: ./dist/index.html to s3://my-bucket/index.html\nupload: ./dist/assets/app.js to s3://my-bucket/assets/app.js\nupload: ./dist/assets/style.css to s3://my-bucket/assets/style.css',r:'Chỉ file thay đổi mới xuất hiện trong output — file không đổi bị bỏ qua lặng lẽ. Chạy lại lần hai ngay lập tức thường cho output trống.',rj:'変更されたファイルだけが表示されます。再実行で出力が空なら同期済みです。'},
+ {o:'--------------------------\n|      DescribeInstances     |\n+----------------------------+\n|  i-0a1b2c3d4e5f67890       |\n|  i-0f9e8d7c6b5a43210       |\n+----------------------------+',r:'Dạng table vẽ khung ASCII với duy nhất cột InstanceId — nhờ --query đã lọc bỏ toàn bộ trường thừa của JSON gốc.',rj:'--query で絞ったため InstanceId 列だけの表になっています。'},
+ {o:'https://my-bucket.s3.ap-northeast-1.amazonaws.com/file.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...&X-Amz-Expires=3600&X-Amz-Signature=9f2c...',r:'Toàn bộ output là một URL dài chứa chữ ký và thời hạn (X-Amz-Expires=3600 giây). Gửi URL này cho người nhận; hết hạn là tự vô hiệu.',rj:'出力全体が署名付きURLです。X-Amz-Expires=3600 が有効期間（秒）です。'},
+ {o:'my-cloud-project',r:'Output chỉ một dòng: project ID đang hiệu lực. Mọi lệnh gcloud sau đó đều chạy trong project này nếu không chỉ định khác.',rj:'出力は1行：有効なプロジェクトIDです。'},
+ {o:'NAME     ZONE               MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS\nweb-1    asia-northeast1-a  e2-medium                  10.128.0.2   34.146.10.21    RUNNING\ndb-1     asia-northeast1-c  e2-standard-2              10.128.0.5                   RUNNING',r:'Bảng gồm tên VM, zone, loại máy, IP trong/ngoài và trạng thái. db-1 không có EXTERNAL_IP nghĩa là máy chỉ có IP nội bộ — đúng thiết kế private.',rj:'VM名、ゾーン、マシンタイプ、内部/外部IP、状態の表です。外部IPが空ならプライベート構成です。'},
+ {o:'gs://my-data-lake/\ngs://my-web-assets/\ngs://backup-archive/',r:'Mỗi dòng một bucket với tiền tố gs:// — dùng nguyên dạng gs://tên-bucket làm đích cho các lệnh cp/rsync.',rj:'各行が gs:// 形式のバケットです。'},
+ {o:'Fetching cluster endpoint and auth data.\nkubeconfig entry generated for prod.\n$ kubectl get nodes\nNAME                    STATUS   ROLES    AGE   VERSION\nnode-pool-1-a1b2        Ready    <none>   12d   v1.29',r:'Dòng “kubeconfig entry generated” là dấu hiệu thành công. Kiểm chứng ngay bằng kubectl get nodes — node Ready là cluster sẵn sàng.',rj:'kubeconfig entry generated が成功の印です。kubectl get nodes で確認します。'},
+ {o:'Copying file://file.zip [Content-Type=application/octet-stream]...\n/ [1 files][  2.3 MiB/  2.3 MiB]',r:'Thanh tiến trình cho thấy dung lượng đã tải / tổng dung lượng; đạt 100% và quay về dấu nhắc là xong. Sao chép thư mục thì thêm cờ đệ quy, hoặc dùng rsync của gcloud storage.',rj:'進捗表示が 100% になれば完了です。'},
+ {o:'$ df -h\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/root        29G   29G     0 100% /\n$ du -sh /var/log\n8.4G    /var/log',r:'Đây là output chẩn đoán của đáp án đúng: df xác nhận / đầy 100%, du chỉ ra /var/log chiếm 8.4G — thủ phạm là log, xử lý log trước, không reboot.',rj:'df で / が100%、du で /var/log が8.4G と判明。原因はログです。'},
+ {o:'$ systemctl status nginx\n● nginx.service - A high performance web server\n   Active: failed (Result: exit-code) since Tue 2026-11-03 09:12:44 JST\n$ journalctl -u nginx -n 20\nnginx: [emerg] bind() to 0.0.0.0:443 failed (98: Address already in use)',r:'status cho biết service failed; journal chỉ rõ nguyên nhân: cổng 443 đã bị tiến trình khác chiếm. Đọc được dòng emerg này mới quyết định cách sửa.',rj:'status で failed、journal で原因（443ポート使用中）が分かります。'},
+ {o:'$ kubectl get pods\nNAME                    READY   STATUS             RESTARTS   AGE\napi-7d9f8b6c5-x2abc     0/1     CrashLoopBackOff   7          18m\n$ kubectl logs api-7d9f8b6c5-x2abc --previous\nError: required env var DATABASE_URL is not set',r:'Log của container vừa crash nói thẳng nguyên nhân: thiếu biến môi trường DATABASE_URL ở bản deploy mới. Sửa config/secret rồi rollout lại.',rj:'前回コンテナのログで原因（DATABASE_URL 未設定）が判明します。'},
+ {o:'$ aws ec2 describe-route-tables --filters Name=vpc-id,Values=vpc-0abc\nRouteTable: rtb-0def — Routes: [ 10.0.0.0/16 → local ]   ← THIẾU route 0.0.0.0/0 → NAT\nSecurity Group outbound: tcp 443 → 0.0.0.0/0  ✓\nDNS: app.internal resolves to 10.0.11.25  ✓',r:'Output chẩn đoán cho thấy route table private chưa có đường ra NAT — đúng điểm nghẽn đầu tiên trong chuỗi Route → NAT → SG → NACL → DNS.',rj:'プライベートルートテーブルに NAT への経路がないことが判明します。'}
+];
+var exOutEl=document.createElement('div'); exOutEl.className='sample-out'; exOutEl.id='exOut'; exOutEl.style.marginTop='14px'; exOutEl.hidden=true;
+var fbEl=$('exFeedback'); fbEl.parentNode.insertBefore(exOutEl, fbEl.nextSibling);
+var lastSig='';
+function renderExOut(){
+  var e=(typeof curEx==='function')?curEx():null; if(!e) return;
+  var idx=EX.indexOf(e); var rec=EXOUT[idx]; if(!rec) { exOutEl.hidden=true; return; }
+  var ja=(window.LANG==='ja');
+  exOutEl.innerHTML='<div class="so-head">● ● ●  '+(ja?'サンプル出力 — Kết quả mẫu (output)':'kết quả mẫu (output) — khi chạy lệnh đúng trên shell thật')+'</div><pre>'+E(rec.o)+'</pre><div class="so-read"><b>'+(ja?'読み方：':'Cách đọc output: ')+'</b>'+E(rec.r)+(rec.rj?'<br /><span style="color:#8fd8ef">'+E(rec.rj)+'</span>':'')+'</div>';
+  exOutEl.hidden=false;
+}
+new MutationObserver(function(){
+  var fb=$('exFeedback'); if(!fb) return;
+  var sig=fb.innerHTML+'|'+fb.hidden;
+  if(sig===lastSig) return; lastSig=sig;
+  if(!fb.hidden && /(Chính xác|Đáp án|Đúng quy trình|phương án|正解|答え)/.test(fb.textContent)) renderExOut();
+  else if(fb.hidden) exOutEl.hidden=true;
+}).observe(fbEl,{attributes:true,attributeFilter:['hidden'],childList:true,subtree:true});
+new MutationObserver(function(){ exOutEl.hidden=true; lastSig=''; }).observe($('exPrompt'),{childList:true,characterData:true,subtree:true});
+
+/* ================= ROUTER ================= */
+function parseRoute(){
+  var h=location.hash||'#/';
+  var m;
+  if(h==='#/'||h===''||h==='#top'||h==='#') return {page:'home'};
+  if((m=h.match(/^#\/service\/(aws|gcp)\/(.+)$/))) return {page:'svcDetail',cloud:m[1],name:decodeURIComponent(m[2])};
+  if((m=h.match(/^#\/lab\/(\d+)$/))) return {page:'labDetail',kind:'lab',idx:+m[1]};
+  if((m=h.match(/^#\/miglab\/(\d+)$/))) return {page:'labDetail',kind:'mig',idx:+m[1]};
+  if((m=h.match(/^#\/(services|labs|migration|networking|architect|command|compare|glossary)$/))) return {page:m[1]};
+  if((m=h.match(/^#\/(diagrams|du-an|deploy)$/))) return {page: m[1]==='deploy'?'glossary':(m[1]==='du-an'?'architect':'networking')};
+  return {page:'home'};
+}
+function applyRoute(){
+  var r=parseRoute();
+  if(r.page==='svcDetail'){ window.__openSvcDetail(r.cloud,r.name); return; }
+  if(r.page==='labDetail'){ window.__openLabDetail(r.kind,r.idx); return; }
+  if(r.page==='compare'){
+    showPage('compare');
+    if(state.cloud!=='cmp'){ /* render compare table on demand */ try{ renderCompare(); }catch(e){} var cv=$('cmpView'); if(cv) cv.hidden=false; }
+    if(window.__applyJA) window.__applyJA();
+    return;
+  }
+  showPage(r.page);
+}
+window.addEventListener('hashchange',applyRoute);
+/* Compare tab inside services -> go to compare page */
+document.querySelectorAll('.ctab').forEach(function(t){
+  t.addEventListener('click',function(ev){ if(t.getAttribute('data-cloud')==='cmp'){ ev.preventDefault(); ev.stopPropagation(); location.hash='#/compare'; } },true);
+});
+/* Old in-page anchor links in body content -> routes */
+var ANCH={'#services':'#/services','#labs':'#/labs','#migration':'#/migration','#diagrams':'#/networking','#networking':'#/networking','#du-an':'#/architect','#architect':'#/architect','#command':'#/command','#glossary':'#/glossary','#deploy':'#/glossary','#top':'#/'};
+document.querySelectorAll('main a[href^="#"], header.hero a[href^="#"]').forEach(function(a){
+  var href=a.getAttribute('href'); if(ANCH[href]) a.setAttribute('href',ANCH[href]);
+});
+applyRoute();
+})();
+
+</script>
+</body>
 </html>
