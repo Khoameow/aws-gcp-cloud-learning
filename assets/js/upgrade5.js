@@ -45,13 +45,20 @@ function E(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&
 
 var openWrap=null;
 
+function ddList(wrap){ return wrap._list||wrap.querySelector('.cp-dd-list'); }
 function closeDD(wrap){
   if(!wrap) return;
   wrap.classList.remove('open');
   var btn=wrap.querySelector('.cp-dd-btn');
   if(btn) btn.setAttribute('aria-expanded','false');
-  var list=wrap.querySelector('.cp-dd-list');
-  if(list) list.hidden=true;
+  var list=ddList(wrap);
+  if(list){
+    list.hidden=true;
+    /* Lúc mở, panel được đưa ra <body> (xem openDD) — đóng thì trả về wrap */
+    if(list.parentNode&&list.parentNode!==wrap) wrap.appendChild(list);
+    list.classList.remove('cp-dd-portal');
+    list.style.cssText='';
+  }
   if(openWrap===wrap) openWrap=null;
 }
 function closeAllDD(except){
@@ -59,7 +66,7 @@ function closeAllDD(except){
 }
 
 function buildOptions(wrap){
-  var sel=wrap._sel, list=wrap.querySelector('.cp-dd-list');
+  var sel=wrap._sel, list=ddList(wrap);
   list.innerHTML='';
   Array.prototype.forEach.call(sel.options,function(op,i){
     var b=document.createElement('button');
@@ -78,7 +85,7 @@ function syncDD(wrap){
   var op=sel.options[sel.selectedIndex];
   var val=wrap.querySelector('.cp-dd-val');
   if(val) val.textContent=op?op.textContent:'';
-  wrap.querySelectorAll('.cp-dd-opt').forEach(function(b){
+  ddList(wrap).querySelectorAll('.cp-dd-opt').forEach(function(b){
     var on=(+b.getAttribute('data-i')===sel.selectedIndex);
     b.classList.toggle('sel',on);
     b.setAttribute('aria-selected',on?'true':'false');
@@ -93,19 +100,54 @@ function pickOption(wrap,i,focusBtn){
   if(changed) sel.dispatchEvent(new Event('change',{bubbles:true}));
   if(focusBtn){ var btn=wrap.querySelector('.cp-dd-btn'); if(btn) btn.focus(); }
 }
+/* ==== PORTAL PANEL (sửa lỗi panel bị che/cắt — cùng họ lỗi panel menu) ====
+   Trước đây panel là position:absolute nằm trong wrap, mà các thẻ chứa
+   dropdown (.calc, .diagram-card, .svc-card…) đều có backdrop-filter →
+   mỗi thẻ là một stacking context riêng: z-index của panel bị "nhốt"
+   trong thẻ, phần panel tràn ra ngoài bị thẻ nội dung phía sau vẽ đè lên
+   (ảnh người dùng: dropdown Prefix ở máy tính CIDR chỉ lộ 1 dòng đầu).
+   Cách sửa: khi mở, đưa panel ra thẳng <body> + position:fixed theo tọa
+   độ nút bấm (tự lật lên trên nếu dưới không đủ chỗ), đóng thì trả về
+   wrap. Thoát hẳn mọi tổ tiên gây cắt/đè, áp dụng cho MỌI dropdown. */
+function positionList(wrap){
+  var list=ddList(wrap), btn=wrap.querySelector('.cp-dd-btn');
+  if(!list||!btn||list.hidden) return;
+  var r=btn.getBoundingClientRect();
+  var vw=window.innerWidth, vh=window.innerHeight;
+  list.style.position='fixed';
+  list.style.zIndex='1000';
+  list.style.right='auto';
+  list.style.bottom='auto';
+  list.style.width='auto';
+  list.style.minWidth=r.width+'px';
+  var w=list.offsetWidth;
+  list.style.left=Math.max(4,Math.min(r.left,Math.max(4,vw-w-4)))+'px';
+  var spaceBelow=vh-r.bottom-12, spaceAbove=r.top-12;
+  var natural=list.offsetHeight;
+  if(spaceBelow>=Math.min(natural,300)||spaceBelow>=spaceAbove){
+    list.style.maxHeight=Math.max(120,Math.min(300,spaceBelow))+'px';
+    list.style.top=(r.bottom+6)+'px';
+  }else{
+    list.style.maxHeight=Math.max(120,Math.min(300,spaceAbove))+'px';
+    list.style.top=(r.top-6-list.offsetHeight)+'px';
+  }
+}
 function openDD(wrap){
   buildOptions(wrap); /* dựng lại nhãn theo ngôn ngữ hiện tại mỗi lần mở */
   closeAllDD(wrap);
-  var list=wrap.querySelector('.cp-dd-list');
+  var list=ddList(wrap);
+  document.body.appendChild(list); /* portal: thoát khỏi thẻ chứa gây đè/cắt */
+  list.classList.add('cp-dd-portal');
   list.hidden=false;
   wrap.classList.add('open');
   wrap.querySelector('.cp-dd-btn').setAttribute('aria-expanded','true');
   openWrap=wrap;
-  var sel=wrap.querySelector('.cp-dd-opt.sel')||wrap.querySelector('.cp-dd-opt');
+  positionList(wrap);
+  var sel=list.querySelector('.cp-dd-opt.sel')||list.querySelector('.cp-dd-opt');
   if(sel) sel.focus();
 }
 function focusStep(wrap,dir){
-  var opts=Array.prototype.slice.call(wrap.querySelectorAll('.cp-dd-opt'));
+  var opts=Array.prototype.slice.call(ddList(wrap).querySelectorAll('.cp-dd-opt'));
   if(!opts.length) return;
   var i=opts.indexOf(document.activeElement);
   var n=(i===-1)?(dir>0?0:opts.length-1):Math.min(opts.length-1,Math.max(0,i+dir));
@@ -125,6 +167,7 @@ function enhance(sel){
     +'<span class="cp-dd-val"></span><span class="cp-dd-chev" aria-hidden="true">▾</span></button>'
     +'<div class="cp-dd-list" role="listbox" hidden></div>';
   if(sel.parentNode) sel.parentNode.insertBefore(wrap, sel.nextSibling);
+  wrap._list=wrap.querySelector('.cp-dd-list');
   var btn=wrap.querySelector('.cp-dd-btn');
   btn.addEventListener('click',function(ev){
     ev.preventDefault(); ev.stopPropagation();
@@ -135,11 +178,11 @@ function enhance(sel){
     else if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); if(wrap.classList.contains('open')) closeDD(wrap); else openDD(wrap); }
     else if(ev.key==='Escape'){ closeDD(wrap); }
   });
-  wrap.querySelector('.cp-dd-list').addEventListener('keydown',function(ev){
+  wrap._list.addEventListener('keydown',function(ev){
     if(ev.key==='ArrowDown'){ ev.preventDefault(); focusStep(wrap,1); }
     else if(ev.key==='ArrowUp'){ ev.preventDefault(); focusStep(wrap,-1); }
-    else if(ev.key==='Home'){ ev.preventDefault(); var f=wrap.querySelector('.cp-dd-opt'); if(f) f.focus(); }
-    else if(ev.key==='End'){ ev.preventDefault(); var all=wrap.querySelectorAll('.cp-dd-opt'); if(all.length) all[all.length-1].focus(); }
+    else if(ev.key==='Home'){ ev.preventDefault(); var f=wrap._list.querySelector('.cp-dd-opt'); if(f) f.focus(); }
+    else if(ev.key==='End'){ ev.preventDefault(); var all=wrap._list.querySelectorAll('.cp-dd-opt'); if(all.length) all[all.length-1].focus(); }
     else if(ev.key==='Escape'){ ev.preventDefault(); closeDD(wrap); btn.focus(); }
     else if(ev.key==='Tab'){ closeDD(wrap); }
   });
@@ -168,6 +211,7 @@ var FALLBACK_CSS=[
 '.cp-dd-chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#22d3ee;font-size:11px;transition:transform .22s ease;pointer-events:none}',
 '.cp-dd.open .cp-dd-chev{transform:translateY(-50%) rotate(180deg);color:#ff9900}',
 '.cp-dd-list{position:absolute;top:calc(100% + 6px);left:0;min-width:100%;max-width:min(340px,92vw);max-height:300px;overflow-y:auto;z-index:300;background:linear-gradient(170deg,#0d1730,#070c17);border:1.5px solid rgba(34,211,238,.55);border-radius:12px;padding:5px;box-shadow:0 18px 44px rgba(0,0,0,.7),0 0 24px rgba(34,211,238,.18)}',
+'.cp-dd-list.cp-dd-portal{position:fixed;z-index:1000;top:auto;left:auto}',
 '.cp-dd-opt{font:inherit;font-size:14px;text-align:left;width:100%;display:flex;align-items:center;gap:9px;padding:10px 11px;min-height:44px;border:1px solid transparent;border-radius:8px;background:transparent;color:#b9c8e4;cursor:pointer}',
 '.cp-dd-opt:hover,.cp-dd-opt:focus-visible{background:rgba(34,211,238,.12);color:#e8f1ff;outline:none}',
 '.cp-dd-opt .cp-check{color:#ff9900;font-weight:800;width:15px;flex:none;opacity:0;text-shadow:0 0 8px rgba(255,153,0,.7)}',
@@ -208,11 +252,15 @@ function ensureCss(){
 }
 
 document.addEventListener('click',function(e){
-  if(openWrap&&(!e.target.closest||!e.target.closest('.cp-dd'))) closeDD(openWrap);
+  /* Panel lúc mở nằm ở <body> (portal) — bấm TRONG panel không phải bấm ngoài */
+  if(openWrap&&(!e.target.closest||(!e.target.closest('.cp-dd')&&!e.target.closest('.cp-dd-list')))) closeDD(openWrap);
 });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&openWrap){ closeDD(openWrap); }
 });
+/* Panel fixed phải bám theo nút khi cuộn trang / đổi kích thước cửa sổ */
+document.addEventListener('scroll',function(){ if(openWrap) positionList(openWrap); },true);
+window.addEventListener('resize',function(){ if(openWrap) positionList(openWrap); });
 
 /* Select sinh động (thanh phân trang Services, trang IaC…) — tự gắn khi xuất hiện.
    Chỉ dựng observer khi body đã có; nếu chưa, init() bên dưới sẽ lo phần tĩnh
