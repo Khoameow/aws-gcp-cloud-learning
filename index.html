@@ -378,15 +378,15 @@
           <div class="sec-head reveal">
             <span class="sec-tag">Phần 6 · Thiết kế dự án</span>
             <h2>Quy trình phân tích &amp; thiết kế một dự án AWS từ A–Z</h2>
-            <p>Đây là quy trình chuẩn của Solutions Architect khi nhận một bài toán thật: không bắt đầu bằng việc chọn service, mà bắt đầu bằng yêu cầu nghiệp vụ và các ràng buộc phi chức năng (NFR).</p>
+            <p>Đây là quy trình chuẩn của Solutions Architect khi nhận một bài toán thật: không bắt đầu bằng việc chọn service, mà bắt đầu bằng yêu cầu nghiệp vụ và các ràng buộc phi chức năng (NFR — Non-Functional Requirements, yêu cầu phi chức năng). Bấm vào từng thẻ bước bên dưới để xem chi tiết của bước đó.</p>
           </div>
           <div class="steps reveal">
             <div class="step"><span class="n">01</span><b>Thu thập yêu cầu</b><p>Phỏng vấn stakeholder: nghiệp vụ, người dùng, lưu lượng hiện tại &amp; dự báo, ngân sách, deadline, ràng buộc pháp lý (dữ liệu phải ở region nào…).</p></div>
-            <div class="step"><span class="n">02</span><b>Phân tích NFR</b><p>Định lượng: RTO/RPO, SLA uptime, p95 latency, throughput đỉnh, tăng trưởng/năm. NFR quyết định kiến trúc — không phải sở thích công nghệ.</p></div>
-            <div class="step"><span class="n">03</span><b>Thiết kế kiến trúc</b><p>Chọn service theo NFR, vẽ sơ đồ (VPC, AZ, luồng dữ liệu), quyết định các điểm đánh đổi và ghi lại thành ADR (Architecture Decision Record).</p></div>
+            <div class="step"><span class="n">02</span><b>Phân tích NFR</b><p>Định lượng: RTO (Recovery Time Objective — thời gian khôi phục tối đa chấp nhận được sau sự cố) / RPO (Recovery Point Objective — lượng dữ liệu tối đa chấp nhận mất, tính ngược theo thời gian), SLA uptime (Service Level Agreement — cam kết mức dịch vụ), p95 latency (95% số request phải nhanh hơn ngưỡng này), throughput đỉnh, tăng trưởng/năm. NFR quyết định kiến trúc — không phải sở thích công nghệ.</p></div>
+            <div class="step"><span class="n">03</span><b>Thiết kế kiến trúc</b><p>Chọn service theo NFR, vẽ sơ đồ (VPC, AZ, luồng dữ liệu), quyết định các điểm đánh đổi và ghi lại thành ADR (Architecture Decision Record — bản ghi quyết định kiến trúc: tài liệu ngắn ghi lại từng quyết định lớn, lý do chọn và điểm đánh đổi).</p></div>
             <div class="step"><span class="n">04</span><b>Ước tính chi phí</b><p>Dùng AWS Pricing Calculator theo 3 kịch bản (hiện tại / tăng trưởng / đỉnh), tính cả phí ẩn: NAT Gateway, data transfer, request S3.</p></div>
-            <div class="step"><span class="n">05</span><b>Well-Architected Review</b><p>Soi lại thiết kế qua 6 trụ cột bằng AWS Well-Architected Tool, xử lý các rủi ro cao (HRI) trước khi triển khai.</p></div>
-            <div class="step"><span class="n">06</span><b>Triển khai &amp; vận hành</b><p>IaC (Terraform/CDK) qua pipeline CI/CD, observability (CloudWatch, X-Ray), runbook, diễn tập failover &amp; khôi phục.</p></div>
+            <div class="step"><span class="n">05</span><b>Well-Architected Review</b><p>Soi lại thiết kế qua 6 trụ cột bằng AWS Well-Architected Tool, xử lý các rủi ro cao (HRI — High-Risk Issue, vấn đề rủi ro cao) trước khi triển khai.</p></div>
+            <div class="step"><span class="n">06</span><b>Triển khai &amp; vận hành</b><p>IaC (Infrastructure as Code — hạ tầng dạng code: Terraform/CDK) qua pipeline CI/CD (Continuous Integration / Continuous Delivery — tích hợp &amp; chuyển giao liên tục), observability (CloudWatch, X-Ray), runbook, diễn tập failover &amp; khôi phục.</p></div>
           </div>
 
           <h3 style="margin-bottom:12px;font-size:17px">6 trụ cột AWS Well-Architected Framework</h3>
@@ -402,7 +402,7 @@
 
           <div class="diagram-card reveal">
             <h3>Case study mẫu — Sàn thương mại điện tử giờ cao điểm</h3>
-            <p><b>Yêu cầu → quyết định:</b> 50.000 user đồng thời giờ sale → ALB + Auto Scaling + cache ElastiCache; ảnh sản phẩm toàn quốc → S3 + CloudFront; không mất đơn khi AZ sập → RDS Multi-AZ; tìm kiếm sản phẩm → OpenSearch; thanh toán tách riêng → SQS + Lambda xử lý bất đồng bộ; RPO ≤ 5 phút → bật PITR &amp; backup liên region cho dữ liệu đơn hàng.</p>
+            <p><b>Yêu cầu → quyết định:</b> 50.000 user đồng thời giờ sale → ALB + Auto Scaling + cache ElastiCache; ảnh sản phẩm toàn quốc → S3 + CloudFront; không mất đơn khi AZ sập → RDS Multi-AZ; tìm kiếm sản phẩm → OpenSearch; thanh toán tách riêng → SQS + Lambda xử lý bất đồng bộ; RPO (Recovery Point Objective — điểm khôi phục, lượng dữ liệu tối đa chấp nhận mất) ≤ 5 phút → bật PITR (Point-In-Time Recovery — khôi phục dữ liệu về đúng một thời điểm trong quá khứ) &amp; backup liên region cho dữ liệu đơn hàng.</p>
             <div class="sub-scroll"><table class="cmp">
               <tr><th>Lớp</th><th>Thiết kế</th><th>Lý do (NFR)</th></tr>
               <tr><td><b>Edge</b></td><td>Route 53 → CloudFront + WAF</td><td>Latency thấp toàn quốc, chặn tấn công lớp 7</td></tr>
@@ -422,7 +422,7 @@
               <li><b>Private subnet</b> cho app &amp; data; chỉ ALB/NAT ở public subnet</li>
               <li><b>IAM least privilege</b>, role cho workload — không dùng access key dài hạn</li>
               <li><b>Mã hoá</b> at-rest (KMS) &amp; in-transit (TLS) cho mọi dữ liệu</li>
-              <li><b>Backup &amp; diễn tập khôi phục</b> đúng RTO/RPO đã cam kết</li>
+              <li><b>Backup &amp; diễn tập khôi phục</b> đúng RTO/RPO (thời gian khôi phục / điểm khôi phục đã chốt ở bước 02) đã cam kết</li>
               <li><b>IaC 100%</b> — không click tay trên production</li>
               <li><b>Tagging &amp; ngân sách</b>: gắn tag dự án/môi trường, cảnh báo chi phí tự động</li>
               <li><b>Observability</b>: log, metric, trace và alarm có người trực nhận</li>
@@ -806,5 +806,6 @@ jobs:
     <script src="assets/js/upgrade4.js"></script>
     <script src="assets/js/upgrade5.js"></script>
     <script src="assets/js/upgrade6.js"></script>
+    <script src="assets/js/upgrade7.js"></script>
 </body>
 </html>

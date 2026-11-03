@@ -1056,3 +1056,34 @@ select.cp-native{position:absolute!important;width:1px!important;height:1px!impo
    ============================================================ */
 body>nav.top{position:sticky;top:0;z-index:500}
 .nav-panel{position:fixed;z-index:500;pointer-events:auto}
+
+/* ============================================================
+   ĐỢT 7 · PHẦN 6 — thẻ bước bấm mở panel chi tiết bên dưới,
+   khối từ viết tắt, và dòng giải thích thuật ngữ trong panel
+   node của sơ đồ chứng chỉ (upgrade7.js).
+   ============================================================ */
+#du-an .step-x{cursor:pointer;position:relative;transition:border-color .15s,box-shadow .15s}
+#du-an .step-x:hover{border-color:var(--orange)}
+#du-an .step-x:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+#du-an .step-x.open{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange),0 10px 26px rgba(0,0,0,.35)}
+#du-an .step-x .chev{position:absolute;top:16px;right:14px;color:var(--orange);font-size:15px;font-weight:800;line-height:1}
+.step-detail{background:var(--panel);border:1px solid var(--orange);border-radius:14px;padding:20px 22px;margin:0 0 26px}
+.sd-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.sd-head .sd-n{font-size:24px;font-weight:800;color:var(--orange)}
+.sd-head h4{font-size:17px;margin:0}
+.sd-sec{margin-top:14px}
+.sd-sec>b{display:block;font-size:14.5px;margin-bottom:6px}
+.sd-sec p{font-size:14px;color:var(--ink2);margin:0;line-height:1.6}
+.sd-sec.sd-ex{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.checklist.sd-one{grid-template-columns:1fr}
+.checklist.sd-one li{margin-bottom:2px}
+.sd-errs{list-style:none;margin:0;padding:0}
+.sd-errs li{font-size:14px;color:var(--ink2);padding-left:26px;position:relative;margin-bottom:6px;line-height:1.55}
+.sd-errs li::before{content:"✕";position:absolute;left:0;top:0;width:19px;height:19px;border-radius:6px;background:rgba(224,82,82,.16);color:#fb8f9f;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.gloss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin-top:12px}
+.gloss-item{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.gloss-item .gt{color:var(--orange);font-size:15px}
+.gloss-item .gf{font-weight:600;font-size:13.5px}
+.gloss-item p{font-size:13px;color:var(--ink2);margin:6px 0 0;line-height:1.55}
+.cert-terms{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(45,212,191,.35);font-size:13px;line-height:1.6;color:var(--ink2)}
+@media(max-width:620px){.step-detail{padding:16px}.gloss-grid{grid-template-columns:1fr}}
