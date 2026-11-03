@@ -1089,3 +1089,31 @@ body>nav.top{position:sticky;top:0;z-index:500}
 .gloss-item p{font-size:13px;color:var(--ink2);margin:6px 0 0;line-height:1.55}
 .cert-terms{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(45,212,191,.35);font-size:13px;line-height:1.6;color:var(--ink2)}
 @media(max-width:620px){.step-detail{padding:16px}.gloss-grid{grid-template-columns:1fr}}
+
+/* ============================================================
+   ĐỢT NGÂN HÀNG CÂU HỎI · Giải thích từng phương án + phiên
+   ============================================================ */
+.qb-whys{margin:2px 0 12px;border:1px solid var(--line2);border-radius:12px;padding:12px 14px;background:rgba(10,16,30,.55)}
+.qb-whys-t{margin:0 0 9px;font-size:12.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.qb-why{display:flex;gap:10px;padding:8px 9px;border-radius:9px;font-size:13.6px;line-height:1.55;color:var(--ink2)}
+.qb-why + .qb-why{margin-top:5px}
+.qb-why .qb-wm{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;margin-top:1px;border:1px solid var(--line)}
+.qb-why.w-ok{background:rgba(20,60,35,.4)}
+.qb-why.w-ok .qb-wm{background:var(--green-soft);border-color:var(--green);color:#4ade80}
+.qb-why.w-ng{background:rgba(70,25,35,.35)}
+.qb-why.w-ng .qb-wm{background:var(--red-soft);border-color:var(--red);color:#fb7185}
+.qb-why.w-no .qb-wm{color:var(--muted)}
+.qb-why b{color:var(--ink)}
+.qb-why .qb-wx{display:block;margin-top:2px}
+.qb-filter{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:14px 0 4px}
+.qb-filter .ctab{padding:8px 16px;font-size:13.5px;min-height:44px}
+.qb-score{margin-left:auto}
+.qb-badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;padding:2px 8px;border-radius:99px;vertical-align:2px}
+.qb-badge.qb-aws{background:rgba(255,153,0,.16);border:1px solid rgba(255,153,0,.6);color:#ffb84d}
+.qb-badge.qb-gcp{background:rgba(77,163,255,.14);border:1px solid rgba(77,163,255,.6);color:#8fc6ff}
+.qb-badge.qb-cmp{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.6);color:#c4b0fa}
+.qb-topic{font-size:12px;color:var(--teal,#2dd4bf);font-weight:600}
+.qb-sum{margin-top:18px;border:1px solid rgba(167,139,250,.55);border-radius:14px;padding:16px 18px;background:rgba(30,22,58,.5)}
+.qb-sum b{font-size:16.5px;color:#fff}
+.qb-sum p{margin:7px 0 12px;font-size:14px;color:var(--ink2);line-height:1.6}
+@media (max-width:768px){ .qb-score{margin-left:0} .qb-why{font-size:13.2px} }

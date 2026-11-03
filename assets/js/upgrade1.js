@@ -352,7 +352,11 @@ var QUIZ_MIG=[
      ['Retain — giữ lại on-prem','Retain — オンプレミスに残す']],
   c:1,
   e:'Rehost là “lift & shift nguyên trạng” — nhanh nhất, ít thay đổi nhất, công cụ chuẩn là MGN (replicate liên tục rồi cutover). Refactor cho giá trị dài hạn cao nhất nhưng tốn kém và chậm nhất, ngược yêu cầu.',
-  ej:'Rehost は「現状のまま移す」戦略で最速・最小変更、標準ツールは MGN（継続レプリケーション後に切り替え）です。Refactor は長期的価値は高い反面、最も時間とコストがかかります。'},
+  ej:'Rehost は「現状のまま移す」戦略で最速・最小変更、標準ツールは MGN（継続レプリケーション後に切り替え）です。Refactor は長期的価値は高い反面、最も時間とコストがかかります。',
+  x:[['Sai — viết lại cloud-native tốn nhiều tháng và thay đổi gần như toàn bộ ứng dụng, ngược hẳn yêu cầu “thoát càng nhanh càng tốt, gần như không sửa”.','誤り — クラウドネイティブへの書き直しは数か月単位でアプリ全体が変わり、「最速・ほぼ無改修」の要件と正反対です。'],
+     ['Đúng — Rehost giữ nguyên trạng ứng dụng; MGN replicate liên tục rồi cutover nên nhanh nhất và ít thay đổi nhất.','正解 — Rehost はアプリを現状のまま移し、MGN の継続レプリケーションと切り替えで最速・最小変更です。'],
+     ['Sai — Repurchase nghĩa là bỏ ứng dụng hiện tại để mua SaaS thay thế, thay cả quy trình nghiệp vụ, không còn là “giữ nguyên ứng dụng”.','誤り — Repurchase は現行アプリを捨てて SaaS に替えるため業務プロセスまで変わり、「そのまま移す」にはなりません。'],
+     ['Sai — Retain là giữ lại on-prem, tức không thoát được data center, trái thẳng mục tiêu chính của ban giám đốc.','誤り — Retain はオンプレミスに残すことであり、データセンター退出という経営層の目的に反します。']]},
  {q:'Khảo sát danh mục (Assess) cho thấy khoảng 15% hệ thống không còn ai dùng hoặc trùng lặp chức năng. Xử lý đúng theo 7R?',
   qj:'棚卸し（Assess）の結果、約15%のシステムが未使用または機能重複だった。7R での正しい扱いは？',
   o:[['Cứ Rehost toàn bộ lên cloud cho đồng bộ','全部まとめて Rehost する'],
@@ -361,7 +365,11 @@ var QUIZ_MIG=[
      ['Repurchase — mua bản mới thay thế','Repurchase — 新製品に買い替える']],
   c:1,
   e:'Đó chính là Retire: tắt hẳn hệ thống trùng lặp/không còn dùng — theo tài liệu AWS, nhóm này thường chiếm 10–20% danh mục và loại bỏ chúng giúp tiết kiệm ngay trước khi di chuyển.',
-  ej:'それが Retire です：重複・未使用システムを廃止します。AWS の資料でもこの層は全体の10〜20%程度を占め、移行前に除くことで即座に節約できます。'},
+  ej:'それが Retire です：重複・未使用システムを廃止します。AWS の資料でもこの層は全体の10〜20%程度を占め、移行前に除くことで即座に節約できます。',
+  x:[['Sai — Rehost cả hệ thống đã chết lên cloud chỉ biến chi phí on-prem thành chi phí cloud, không giải quyết được phần lãng phí.','誤り — 死んだシステムまで Rehost するとオンプレのコストがクラウドのコストに化けるだけで、無駄は消えません。'],
+     ['Đúng — hệ thống không còn dùng hoặc trùng lặp thì xử lý đúng theo 7R là Retire: tắt hẳn, thường chiếm 10–20% danh mục.','正解 — 未使用・重複システムの 7R は Retire（廃止）。全体の10〜20%を占めるのが通例です。'],
+     ['Sai — Retain chỉ dành cho hệ thống còn lý do giữ tạm (mới nâng cấp, ràng buộc pháp lý); giữ vô thời hạn hệ không ai dùng không phải Retain mà là bỏ mặc.','誤り — Retain は「直近の更改済み」「法的制約」など一時的に残す理由がある場合用で、誰も使わないシステムの無期限放置ではありません。'],
+     ['Sai — Repurchase là mua giải pháp thay thế cho nhu cầu còn tồn tại; ở đây nhu cầu đã không còn nên không có gì để “mua thay”.','誤り — Repurchase は需要が残っている場合の置き換え策。需要自体が消えたシステムに買うものはありません。']]},
  {q:'Chuyển Oracle on-prem sang Amazon Aurora PostgreSQL (đổi cả engine). Cặp công cụ và chiến lược đúng?',
   qj:'オンプレミスの Oracle を Amazon Aurora PostgreSQL へ（エンジンも変更）。正しいツールの組み合わせと戦略は？',
   o:[['MGN chuyển server là đủ','MGN でサーバーを移せば十分'],
@@ -370,7 +378,11 @@ var QUIZ_MIG=[
      ['Storage Transfer Service','Storage Transfer Service']],
   c:1,
   e:'Đổi engine là bài toán hai lớp: SCT chuyển đổi schema/đối tượng (tự động ~70–90%, PL/SQL phải sửa tay), DMS làm full load + CDC để downtime gần 0. Đây là mẫu Replatform kinh điển — động lực lớn nhất là thoát license Oracle.',
-  ej:'エンジン変更は2層の課題です：SCT でスキーマ変換（自動70〜90%、PL/SQL は手修正）、DMS でフルロード＋CDC によりダウンタイム最小化。これは Replatform の典型で、最大の動機は Oracle ライセンスからの脱却です。'},
+  ej:'エンジン変更は2層の課題です：SCT でスキーマ変換（自動70〜90%、PL/SQL は手修正）、DMS でフルロード＋CDC によりダウンタイム最小化。これは Replatform の典型で、最大の動機は Oracle ライセンスからの脱却です。',
+  x:[['Sai — MGN chuyển server ở tầng hệ điều hành/khối dữ liệu (block), không chuyển đổi được engine database từ Oracle sang PostgreSQL.','誤り — MGN は OS/ブロック層のサーバー移行であり、Oracle から PostgreSQL へのエンジン変換はできません。'],
+     ['Đúng — đổi engine là bài toán hai lớp: SCT chuyển schema/đối tượng, DMS full load + CDC đồng bộ liên tục. Đây là mẫu Replatform kinh điển.','正解 — エンジン変更は2層の課題：SCT でスキーマ変換、DMS でフルロード＋CDC。これは Replatform の典型です。'],
+     ['Sai — DataSync đồng bộ file/object giữa các hệ lưu trữ, không chuyển schema và không replicate giao dịch của database.','誤り — DataSync はストレージ間のファイル同期専用で、スキーマ変換も DB トランザクション複製も行いません。'],
+     ['Sai — Storage Transfer Service là dịch vụ của Google Cloud (chuyển dữ liệu vào GCP), không phải công cụ cho bài toán chuyển sang Aurora.','誤り — Storage Transfer Service は Google Cloud 側の転送サービスで、Aurora への移行ツールではありません。']]},
  {q:'Thứ tự đúng của quy trình migration chuẩn 3 giai đoạn là?',
   qj:'標準的な移行プロセス3フェーズの正しい順序は？',
   o:[['Migrate → Assess → Mobilize','Migrate → Assess → Mobilize'],
@@ -379,7 +391,11 @@ var QUIZ_MIG=[
      ['Assess → Migrate → Mobilize','Assess → Migrate → Mobilize']],
   c:1,
   e:'Assess (đánh giá danh mục & phụ thuộc, phân loại 7R) → Mobilize (dựng Landing Zone: tài khoản, mạng, bảo mật, logging) → Migrate & Modernize (chuyển theo wave). Bỏ qua hai giai đoạn đầu rồi nhảy vào chuyển server là nguyên nhân thất bại phổ biến nhất.',
-  ej:'Assess（棚卸しと依存関係、7R 分類）→ Mobilize（ランディングゾーン構築：アカウント、ネットワーク、セキュリティ、ログ）→ Migrate & Modernize（ウェーブ移行）の順です。最初の2段階を飛ばすのが失敗の最大要因です。'},
+  ej:'Assess（棚卸しと依存関係、7R 分類）→ Mobilize（ランディングゾーン構築：アカウント、ネットワーク、セキュリティ、ログ）→ Migrate & Modernize（ウェーブ移行）の順です。最初の2段階を飛ばすのが失敗の最大要因です。',
+  x:[['Sai — chuyển server trước khi đánh giá là mù bản đồ phụ thuộc, và chưa có Landing Zone thì không có nền tài khoản/mạng/bảo mật để hạ cánh.','誤り — 評価前に移すと依存関係が見えず、ランディングゾーンがなければ受け皿のアカウント/ネットワーク/セキュリティ基盤がありません。'],
+     ['Đúng — Assess (đánh giá & phân loại 7R) → Mobilize (dựng Landing Zone) → Migrate & Modernize (chuyển theo wave) là thứ tự chuẩn.','正解 — Assess（棚卸しと 7R 分類）→ Mobilize（ランディングゾーン構築）→ Migrate & Modernize（ウェーブ移行）が標準順序です。'],
+     ['Sai — dựng nền (Mobilize) trước khi biết danh mục và yêu cầu thật (Assess) dễ xây sai quy mô và phải làm lại.','誤り — Assess 前の Mobilize は棚卸しも要件も分からないまま基盤を作るため、規模を誤りやすく手戻りします。'],
+     ['Sai — xen Migrate vào giữa khiến workload phải hạ cánh khi Landing Zone chưa hoàn thiện, rủi ro bảo mật và vận hành.','誤り — 途中に Migrate を挟むと、ランディングゾーン未完成のままワークロードを受け入れることになり、セキュリティと運用のリスクになります。']]},
  {q:'Khi cutover database bằng DMS, cách làm an toàn nhất để downtime ngắn nhất?',
   qj:'DMS でデータベースを切り替える際、ダウンタイムを最短にする最も安全な方法は？',
   o:[['Dừng hệ thống nguồn cả ngày rồi sao chép tay','ソースを丸1日止めて手作業コピー'],
@@ -388,7 +404,11 @@ var QUIZ_MIG=[
      ['Chỉ full load một lần, không cần CDC','フルロード1回のみで CDC は不要']],
   c:1,
   e:'Đúng quy trình trong lab migration DB: full load dữ liệu lịch sử → CDC bắt kịp thay đổi liên tục → kiểm chứng dữ liệu → cutover khi lag về 0 trong cửa sổ ghi dừng ngắn. Chỉ full load một lần sẽ mất mọi thay đổi phát sinh sau đó.',
-  ej:'DB 移行ラボの手順通り：履歴データのフルロード → CDC で変更を継続同期 → データ検証 → 遅延ゼロの短い停止窓で切り替え。フルロードのみではその後の変更が失われます。'},
+  ej:'DB 移行ラボの手順通り：履歴データのフルロード → CDC で変更を継続同期 → データ検証 → 遅延ゼロの短い停止窓で切り替え。フルロードのみではその後の変更が失われます。',
+  x:[['Sai — dừng nguồn cả ngày tạo downtime rất dài, và sao chép tay dễ sai lệch dữ liệu, khó kiểm chứng toàn vẹn.','誤り — ソースを丸1日止めるとダウンタイムが長く、手作業コピーは不整合が起きやすく完全性の検証も困難です。'],
+     ['Đúng — full load dữ liệu lịch sử trước, CDC bắt kịp mọi thay đổi liên tục, chờ lag về ~0 rồi mới đổi connection string trong cửa sổ dừng ghi ngắn.','正解 — 先に履歴データをフルロードし、CDC で変更を継続同期、遅延がほぼ0になってから短い停止窓で接続文字列を切り替えます。'],
+     ['Sai — xoá database đích rồi tạo lại phá vỡ chính dữ liệu đã đồng bộ được và không rút ngắn downtime chút nào.','誤り — 移行先 DB を削除して作り直すのは同期済みデータを壊すだけで、ダウンタイム短縮にはなりません。'],
+     ['Sai — chỉ full load một lần sẽ bỏ mất mọi thay đổi phát sinh trên nguồn sau thời điểm chụp dữ liệu.','誤り — フルロード1回のみでは、データ取得後にソースで発生した変更がすべて失われます。']]},
  {q:'Chuyển hệ thống đang phục vụ người dùng thật từ AWS sang GCP. Cách chuyển traffic nào giảm rủi ro nhất?',
   qj:'実ユーザーが使っているシステムを AWS から GCP へ移行。トラフィック切替で最もリスクが低い方法は？',
   o:[['Đổi DNS trỏ 100% sang hệ mới ngay lập tức','DNS を即座に100%新システムへ向ける'],
@@ -397,7 +417,11 @@ var QUIZ_MIG=[
      ['Không cần kiểm chứng, chuyển xong tính sau','検証なしで移してから考える']],
   c:1,
   e:'Đúng mẫu cross-cloud trong bài: hạ TTL DNS trước 24–48 giờ và dùng weighted routing chuyển dần 10% → 50% → 100%, theo dõi song song rồi mới tắt phía cũ. Đổi 100% ngay khiến rollback gần như không thể.',
-  ej:'本文のクロスクラウドパターン通り：24〜48時間前に TTL を下げ、重み付きルーティングで10%→50%→100%と段階移行し、並行監視してから旧側を停止します。即時100%切替はロールバックが困難です。'}
+  ej:'本文のクロスクラウドパターン通り：24〜48時間前に TTL を下げ、重み付きルーティングで10%→50%→100%と段階移行し、並行監視してから旧側を停止します。即時100%切替はロールバックが困難です。',
+  x:[['Sai — dồn 100% traffic sang hệ mới ngay lập tức khiến mọi lỗi của hệ mới đánh trúng toàn bộ người dùng, và rollback gần như không thể khi dữ liệu đã lệch.','誤り — 即座に100%を新システムへ向けると新側の不具合が全ユーザーに直撃し、データがずれた後のロールバックはほぼ不可能です。'],
+     ['Đúng — hạ TTL trước 24–48 giờ rồi chuyển dần theo trọng số 10% → 50% → 100% giúp quan sát song song và quay lui dễ dàng ở mỗi bước.','正解 — 24〜48時間前に TTL を下げ、10% → 50% → 100% と段階的に移すことで並行監視と切り戻しが可能になります。'],
+     ['Sai — tắt hệ thống cũ trước khi hệ mới nhận traffic tạo khoảng trống dịch vụ và tự cắt đường lui nếu hệ mới có vấn đề.','誤り — 新側が受ける前に旧側を止めるとサービス空白が生まれ、問題時の切り戻し先もなくなります。'],
+     ['Sai — bỏ qua kiểm chứng dữ liệu và chức năng trước cutover là nguyên nhân hàng đầu của sự cố ngay sau khi chuyển đổi.','誤り — 切り替え前のデータ・機能検証を省くことは、移行直後トラブルの最大要因です。']]}
 ];
 var quizState={net:{},mig:{}};
 function quizHTML(kind){
@@ -418,6 +442,13 @@ function quizHTML(kind){
       }).join('')+'</div>';
     if(picked!==undefined){
       s+='<div class="ex-feedback '+(picked===qq.c?'ok':'ng')+'">'+(picked===qq.c?('<b>'+(ja?'正解！':'Đúng!')+'</b> '):('<b>'+(ja?'不正解 — 正解は緑の選択肢です。':'Chưa đúng — đáp án đúng là phương án màu xanh.')+'</b> '))+E(ja?qq.ej:qq.e)+'</div>';
+      if(qq.x){
+        s+='<div class="qb-whys"><p class="qb-whys-t">'+(ja?'各選択肢の解説：':'Giải thích từng phương án:')+'</p>'+qq.o.map(function(o,j){
+          var mark=j===qq.c?'✓':(j===picked?'✗':'·');
+          var cls=j===qq.c?'w-ok':(j===picked?'w-ng':'w-no');
+          return '<div class="qb-why '+cls+'"><span class="qb-wm" aria-hidden="true">'+mark+'</span><div><b>'+String.fromCharCode(65+j)+'.</b> '+E(ja?o[1]:o[0])+'<span class="qb-wx">'+E(ja?qq.x[j][1]:qq.x[j][0])+'</span></div></div>';
+        }).join('')+'</div>';
+      }
     }
     return s+'</div>';
   }).join('');
