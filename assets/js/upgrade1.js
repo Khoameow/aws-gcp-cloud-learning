@@ -42,7 +42,8 @@ try{
     function closeNavGroups(except){
       navGroups.forEach(function(x){
         if(x.g===except) return;
-        x.g.classList.remove('open'); x.btn.setAttribute('aria-expanded','false');
+        x.g.classList.remove('open'); if(x.panel) x.panel.classList.remove('open');
+        x.btn.setAttribute('aria-expanded','false');
       });
     }
     PILLARS.forEach(function(def){
@@ -53,22 +54,38 @@ try{
       btn.innerHTML='<span class="np-t"></span><span class="np-caret" aria-hidden="true">▾</span>';
       var panel=document.createElement('div'); panel.className='nav-panel';
       def.texts.forEach(function(t){ var a=byText[t]; if(a) panel.appendChild(a); });
-      panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ closeNavGroups(null); g.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }); });
+      panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ closeNavGroups(null); g.classList.remove('open'); panel.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }); });
+      /* Uỷ quyền: link do các đợt sau (Pricing, Cây quyết định, IaC…) chèn vào panel
+         cũng đóng menu khi bấm — handler của chúng tìm .nav-group không còn trúng
+         vì panel đã rời khỏi group (xem dưới), nên đóng tập trung tại đây. */
+      panel.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('a')) closeNavGroups(null); });
       btn.addEventListener('click',function(ev){
         ev.stopPropagation();
         var willOpen=!g.classList.contains('open');
         closeNavGroups(g);
         g.classList.toggle('open',willOpen);
+        panel.classList.toggle('open',willOpen);
         btn.setAttribute('aria-expanded',willOpen?'true':'false');
         if(willOpen&&window.innerWidth>=1024){
           var r=btn.getBoundingClientRect();
           panel.style.left=Math.max(8,Math.min(r.left,window.innerWidth-268))+'px';
         }
       });
-      g.appendChild(btn); g.appendChild(panel); bar.appendChild(g);
+      g.appendChild(btn); bar.appendChild(g);
+      /* FIX TRIỆT ĐỂ (chẩn đoán lại lỗi dropdown không bấm được): panel KHÔNG nằm
+         trong .nav-group/.nav-scroll nữa. .nav-scroll là vùng cuộn ngang
+         (overflow-x:auto + overflow-y:hidden, cao 56px) và nav.top có
+         backdrop-filter — tổ tiên tạo containing block cho position:fixed —
+         nên panel bị vùng cuộn giữ trong stacking/hit-test của thanh nav và
+         bị nội dung trang (z-index:1 ở gốc) đè hit-test trên trang live.
+         Đưa panel thành con trực tiếp của nav.top: giữa panel và containing
+         block không còn phần tử cuộn/overflow nào, hit-test sạch hoàn toàn.
+         Các đợt sau vẫn tìm thấy panel qua 'nav.top .nav-panel' như cũ. */
+      var navEl=document.querySelector('nav.top');
+      if(navEl) navEl.appendChild(panel); else g.appendChild(panel);
       navGroups.push({g:g,btn:btn,panel:panel,def:def});
     });
-    document.addEventListener('click',function(e){ if(!e.target.closest||!e.target.closest('.nav-group')) closeNavGroups(null); });
+    document.addEventListener('click',function(e){ if(!e.target.closest||(!e.target.closest('.nav-group')&&!e.target.closest('.nav-panel'))) closeNavGroups(null); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeNavGroups(null); });
     window.addEventListener('resize',function(){ closeNavGroups(null); });
   }
