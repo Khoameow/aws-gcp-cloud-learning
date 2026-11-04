@@ -1188,4 +1188,60 @@ try{
   var b=$(id); if(!b) return;
   b.addEventListener('click',function(){ setTimeout(function(){ try{ renderQB(); }catch(e){} },240); });
 });
+
+/* ============================================================
+   BẢN VÁ QUIZ MIGRATION — giải thích từng phương án (dự phòng độc lập)
+   Kiểm chứng live 02:24–02:32 JST: phía Networking (file này) chạy
+   đúng bản mới, nhưng mini-quiz Migration — vốn do upgrade1.js vẽ —
+   vẫn hiện giải thích gộp kiểu cũ, tức bản upgrade1.js được phục vụ
+   trên bản thật không khớp bản nguồn đã retrofit (đúng mẫu lỗi
+   'bản dựng đạt, bản live không' từng gặp với dropdown). Vì vậy đợt
+   này gắn thêm một lớp dự phòng NGAY TRONG upgrade8.js (file đã
+   được xác nhận phục vụ đúng trên live): dữ liệu giải thích của cả
+   6 câu Migration được nhúng tại đây, và một MutationObserver theo
+   dõi thẻ #quizMig — sau mỗi lần upgrade1.js vẽ lại (trả lời câu
+   hỏi, đổi ngôn ngữ...), câu nào đã trả lời mà chưa có khối
+   .qb-whys thì khối 4 dòng giải thích được chèn vào, dùng đúng
+   class/markup của upgrade1.js nên hiển thị y hệt. Nếu upgrade1.js
+   đã tự vẽ đủ .qb-whys (bản khớp nguồn) thì lớp này không chèn gì.
+   ============================================================ */
+var MIG_GUARD=[{"c":1,"x":[["Sai — viết lại cloud-native tốn nhiều tháng và thay đổi gần như toàn bộ ứng dụng, ngược hẳn yêu cầu “thoát càng nhanh càng tốt, gần như không sửa”.","誤り — クラウドネイティブへの書き直しは数か月単位でアプリ全体が変わり、「最速・ほぼ無改修」の要件と正反対です。"],["Đúng — Rehost giữ nguyên trạng ứng dụng; MGN replicate liên tục rồi cutover nên nhanh nhất và ít thay đổi nhất.","正解 — Rehost はアプリを現状のまま移し、MGN の継続レプリケーションと切り替えで最速・最小変更です。"],["Sai — Repurchase nghĩa là bỏ ứng dụng hiện tại để mua SaaS thay thế, thay cả quy trình nghiệp vụ, không còn là “giữ nguyên ứng dụng”.","誤り — Repurchase は現行アプリを捨てて SaaS に替えるため業務プロセスまで変わり、「そのまま移す」にはなりません。"],["Sai — Retain là giữ lại on-prem, tức không thoát được data center, trái thẳng mục tiêu chính của ban giám đốc.","誤り — Retain はオンプレミスに残すことであり、データセンター退出という経営層の目的に反します。"]]},{"c":1,"x":[["Sai — Rehost cả hệ thống đã chết lên cloud chỉ biến chi phí on-prem thành chi phí cloud, không giải quyết được phần lãng phí.","誤り — 死んだシステムまで Rehost するとオンプレのコストがクラウドのコストに化けるだけで、無駄は消えません。"],["Đúng — hệ thống không còn dùng hoặc trùng lặp thì xử lý đúng theo 7R là Retire: tắt hẳn, thường chiếm 10–20% danh mục.","正解 — 未使用・重複システムの 7R は Retire（廃止）。全体の10〜20%を占めるのが通例です。"],["Sai — Retain chỉ dành cho hệ thống còn lý do giữ tạm (mới nâng cấp, ràng buộc pháp lý); giữ vô thời hạn hệ không ai dùng không phải Retain mà là bỏ mặc.","誤り — Retain は「直近の更改済み」「法的制約」など一時的に残す理由がある場合用で、誰も使わないシステムの無期限放置ではありません。"],["Sai — Repurchase là mua giải pháp thay thế cho nhu cầu còn tồn tại; ở đây nhu cầu đã không còn nên không có gì để “mua thay”.","誤り — Repurchase は需要が残っている場合の置き換え策。需要自体が消えたシステムに買うものはありません。"]]},{"c":1,"x":[["Sai — MGN chuyển server ở tầng hệ điều hành/khối dữ liệu (block), không chuyển đổi được engine database từ Oracle sang PostgreSQL.","誤り — MGN は OS/ブロック層のサーバー移行であり、Oracle から PostgreSQL へのエンジン変換はできません。"],["Đúng — đổi engine là bài toán hai lớp: SCT chuyển schema/đối tượng, DMS full load + CDC đồng bộ liên tục. Đây là mẫu Replatform kinh điển.","正解 — エンジン変更は2層の課題：SCT でスキーマ変換、DMS でフルロード＋CDC。これは Replatform の典型です。"],["Sai — DataSync đồng bộ file/object giữa các hệ lưu trữ, không chuyển schema và không replicate giao dịch của database.","誤り — DataSync はストレージ間のファイル同期専用で、スキーマ変換も DB トランザクション複製も行いません。"],["Sai — Storage Transfer Service là dịch vụ của Google Cloud (chuyển dữ liệu vào GCP), không phải công cụ cho bài toán chuyển sang Aurora.","誤り — Storage Transfer Service は Google Cloud 側の転送サービスで、Aurora への移行ツールではありません。"]]},{"c":1,"x":[["Sai — chuyển server trước khi đánh giá là mù bản đồ phụ thuộc, và chưa có Landing Zone thì không có nền tài khoản/mạng/bảo mật để hạ cánh.","誤り — 評価前に移すと依存関係が見えず、ランディングゾーンがなければ受け皿のアカウント/ネットワーク/セキュリティ基盤がありません。"],["Đúng — Assess (đánh giá & phân loại 7R) → Mobilize (dựng Landing Zone) → Migrate & Modernize (chuyển theo wave) là thứ tự chuẩn.","正解 — Assess（棚卸しと 7R 分類）→ Mobilize（ランディングゾーン構築）→ Migrate & Modernize（ウェーブ移行）が標準順序です。"],["Sai — dựng nền (Mobilize) trước khi biết danh mục và yêu cầu thật (Assess) dễ xây sai quy mô và phải làm lại.","誤り — Assess 前の Mobilize は棚卸しも要件も分からないまま基盤を作るため、規模を誤りやすく手戻りします。"],["Sai — xen Migrate vào giữa khiến workload phải hạ cánh khi Landing Zone chưa hoàn thiện, rủi ro bảo mật và vận hành.","誤り — 途中に Migrate を挟むと、ランディングゾーン未完成のままワークロードを受け入れることになり、セキュリティと運用のリスクになります。"]]},{"c":1,"x":[["Sai — dừng nguồn cả ngày tạo downtime rất dài, và sao chép tay dễ sai lệch dữ liệu, khó kiểm chứng toàn vẹn.","誤り — ソースを丸1日止めるとダウンタイムが長く、手作業コピーは不整合が起きやすく完全性の検証も困難です。"],["Đúng — full load dữ liệu lịch sử trước, CDC bắt kịp mọi thay đổi liên tục, chờ lag về ~0 rồi mới đổi connection string trong cửa sổ dừng ghi ngắn.","正解 — 先に履歴データをフルロードし、CDC で変更を継続同期、遅延がほぼ0になってから短い停止窓で接続文字列を切り替えます。"],["Sai — xoá database đích rồi tạo lại phá vỡ chính dữ liệu đã đồng bộ được và không rút ngắn downtime chút nào.","誤り — 移行先 DB を削除して作り直すのは同期済みデータを壊すだけで、ダウンタイム短縮にはなりません。"],["Sai — chỉ full load một lần sẽ bỏ mất mọi thay đổi phát sinh trên nguồn sau thời điểm chụp dữ liệu.","誤り — フルロード1回のみでは、データ取得後にソースで発生した変更がすべて失われます。"]]},{"c":1,"x":[["Sai — dồn 100% traffic sang hệ mới ngay lập tức khiến mọi lỗi của hệ mới đánh trúng toàn bộ người dùng, và rollback gần như không thể khi dữ liệu đã lệch.","誤り — 即座に100%を新システムへ向けると新側の不具合が全ユーザーに直撃し、データがずれた後のロールバックはほぼ不可能です。"],["Đúng — hạ TTL trước 24–48 giờ rồi chuyển dần theo trọng số 10% → 50% → 100% giúp quan sát song song và quay lui dễ dàng ở mỗi bước.","正解 — 24〜48時間前に TTL を下げ、10% → 50% → 100% と段階的に移すことで並行監視と切り戻しが可能になります。"],["Sai — tắt hệ thống cũ trước khi hệ mới nhận traffic tạo khoảng trống dịch vụ và tự cắt đường lui nếu hệ mới có vấn đề.","誤り — 新側が受ける前に旧側を止めるとサービス空白が生まれ、問題時の切り戻し先もなくなります。"],["Sai — bỏ qua kiểm chứng dữ liệu và chức năng trước cutover là nguyên nhân hàng đầu của sự cố ngay sau khi chuyển đổi.","誤り — 切り替え前のデータ・機能検証を省くことは、移行直後トラブルの最大要因です。"]]}];
+function migWhyHTML(qEl,idx){
+  var g=MIG_GUARD[idx]; if(!g) return '';
+  var btns=qEl.querySelectorAll('.quiz-opts button');
+  if(btns.length!==4) return '';
+  var picked=-1;
+  btns.forEach(function(b,j){ if(b.classList.contains('q-ng')) picked=j; });
+  if(picked<0) picked=g.c;
+  var ja=JA();
+  var h='<div class="qb-whys"><p class="qb-whys-t">'+(ja?'各選択肢の解説：':'Giải thích từng phương án:')+'</p>';
+  for(var j=0;j<4;j++){
+    var mark=j===g.c?'✓':(j===picked?'✗':'·');
+    var cls=j===g.c?'w-ok':(j===picked?'w-ng':'w-no');
+    var label=btns[j].textContent.replace(/^\s*[A-D]\.\s*/,'');
+    h+='<div class="qb-why '+cls+'"><span class="qb-wm" aria-hidden="true">'+mark+'</span><div><b>'+String.fromCharCode(65+j)+'.</b> '+E(label)+'<span class="qb-wx">'+E(ja?g.x[j][1]:g.x[j][0])+'</span></div></div>';
+  }
+  return h+'</div>';
+}
+var migPatchBusy=false;
+function migPatch(){
+  var host=$('quizMig'); if(!host||migPatchBusy) return;
+  var qs=host.querySelectorAll('.quiz-q');
+  qs.forEach(function(qEl,idx){
+    if(qEl.querySelector('.qb-whys')) return;
+    if(!qEl.querySelector('.ex-feedback')) return;
+    var html=migWhyHTML(qEl,idx); if(!html) return;
+    migPatchBusy=true;
+    var tmp=document.createElement('div'); tmp.innerHTML=html;
+    qEl.appendChild(tmp.firstChild);
+    migPatchBusy=false;
+  });
+}
+try{
+  migPatch();
+  var migHost=$('quizMig');
+  if(migHost&&window.MutationObserver){
+    new MutationObserver(function(){ migPatch(); }).observe(migHost,{childList:true,subtree:true});
+  }
+}catch(e){}
 })();
