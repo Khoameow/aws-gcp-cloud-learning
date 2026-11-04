@@ -258,21 +258,21 @@ function wrap2(txt,max){
   if(lines.length>2){ lines=lines.slice(0,2); lines[1]=lines[1].length>max?lines[1].slice(0,max-1)+'…':lines[1]; }
   return lines;
 }
-function nodeSVG(cx,cy,w,h,disp,svc,center){
+function nodeSVG(cx,cy,w,h,disp,svc,center,compact){
   var x=cx-w/2, y=cy-h/2;
   var gi=glyphOf(svc);
   var stroke=center?'#ffb84d':(gi?gi.col:'rgba(167,139,250,.75)');
   var inner='';
   if(gi){
-    var gs=center?30:22;
-    inner+='<g transform="translate('+(cx-gs/2)+','+(y+(center?8:6))+') scale('+(gs/24)+')" fill="none" stroke="'+gi.col+'" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:'+gi.col+'">'+gi.g+'</g>';
+    var gs=center?(compact?25:29):(compact?19:22);
+    inner+='<g transform="translate('+(cx-gs/2)+','+(y+(center?7:5))+') scale('+(gs/24)+')" fill="none" stroke="'+gi.col+'" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="color:'+gi.col+'">'+gi.g+'</g>';
   }else{
-    inner+='<circle cx="'+cx+'" cy="'+(y+17)+'" r="8" fill="none" stroke="rgba(167,139,250,.8)" stroke-width="1.6" stroke-dasharray="3 3"/>';
+    inner+='<circle cx="'+cx+'" cy="'+(y+15)+'" r="7.5" fill="none" stroke="rgba(167,139,250,.8)" stroke-width="1.6" stroke-dasharray="3 3"/>';
   }
-  var lines=wrap2(disp,center?17:16);
-  var ly=y+(center?50:40);
+  var lines=wrap2(disp,center?(compact?16:18):(compact?14:16));
+  var ly=y+(center?(compact?44:50):(compact?36:39));
   lines.forEach(function(ln,i){
-    inner+='<text x="'+cx+'" y="'+(ly+i*15)+'" text-anchor="middle" font-size="'+(center?14.5:13)+'" font-weight="'+(center?800:700)+'" fill="'+(center?'#ffffff':'#e8eefb')+'">'+E(ln)+'</text>';
+    inner+='<text x="'+cx+'" y="'+(ly+i*14)+'" text-anchor="middle" font-size="'+(center?(compact?13:14.5):(compact?11.8:13))+'" font-weight="'+(center?800:700)+'" fill="'+(center?'#ffffff':'#e8eefb')+'">'+E(ln)+'</text>';
   });
   var g='<g><rect class="svcd-nb" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="12" fill="'+(center?'#12233f':'#0d1730')+'" stroke="'+stroke+'" stroke-width="'+(center?2.4:1.5)+'"'+(svc?'':' stroke-dasharray="5 4"')+'/>'+inner+'</g>';
   if(svc&&gi){
@@ -280,34 +280,216 @@ function nodeSVG(cx,cy,w,h,disp,svc,center){
   }
   return g;
 }
-function edgeSVG(x1,y1,x2,y2,label){
-  var mx=(x1+x2)/2, my=(y1+y2)/2, out='';
-  if(label){
-    var ls=wrap2(label,15);
-    ls.forEach(function(ln,i){ out+='<text x="'+mx+'" y="'+(my-5+i*12)+'" text-anchor="middle" font-size="10.3" fill="#8fa3c2">'+E(ln)+'</text>'; });
+/* ---------- HỆ KHUNG MÔI TRƯỜNG (đồng bộ Thư viện Sơ đồ #/diagrams) ----------
+   Cùng bộ khung, màu, nhãn và thứ bậc của frame kit .dg-frame:
+   AWS: ☁ AWS Cloud ⊃ 🌐 Region — ap-northeast-1 (Tokyo) ⊃ VPC ⊃ AZ ⊃ Subnet.
+   GCP: Google Cloud ⊃ VPC — Global ⊃ Region — asia-northeast1 (Tokyo) ⊃ Subnet/Zone.
+   Chỉ vẽ khung khi có node thật sống ở lớp đó; node người dùng ở ngoài
+   khung Cloud, node on-premise trong khung Corporate data center riêng. */
+var FCOL={aws:['#ff9900','rgba(255,153,0,.05)',''],region:['#22d3ee','rgba(34,211,238,.03)','7 5'],vpc:['#a78bfa','rgba(167,139,250,.045)',''],az:['#4ade80','rgba(74,222,128,.03)','7 5'],pub:['#38bdf8','rgba(56,189,248,.05)',''],priv:['#2dd4bf','rgba(45,212,191,.045)',''],gcp:['#4da3ff','rgba(77,163,255,.045)',''],zone:['#34d399','rgba(52,211,153,.03)','7 5'],onprem:['#a3b88a','rgba(163,184,138,.05)','7 5']};
+function frameSVG(x,y,w,h,kind,label){
+  var c=FCOL[kind]||FCOL.region, lw=18, i;
+  for(i=0;i<label.length;i++) lw+=(label.charCodeAt(i)>255?11.5:6.9);
+  return '<rect class="svcd-fr f-'+kind+'" x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="13" fill="'+c[1]+'" stroke="'+c[0]+'" stroke-width="1.5"'+(c[2]?' stroke-dasharray="'+c[2]+'"':'')+'/>'
+    +'<rect x="'+(x+10)+'" y="'+(y-9)+'" width="'+Math.min(lw,w-16)+'" height="18" rx="9" fill="#060b16"/>'
+    +'<text class="svcd-fl" x="'+(x+19)+'" y="'+(y+4)+'" font-size="11.5" font-weight="800" fill="'+c[0]+'" letter-spacing=".02em">'+E(label)+'</text>';
+}
+function zoneOfSvc(cloud,svc,disp){
+  var s=svc||'', d=disp||'';
+  if(d.indexOf('@Edge')>=0) return 'global';
+  if(cloud==='aws'){
+    if(/Route 53|CloudFront|Global Accelerator|AWS Shield/.test(s)||s==='AWS IAM'||s.indexOf('IAM Identity')>=0||s==='AWS Organizations') return 'global';
+    if(/Load Balancing/.test(s)) return 'pub';
+    if(/RDS|Aurora|ElastiCache|Neptune|DocumentDB|Redshift/.test(s)) return 'data';
+    if(/EC2|ECS|EKS|Fargate|Elastic Beanstalk|EMR|AWS Batch/.test(s)) return 'app';
+    return 'region';
   }
-  return '<path d="M'+x1+','+y1+' L'+x2+','+y2+'" stroke="#5b7ba6" stroke-width="1.8" fill="none" marker-end="url(#svcdAh)"/>'+out;
+  if(/Cloud Load Balancing|Cloud DNS|Pub\/Sub|Cloud Armor|Cloud CDN/.test(s)||s.indexOf('IAM')>=0) return 'global';
+  if(/Compute Engine|Kubernetes Engine|Cloud SQL|AlloyDB|Memorystore|Cloud NAT/.test(s)) return 'subnet';
+  return 'region';
+}
+function zoneOfNd(cloud,nd){
+  var disp=nd[0]||'', svc=nd[1];
+  if(!svc){
+    if(/on-?prem|data center/i.test(disp)) return 'onprem';
+    if(/nat gateway/i.test(disp)) return cloud==='gcp'?'subnet':'pub';
+    if(/internet gateway/i.test(disp)) return 'pub';
+    if(/replica|standby|backup/i.test(disp)) return 'mirror';
+    if(/endpoint|dashboard|báo cáo|vpc/i.test(disp)) return 'region';
+    return 'outside';
+  }
+  return zoneOfSvc(cloud,svc,disp);
+}
+function centerZone(cloud,name,group,hasVPC){
+  var z=zoneOfSvc(cloud,name,name);
+  if(z!=='region') return z;
+  if(hasVPC){
+    if(cloud==='aws'){
+      if(/Lambda|Lightsail/.test(name)) return 'region';
+      if(group==='Compute'||group==='Containers') return 'app';
+      if(group==='Database') return 'data';
+    }else{
+      /* Cloud Run / App Engine là serverless cấp region — chỉ vào Subnet
+         khi tình huống thật sự có VPC connector, không suy từ nhóm */
+      if(/Cloud Run|App Engine/.test(name)) return 'region';
+      if(group==='Compute'||group==='Containers'||group==='Databases') return 'subnet';
+    }
+  }
+  return 'region';
+}
+var LBLQ=[];
+function edgeSVG2(a,b,label,dashed){
+  var dx=b.cx-a.cx, dy=b.cy-a.cy, x1,y1,x2,y2;
+  if(Math.abs(dx)>=Math.abs(dy)){ var sx=dx>=0?1:-1; x1=a.cx+sx*a.w/2; y1=a.cy; x2=b.cx-sx*b.w/2; y2=b.cy; }
+  else { var sy=dy>=0?1:-1; x1=a.cx; y1=a.cy+sy*a.h/2; x2=b.cx; y2=b.cy-sy*b.h/2; }
+  var mx=(x1+x2)/2, my=(y1+y2)/2;
+  if(label){
+    var ls=wrap2(label,15), lw=0, out='';
+    ls.forEach(function(ln){ lw=Math.max(lw,ln.length*6.1); });
+    out+='<rect x="'+(mx-lw/2-5)+'" y="'+(my-ls.length*6-4)+'" width="'+(lw+10)+'" height="'+(ls.length*12+5)+'" rx="4" fill="#060b16" fill-opacity=".93"/>';
+    ls.forEach(function(ln,i){ out+='<text x="'+mx+'" y="'+(my-5+i*12)+'" text-anchor="middle" font-size="10.3" fill="#8fa3c2" style="paint-order:stroke;stroke:#060b16;stroke-width:3px">'+E(ln)+'</text>'; });
+    LBLQ.push(out);
+  }
+  return '<path d="M'+x1+','+y1+' L'+x2+','+y2+'" stroke="'+(dashed?'#40649f':'#5b7ba6')+'" stroke-width="1.8" fill="none"'+(dashed?' stroke-dasharray="4 4"':'')+' marker-end="url(#svcdAh)"/>';
 }
 function diagramSVG(cloud,name,group,glyph,scen){
-  var CY=104;
-  var inn=scen.inn.slice(0,2), out=scen.out.slice(0,2);
-  var s='<svg class="svcd-diagram" viewBox="0 0 720 262" role="img" aria-label="'+E(L('Sơ đồ ví dụ: ','例の図：')+name)+'">'
-    +'<defs><marker id="svcdAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93ad"/></marker></defs>';
-  function ys(list){ return list.length===1?[CY]:[56,166]; }
-  var iy=ys(inn), oy=ys(out);
-  inn.forEach(function(nd,i){ s+=edgeSVG(176,iy[i],266,CY, ja()?nd[3]:nd[2]); });
-  out.forEach(function(nd,i){ s+=edgeSVG(454,CY,544,oy[i], ja()?nd[3]:nd[2]); });
-  inn.forEach(function(nd,i){ s+=nodeSVG(93,iy[i],166,64,nd[0],nd[1],false); });
-  out.forEach(function(nd,i){ s+=nodeSVG(627,oy[i],166,64,nd[0],nd[1],false); });
-  /* node trung tâm = chính service, icon của nó */
-  s+=nodeSVG(360,CY,188,78,name,name,true);
-  /* node giám sát phía dưới */
-  var bot=('bot' in scen)?scen.bot:ND(cloud==='gcp'?'Cloud Monitoring':'CloudWatch',OBS[cloud],'','');
-  if(bot){
-    s+='<path d="M360,143 L360,204" stroke="#40649f" stroke-width="1.6" stroke-dasharray="4 4" fill="none" marker-end="url(#svcdAh)"/>'
-      +'<text x="369" y="180" font-size="10.8" fill="#8fa3c2">log · metric · alarm</text>'
-      +nodeSVG(360,226,190,46,bot[0],bot[1],false);
+  var W=800, ROW=78;
+  var isG=cloud==='gcp';
+  var botNd=('bot' in scen)?scen.bot:ND(isG?'Cloud Monitoring':'CloudWatch',OBS[cloud],'','');
+  var nodes=[], centerNode={nd:[name,name,'',''],role:'center'}, botNode=null;
+  scen.inn.slice(0,2).forEach(function(nd){ nodes.push({nd:nd,role:'inn'}); });
+  nodes.push(centerNode);
+  scen.out.slice(0,2).forEach(function(nd){ nodes.push({nd:nd,role:'out'}); });
+  if(botNd){ botNode={nd:botNd,role:'bot'}; nodes.push(botNode); }
+  nodes.forEach(function(n){ n.disp=n.nd[0]; n.svc=n.nd[1]; if(n.role!=='center') n.zone=zoneOfNd(cloud,n.nd); });
+  var hasVPC=nodes.some(function(n){ return n.role!=='center'&&/^(pub|app|data|subnet)$/.test(n.zone); });
+  centerNode.zone=centerZone(cloud,name,group,hasVPC);
+  nodes.forEach(function(n){ if(n.zone==='mirror') n.zone=centerNode.zone; });
+  hasVPC=nodes.some(function(n){ return /^(pub|app|data|subnet)$/.test(n.zone); });
+  var compact=nodes.length>=6||(isG?false:(['pub','app','data'].filter(function(k){return nodes.some(function(n){return n.zone===k;});}).length>=3));
+  /* phân node vào các miền (section) trong khung */
+  nodes.forEach(function(n){
+    if(n.zone==='global') n.sec='global';
+    else if(n.zone==='region') n.sec='strip';
+    else if(n.zone==='pub'||n.zone==='app'||n.zone==='data') n.sec='band:'+n.zone;
+    else if(n.zone==='subnet') n.sec='subnet';
+    else n.sec=null;
+  });
+  function secList(key){ return nodes.filter(function(n){ return n.sec===key; }); }
+  function secRows(key){
+    var per={}, rows=0;
+    secList(key).forEach(function(n){ if(n.role==='bot') return; per[n.role]=(per[n.role]||0)+1; if(per[n.role]>rows) rows=per[n.role]; });
+    return Math.max(rows,1);
   }
+  function secH(key){
+    if(!secList(key).length) return 0;
+    var bot=secList(key).some(function(n){ return n.role==='bot'; });
+    return 20+secRows(key)*ROW+(bot?ROW+14:0)+6;
+  }
+  var gH=secH('global'), stripH=secH('strip');
+  var bandKeys=['pub','app','data'].filter(function(k){ return secList('band:'+k).length; });
+  var bandH={}; bandKeys.forEach(function(k){ bandH[k]=secH('band:'+k); });
+  var subH=secH('subnet');
+  /* chiều cao các khung lồng nhau */
+  var netH=0, regionInnerH=0, regionH=0, midH=0;
+  if(isG){
+    var zoneH=subH?subH:0;
+    var subnetH=subH?(20+zoneH+8):0;
+    regionInnerH=subnetH+(subnetH&&stripH?10:0)+stripH;
+    regionH=regionInnerH?(26+regionInnerH+10):0;
+    /* khung VPC — Global chỉ bọc Region khi thật sự có node trong Subnet */
+    midH=regionH?(subH?(24+regionH+10):regionH):0;
+  }else{
+    var azH=bandKeys.length?(24+bandKeys.reduce(function(a,k){ return a+bandH[k]; },0)+6*(bandKeys.length-1)+8):0;
+    var vpcH=bandKeys.length?(22+azH+8):0;
+    regionInnerH=vpcH+(vpcH&&stripH?10:0)+stripH;
+    regionH=regionInnerH?(24+regionInnerH+10):0;
+    midH=regionH;
+  }
+  var H=10+26+(gH?gH+8:0)+midH+12;
+  /* tọa độ X: cột theo vai trò, chừa hai cột ngoài cho node ngoài Cloud */
+  var hasL=nodes.some(function(n){ return !n.sec&&(n.zone==='outside'||n.zone==='onprem')&&n.role==='inn'; });
+  var hasR=nodes.some(function(n){ return !n.sec&&(n.zone==='outside'||n.zone==='onprem')&&n.role==='out'; });
+  var cloudX0=hasL?166:6, cloudX1=hasR?W-166:W-6;
+  var bothOut=hasL&&hasR;
+  var nodeW=bothOut?122:(compact?150:164), centerW=bothOut?142:(compact?172:188);
+  var nodeHn=62, centerHn=compact?68:74;
+  var cX0=cloudX0+26, cX1=cloudX1-26;
+  function colX(role){ var f=role==='inn'?0.18:(role==='out'?0.82:0.5); return Math.round(cX0+f*(cX1-cX0)); }
+  nodes.forEach(function(n){
+    n.w=n.role==='center'?centerW:(!n.sec?140:nodeW);
+    n.h=n.role==='center'?centerHn:nodeHn;
+    if(n.sec) n.cx=colX(n.role==='bot'?'center':n.role);
+  });
+  /* gán Y theo từng miền */
+  function assignY(key,contentTop){
+    var per={}, rows=secRows(key);
+    secList(key).forEach(function(n){
+      if(n.role==='bot'){ n.cy=contentTop+rows*ROW+14+Math.round(n.h/2); return; }
+      var idx=per[n.role]||0; per[n.role]=idx+1;
+      n.cy=contentTop+idx*ROW+Math.round(n.h/2);
+    });
+  }
+  var cloudY=10, curY=cloudY+26;
+  if(gH){ assignY('global',curY+20); curY+=gH+8; }
+  var midY=curY, regionY=midY+(isG&&subH?24:0), regionContentY=regionY+26;
+  var framesMid='', framesNet='';
+  if(isG){
+    var subnetY=regionContentY, zoneY=subnetY+20;
+    if(subH) assignY('subnet',zoneY+20);
+    var stripY=regionContentY+(subH?(20+subH+8)+10:0);
+    if(stripH) assignY('strip',stripY+20);
+    if(regionH){
+      if(subH) framesMid+=frameSVG(cloudX0+12,midY,cloudX1-cloudX0-24,midH,'vpc',L('VPC — Global','VPC — グローバル'));
+      framesMid+=frameSVG(cloudX0+(subH?24:12),regionY,cloudX1-cloudX0-(subH?48:24),regionH,'region',L('🌐 Region — asia-northeast1 (Tokyo)','🌐 リージョン — asia-northeast1（東京）'));
+    }
+    if(subH){
+      framesNet+=frameSVG(cloudX0+36,subnetY,cloudX1-cloudX0-72,20+subH+8,'priv',L('Subnet — Regional · 10.0.0.0/24','サブネット — リージョナル · 10.0.0.0/24'));
+      framesNet+=frameSVG(cloudX0+46,zoneY,cloudX1-cloudX0-92,subH,'zone',L('Zone — asia-northeast1-a','ゾーン — asia-northeast1-a'));
+    }
+  }else{
+    var vpcY=regionContentY, azY=vpcY+22, bandY=azY+24;
+    bandKeys.forEach(function(k){ assignY('band:'+k,bandY+20); bandY+=bandH[k]+6; });
+    var stripY2=regionContentY+(bandKeys.length?((22+(24+bandKeys.reduce(function(a,k){ return a+bandH[k]; },0)+6*(bandKeys.length-1)+8)+8)+10):0);
+    if(stripH) assignY('strip',stripY2+20);
+    if(regionH) framesMid+=frameSVG(cloudX0+12,regionY,cloudX1-cloudX0-24,regionH,'region',L('🌐 Region — ap-northeast-1 (Tokyo)','🌐 リージョン — ap-northeast-1（東京）'));
+    if(bandKeys.length){
+      var azH2=24+bandKeys.reduce(function(a,k){ return a+bandH[k]; },0)+6*(bandKeys.length-1)+8;
+      framesNet+=frameSVG(cloudX0+24,vpcY,cloudX1-cloudX0-48,22+azH2+8,'vpc','VPC — 10.0.0.0/16');
+      framesNet+=frameSVG(cloudX0+34,azY,cloudX1-cloudX0-68,azH2,'az',L('AZ — ap-northeast-1a','AZ — ap-northeast-1a'));
+      var by=azY+24;
+      var bandLbl={pub:L('Public Subnet — 10.0.1.0/24','パブリックサブネット — 10.0.1.0/24'),app:L('Private Subnet — App · 10.0.11.0/24','プライベートサブネット — アプリ · 10.0.11.0/24'),data:L('Private Subnet — Data · 10.0.21.0/24','プライベートサブネット — データ · 10.0.21.0/24')};
+      bandKeys.forEach(function(k){ framesNet+=frameSVG(cloudX0+44,by,cloudX1-cloudX0-88,bandH[k],k==='pub'?'pub':'priv',bandLbl[k]); by+=bandH[k]+6; });
+    }
+  }
+  /* node ngoài Cloud: canh theo hàng của node trung tâm */
+  var centerCy=centerNode.cy||Math.round(H/2);
+  ['inn','out'].forEach(function(role){
+    var list=nodes.filter(function(n){ return !n.sec&&n.role===role; });
+    list.forEach(function(n,i){ n.cx=role==='inn'?84:W-84; n.cy=centerCy+(i-(list.length-1)/2)*86; });
+  });
+  /* khung on-premise bọc riêng các node on-premise mỗi phía */
+  var framesOn='';
+  ['inn','out'].forEach(function(role){
+    var list=nodes.filter(function(n){ return n.zone==='onprem'&&n.role===role; });
+    if(!list.length) return;
+    var top=Math.min.apply(null,list.map(function(n){ return n.cy-n.h/2; })), bot2=Math.max.apply(null,list.map(function(n){ return n.cy+n.h/2; }));
+    var cx=list[0].cx;
+    framesOn+=frameSVG(cx-82,top-30,164,bot2-top+44,'onprem',L('🏢 Corporate data center','🏢 コーポレートデータセンター'));
+  });
+  /* lắp SVG: khung → dây nối → node → nhãn luồng (nhãn vẽ trên cùng để
+     không bị node che khi khoảng cách giữa hai node ngắn) */
+  LBLQ=[];
+  var s='<svg class="svcd-diagram" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+E(L('Sơ đồ ví dụ: ','例の図：')+name)+'">'
+    +'<defs><marker id="svcdAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7f93ad"/></marker></defs>';
+  s+=frameSVG(cloudX0,cloudY,cloudX1-cloudX0,H-20,isG?'gcp':'aws',isG?'Google Cloud':L('☁ AWS Cloud','☁ AWS Cloud'));
+  s+=framesMid+framesNet+framesOn;
+  nodes.forEach(function(n){ if(n.role==='inn') s+=edgeSVG2(n,centerNode,ja()?n.nd[3]:n.nd[2],false); });
+  nodes.forEach(function(n){ if(n.role==='out') s+=edgeSVG2(centerNode,n,ja()?n.nd[3]:n.nd[2],false); });
+  if(botNode){ s+=edgeSVG2(centerNode,botNode,'',true); LBLQ.push('<rect x="'+(botNode.cx+5)+'" y="'+(Math.round((centerNode.cy+botNode.cy)/2)-8)+'" width="118" height="16" rx="4" fill="#060b16" fill-opacity=".93"/><text x="'+(botNode.cx+10)+'" y="'+Math.round((centerNode.cy+botNode.cy)/2+3)+'" font-size="10.8" fill="#8fa3c2">log · metric · alarm</text>'); }
+  nodes.forEach(function(n){ if(n.role!=='center') s+=nodeSVG(n.cx,n.cy,n.w,n.h,n.disp,n.svc,false,compact); });
+  s+=nodeSVG(centerNode.cx,centerNode.cy,centerNode.w,centerNode.h,name,name,true,compact);
+  s+=LBLQ.join('');
   return s+'</svg>';
 }
 function svcdHTML(cloud,name){
