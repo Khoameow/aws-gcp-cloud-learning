@@ -1188,3 +1188,27 @@ body>nav.top{position:sticky;top:0;z-index:500}
   .modal-bk{align-items:flex-end}
 }
 @media (min-width:769px){.mzoom-btn{display:none}}
+
+/* ============================================================
+   MOBILE FIX 2 · 2026-11-09 — sơ đồ thư viện (dg-stage) trên mobile
+   Báo cáo + ảnh chụp: sơ đồ lớn "Data pipeline xe tự lái" (15 node,
+   canvas gốc 1080×640) ép vào khung 315px → sân khấu chỉ còn
+   315×187px: node rộng 52px (nhãn "Rekognition" bị cắt chữ), các
+   hàng node cách nhau ~53px trong khi node cao ~70px nên chồng
+   lên nhau, node cuối (Developers, tâm ở 93.5%) bị cắt khỏi mép.
+   Thu vừa màn hình là không thể đọc được với sơ đồ mật độ này.
+   Cách sửa (≤768px): sân khấu giữ bề ngang tối thiểu 720px
+   (780px với sơ đồ nổi bật .feat) bên trong khung vuốt ngang;
+   vuốt dọc từ trên sơ đồ vẫn cuộn trang (pan-x pan-y, trình duyệt
+   tự khoá theo trục); chừa 36px mép phải để node cuối vuốt vào
+   được trọn vẹn. upgrade10.js chèn dòng gợi ý vuốt ngang.
+   Hộp Phóng to (.dg-zoom-bk) không áp dụng: ở đó sân khấu đã 720px.
+   ============================================================ */
+.dg-swipe-hint{display:none}
+@media (max-width:768px){
+  .dg-stage-wrap{overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y;overscroll-behavior-x:contain;scrollbar-width:thin}
+  .dg-stage{min-width:720px;margin-right:36px}
+  .dg-card.feat .dg-stage{min-width:780px}
+  .dg-zoom-bk .dg-stage{min-width:0;margin-right:0}
+  .dg-swipe-hint{display:block;font-size:12.5px;color:var(--muted);margin:0 0 7px;letter-spacing:.01em}
+}

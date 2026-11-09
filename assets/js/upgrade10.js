@@ -92,6 +92,16 @@
         function(){ return card.querySelector('svg'); },
         function(){ var h=card.querySelector('h3'); return h?h.textContent.trim():L('Sơ đồ','図'); });
     });
+    /* Gợi ý vuốt ngang cho sơ đồ thư viện (khung .dg-stage-wrap trên
+       mobile là khung cuộn ngang kể từ MOBILE FIX 2 trong main.css) */
+    document.querySelectorAll('.dg-stage-wrap').forEach(function(wr){
+      if(wr.getAttribute('data-hint')||bk.contains(wr)||wr.closest('.dg-zoom-bk')) return;
+      wr.setAttribute('data-hint','1');
+      var hint=document.createElement('p');
+      hint.className='dg-swipe-hint';
+      hint.textContent='↔ '+L('Vuốt ngang để xem hết sơ đồ · hoặc bấm Phóng to','左右にスワイプで図全体を表示 · または「拡大」をタップ');
+      wr.parentNode.insertBefore(hint,wr);
+    });
   }
 
   var pending=false;
