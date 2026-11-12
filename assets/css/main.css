@@ -421,6 +421,8 @@ details.dstep summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(
 .cert b{display:block;font-size:13.8px;color:#fff;line-height:1.4}
 .cert .code{display:inline-block;margin-top:5px;font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:700;color:#ffd9ae;background:rgba(255,153,0,.14);border:1px solid rgba(255,153,0,.5);border-radius:99px;padding:2px 9px}
 .cert.gcp .code{color:#bcd8f7;background:rgba(77,163,255,.13);border-color:rgba(77,163,255,.55)}
+.cert.aws3:hover{box-shadow:0 0 22px rgba(139,92,246,.5)}
+.cert.aws3 .code{color:#e2d6ff;background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.55)}
 
 /* ===== V4 · FLOW HỌC — lộ trình học theo thứ tự ===== */
 .flow-topbar{background:linear-gradient(160deg,rgba(17,27,50,.88),rgba(8,13,26,.95));border:1px solid rgba(34,211,238,.45);border-radius:16px;padding:20px 22px;margin-bottom:22px;box-shadow:0 0 26px rgba(34,211,238,.12)}
