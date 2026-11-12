@@ -507,8 +507,8 @@
     /* ---- Roadmap ---- */
     var ROAD = [
     ['Foundation','AWS Certified Cloud Practitioner','Google Cloud Digital Leader','Mô hình cloud, nhóm service cốt lõi của cả hai cloud, billing &amp; bảo mật cơ bản, Linux/Git/Docker nền.','Lab 1–3 (mạng nền, VM, web tĩnh) ở cả hai cloud.','Dựng website tĩnh + VM web server hai cloud, viết README so sánh chi phí.'],
-    ['Associate','AWS Solutions Architect – Associate','Google Associate Cloud Engineer','Thiết kế VPC multi-AZ/Shared VPC, IAM least-privilege, Terraform cơ bản, K8s cơ bản (EKS/GKE), HA &amp; backup.','Lab 4–8 + Lab Terraform (3-tier hai cloud).','Triển khai ứng dụng 3-tier bằng Terraform lên AWS và GCP, có monitoring &amp; alarm.'],
-    ['Professional / Specialty','AWS Solutions Architect – Professional · Advanced Networking · Security Specialty','Google Professional Cloud Architect · Professional Cloud Network Engineer · Professional Cloud Security Engineer','Thiết kế đa tài khoản/đa region, migration quy mô lớn, DR, FinOps, bảo mật nâng cao, Kubernetes production &amp; GitOps.','Lab 9–12 + toàn bộ labs migration &amp; networking bậc thầy.','Hoàn thành Capstone ở Khối 6: phân tích → chọn cloud → Terraform → K8s → CI/CD → vận hành → báo cáo chi phí.']
+    ['Associate','AWS Solutions Architect – Associate (SAA-C03) · Developer – Associate (DVA-C03, từ 01/12/2026)','Google Associate Cloud Engineer','Thiết kế VPC multi-AZ/Shared VPC, IAM least-privilege, Terraform cơ bản, K8s cơ bản (EKS/GKE), HA &amp; backup.','Lab 4–8 + Lab Terraform (3-tier hai cloud).','Triển khai ứng dụng 3-tier bằng Terraform lên AWS và GCP, có monitoring &amp; alarm.'],
+    ['Professional / Specialty','AWS Solutions Architect – Professional (SAP-C03, từ 17/11/2026) · Advanced Networking – Specialty (ANS-C01, kết thúc 31/12/2026) · Security Specialty','Google Professional Cloud Architect (v6.1) · Professional Cloud Network Engineer · Professional Cloud Security Engineer','Thiết kế đa tài khoản/đa region, migration quy mô lớn, DR, FinOps, bảo mật nâng cao, Kubernetes production &amp; GitOps.','Lab 9–12 + toàn bộ labs migration &amp; networking bậc thầy.','Hoàn thành Capstone ở Khối 6: phân tích → chọn cloud → Terraform → K8s → CI/CD → vận hành → báo cáo chi phí.']
     ];
     document.getElementById('roadmapTable').innerHTML = '<tr><th style="width:12%">Cấp độ</th><th style="width:19%">Chứng chỉ AWS</th><th style="width:19%">Chứng chỉ Google Cloud</th><th style="width:20%">Cần học gì</th><th style="width:15%">Lab trong trang này</th><th>Project mẫu phải làm được</th></tr>'
       + ROAD.map(function(r){ return '<tr><td><b>' + r[0] + '</b></td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td><td>' + r[5] + '</td></tr>'; }).join('');
@@ -676,6 +676,22 @@
     'Capacity, Trade-off & Đọc/vẽ sơ đồ':'キャパシティ、トレードオフ、図の読み書き',
     /* Lộ trình */
     'Cấp độ':'レベル','Chứng chỉ AWS':'AWS認定資格','Chứng chỉ Google Cloud':'Google Cloud認定資格','Cần học gì':'学ぶ内容','Lab trong trang này':'本ページのラボ','Project mẫu phải làm được':'到達目標プロジェクト',
+    /* Cập nhật phiên bản kỳ thi 2026 */
+    'AWS Solutions Architect – Associate (SAA-C03) · Developer – Associate (DVA-C03, từ 01/12/2026)':'AWS Solutions Architect – Associate (SAA-C03) · Developer – Associate (DVA-C03、2026年12月1日開始)',
+    'AWS Solutions Architect – Professional (SAP-C03, từ 17/11/2026) · Advanced Networking – Specialty (ANS-C01, kết thúc 31/12/2026) · Security Specialty':'AWS Solutions Architect – Professional (SAP-C03、2026年11月17日開始) · Advanced Networking – Specialty (ANS-C01、2026年12月31日終了) · Security Specialty',
+    'Google Professional Cloud Architect (v6.1) · Professional Cloud Network Engineer · Professional Cloud Security Engineer':'Google Professional Cloud Architect (v6.1) · Professional Cloud Network Engineer · Professional Cloud Security Engineer',
+    'Cập nhật phiên bản kỳ thi — 2026':'試験バージョン更新 — 2026年',
+    'AWS và Google Cloud đang đổi phiên bản một số kỳ thi trong lộ trình này. Hãy ôn theo phiên bản hiện hành và để ý ngày thi cuối của bản cũ — đừng ôn theo đề cương sắp hết hạn.':'AWS と Google Cloud はこのロードマップの一部試験のバージョンを切り替えています。現行バージョンに沿って学び、旧バージョンの最終受験日を確認してください — 期限切れの出題範囲で学ばないよう注意しましょう。',
+    'Kỳ thi':'試験','Phiên bản & mốc thời gian':'バージョンと日程','Điểm mới / lưu ý':'変更点・注意点',
+    'SAP-C03 (mới) — bắt đầu thi từ 17/11/2026 · SAP-C02 (cũ) — ngày thi cuối 16/11/2026':'SAP-C03(新) — 2026年11月17日開始 · SAP-C02(旧) — 最終受験日 2026年11月16日',
+    'Bổ sung: Amazon Bedrock AgentCore, Bedrock Guardrails, Well-Architected Framework, tích hợp AI/ML':'追加:Amazon Bedrock AgentCore、Bedrock Guardrails、Well-Architected Framework、AI/ML統合',
+    'DVA-C03 (mới) — bắt đầu thi từ 01/12/2026 · DVA-C02 (cũ) — ngày thi cuối 30/11/2026':'DVA-C03(新) — 2026年12月1日開始 · DVA-C02(旧) — 最終受験日 2026年11月30日',
+    'Bổ sung: tích hợp AI/ML, Amazon Bedrock (AgentCore, Guardrails)':'追加:AI/ML統合、Amazon Bedrock (AgentCore、Guardrails)',
+    'ANS-C01 — kết thúc 31/12/2026':'ANS-C01 — 2026年12月31日終了',
+    'Muốn lấy chứng chỉ này phải thi trước 31/12/2026; sau mốc này kỳ thi không còn hiện hành':'この資格は2026年12月31日までに受験が必要です。この日を過ぎると現行試験ではなくなります',
+    'PCA v6.1 — phiên bản hiện hành':'PCA v6.1 — 現行バージョン',
+    'Cập nhật theo Architecture Framework và tích hợp AI/ML':'Architecture Framework と AI/ML 統合に沿って更新',
+    'Bảng lộ trình Khối 5 ở trên đã dùng mã phiên bản mới (SAP-C03, DVA-C03, PCA v6.1); các bản cũ SAP-C02 và DVA-C02 chỉ còn giá trị tham khảo tới ngày thi cuối tương ứng.':'上のブロック5の表は新しいバージョンコード (SAP-C03、DVA-C03、PCA v6.1) を使用しています。旧バージョンの SAP-C02 と DVA-C02 は、それぞれの最終受験日までの参考用です。',
     /* Sơ đồ */
     'Sơ đồ 1 — Web 3-tier Highly Available trong VPC':'図1 — VPC内の高可用性 3層Webアーキテクチャ',
     'Sơ đồ 2 — Data pipeline lớn kiểu AWS công bố (luyện đọc sơ đồ thật)':'図2 — AWS公開型の大規模データパイプライン（実図を読む練習）',
